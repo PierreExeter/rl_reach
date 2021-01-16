@@ -1,0 +1,7 @@
+__pycache__
+*.egg-info
+*.pyc
+*.run
+sonic_cluster.sh
+kay_cluster.slurm
+

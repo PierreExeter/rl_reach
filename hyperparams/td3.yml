@@ -1,0 +1,46 @@
+widowx_reacher-v1:
+  # env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: 500000
+  normalize: true
+  policy: 'MlpPolicy'
+  learning_rate: 0.001
+  buffer_size: 1000000
+  learning_starts: 100
+  batch_size: 100
+  tau: 0.005
+  gamma: 0.99
+  train_freq: -1
+  gradient_steps: -1
+  n_episodes_rollout: 1
+  optimize_memory_usage: False
+  policy_delay: 2
+  target_policy_noise: 0.2
+  target_noise_clip: 0.5
+  create_eval_env: False
+  policy_kwargs: None  # "dict(net_arch=[400, 300])"
+  device: "auto"
+  _init_setup_model: True
+
+
+widowx_reacher-v3:
+  # env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: 500000
+  normalize: true
+  policy: 'MlpPolicy'
+  learning_rate: 0.001
+  buffer_size: 1000000
+  learning_starts: 100
+  batch_size: 100
+  tau: 0.005
+  gamma: 0.99
+  train_freq: -1
+  gradient_steps: -1
+  n_episodes_rollout: 1
+  optimize_memory_usage: False
+  policy_delay: 2
+  target_policy_noise: 0.2
+  target_noise_clip: 0.5
+  create_eval_env: False
+  policy_kwargs: None  # "dict(net_arch=[400, 300])"
+  device: "auto"
+  _init_setup_model: True

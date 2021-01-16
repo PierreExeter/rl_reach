@@ -1,0 +1,345 @@
+CartPole-v1:
+  n_envs: 8
+  n_timesteps: !!float 1e5
+  policy: 'MlpPolicy'
+  n_steps: 32
+  batch_size: 256
+  gae_lambda: 0.8
+  gamma: 0.98
+  n_epochs: 20
+  ent_coef: 0.0
+  learning_rate: lin_0.001
+  clip_range: lin_0.2
+
+
+#   # Default
+# widowx_reacher-v1:
+#   # env_wrapper: utils.wrappers.TimeFeatureWrapper
+#   n_timesteps: 500000
+#   normalize: true
+#   n_envs: 8
+#   policy: 'MlpPolicy'
+#   learning_rate: 0.0003
+#   n_steps: 2048
+#   batch_size: 64
+#   n_epochs: 10
+#   gamma: 0.99
+#   gae_lambda: 0.95
+#   clip_range: 0.2
+#   ent_coef: 0.0
+#   vf_coef: 0.5
+#   max_grad_norm: 0.5
+#   use_sde: False
+#   sde_sample_freq: -1
+#   create_eval_env: False
+#   policy_kwargs: None
+#   device: "auto"
+#   _init_setup_model: True
+#   # policy_kwargs: "dict(log_std_init=-2.7,
+#   #                      ortho_init=False,
+#   #                      activation_fn=nn.ReLU,
+#   #                      net_arch=[dict(pi=[256, 256], vf=[256, 256])]
+#   #                      )"
+
+
+# # tuned
+# widowx_reacher-v1:
+#   _init_setup_model: true
+#   batch_size: 8
+#   clip_range: 0.1
+#   create_eval_env: false
+#   device: auto
+#   ent_coef: 0.024440749071239463
+#   gae_lambda: 1.0
+#   gamma: 0.995
+#   learning_rate: 0.0001477858879761212
+#   max_grad_norm: 0.6
+#   n_envs: 8
+#   n_epochs: 20
+#   n_steps: 8
+#   n_timesteps: 500000
+#   normalize: true
+#   policy: MlpPolicy
+#   policy_kwargs: dict(log_std_init=0.1271142705653581, net_arch=[dict(pi=[64, 64],
+#     vf=[64, 64])], activation_fn=nn.ReLU, ortho_init=False)
+#   sde_sample_freq: -1
+#   use_sde: false
+#   vf_coef: 0.7672995535258906
+
+
+# # SB2 hyperparams
+# widowx_reacher-v1:
+#   n_timesteps: 100000
+#   normalize: true
+#   policy: 'MlpPolicy'
+#   n_envs: 8
+#   n_steps: 128
+#   n_epochs: 4
+#   batch_size: 256
+#   learning_rate: !!float 2.5e-4
+#   clip_range: 0.2
+#   vf_coef: 0.5
+#   ent_coef: 0.01
+
+# optimised hyperparameters: manual optimisation
+widowx_reacher-v1:
+  n_timesteps: 500000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 1024
+  n_epochs: 4
+  batch_size: 64
+  learning_rate: 0.0003
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v2:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v3:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v4:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v5:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v6:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v7:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v8:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v9:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v10:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v11:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v12:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+
+
+
+# # widowx_reacher-v1:
+# #   n_timesteps: 500000
+# #   normalize: true
+# #   n_envs: 8
+# #   policy: 'MlpPolicy'
+
+# widowx_reacher-v3:
+#   # env_wrapper: utils.wrappers.TimeFeatureWrapper
+#   n_timesteps: 500000
+#   normalize: true
+#   n_envs: 8
+#   policy: 'MlpPolicy'
+#   learning_rate: 0.0003
+#   n_steps: 2048
+#   batch_size: 64
+#   n_epochs: 10
+#   gamma: 0.99
+#   gae_lambda: 0.95
+#   clip_range: 0.2
+#   ent_coef: 0.0
+#   vf_coef: 0.5
+#   max_grad_norm: 0.5
+#   use_sde: False
+#   sde_sample_freq: -1
+#   create_eval_env: False
+#   policy_kwargs: None
+#   device: "auto"
+#   _init_setup_model: True
+#   # policy_kwargs: "dict(log_std_init=-2.7,
+#   #                      ortho_init=False,
+#   #                      activation_fn=nn.ReLU,
+#   #                      net_arch=[dict(pi=[256, 256], vf=[256, 256])]
+#   #                      )"
+
+
+# widowx_reacher-v5:
+#   # env_wrapper: utils.wrappers.TimeFeatureWrapper
+#   n_timesteps: 500000
+#   normalize: true
+#   n_envs: 8
+#   policy: 'MlpPolicy'
+#   learning_rate: 0.0003
+#   n_steps: 2048
+#   batch_size: 64
+#   n_epochs: 10
+#   gamma: 0.99
+#   gae_lambda: 0.95
+#   clip_range: 0.2
+#   ent_coef: 0.0
+#   vf_coef: 0.5
+#   max_grad_norm: 0.5
+#   use_sde: False
+#   sde_sample_freq: -1
+#   create_eval_env: False
+#   policy_kwargs: None
+#   device: "auto"
+#   _init_setup_model: True
+#   # policy_kwargs: "dict(log_std_init=-2.7,
+#   #                      ortho_init=False,
+#   #                      activation_fn=nn.ReLU,
+#   #                      net_arch=[dict(pi=[256, 256], vf=[256, 256])]
+#   #                      )"
+
+
+# widowx_reacher-v6:
+#   # env_wrapper: utils.wrappers.TimeFeatureWrapper
+#   n_timesteps: 500000
+#   normalize: true
+#   n_envs: 8
+#   policy: 'MlpPolicy'
+#   learning_rate: 0.0003
+#   n_steps: 2048
+#   batch_size: 64
+#   n_epochs: 10
+#   gamma: 0.99
+#   gae_lambda: 0.95
+#   clip_range: 0.2
+#   ent_coef: 0.0
+#   vf_coef: 0.5
+#   max_grad_norm: 0.5
+#   use_sde: False
+#   sde_sample_freq: -1
+#   create_eval_env: False
+#   policy_kwargs: None
+#   device: "auto"
+#   _init_setup_model: True
+#   # policy_kwargs: "dict(log_std_init=-2.7,
+#   #                      ortho_init=False,
+#   #                      activation_fn=nn.ReLU,
+#   #                      net_arch=[dict(pi=[256, 256], vf=[256, 256])]
+#   #                      )"

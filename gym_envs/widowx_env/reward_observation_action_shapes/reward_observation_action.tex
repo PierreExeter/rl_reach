@@ -1,0 +1,192 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+%\usepackage{geometry}
+\usepackage{placeins} % use float barriers
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{longtable}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{grffile}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{amsmath}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\title{Reward, observation and action shapes considered in the training environments}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Observation}
+
+OBS1
+\begin{equation}
+[Ex, Ey, Ez, A1, A2, A3, A4, A5, A6]
+\end{equation}
+
+OBS2
+\begin{equation}
+[Gx, Gy, Gz, A1, A2, A3, A4, A5, A6]
+\end{equation}
+
+OBS3
+\begin{equation}
+[ETx, ETy, ETz, EGx, EGy, EGz, A1, A2, A3, A4, A5, A6]
+\end{equation}
+
+OBS4
+\begin{equation}
+[EGx, EGy, EGz, A1, A2, A3, A4, A5, A6]
+\end{equation}
+
+OBS5
+\begin{equation}
+[ETx, ETy, ETz, EGx, EGy, EGz, Gx, Gy, Gz, A1, A2, A3, A4, A5, A6]
+\end{equation}
+
+
+$Ei$ = End effector coordinate along the $i$ axis \\
+$Gi$ = Goal coordinate along the $i$ axis \\
+$EGi$ = Vector End effector - Goal along the $i$ axis \\
+$ETx$ = Vector End effector - Torso along the $i$ axis  \\
+$Ai$ = Angular position of joint $i$ \\
+
+
+\section{Action}
+
+
+\section{Reward}
+
+
+$r$ = reward  \\
+$d_t$ = distance at time t \\
+$a$ = action \\
+$s$ = state \\
+$G$ = set of goals \\
+
+\subsection{Dense rewards}
+
+\begin{equation}
+r = - d_t^2
+\end{equation}
+
+
+\begin{equation}
+r = - d_t
+\end{equation}
+
+
+\begin{equation}
+r = -\alpha d_t - \beta a^T a
+\end{equation}
+
+\begin{equation}
+r = -\alpha d_{t-1}^p - d_t^p 
+\end{equation}
+
+$\alpha$ = 0 or 1 \\
+$p$ = 1 or 2 \\
+but don't work well...
+
+\begin{equation}
+r = - d_t -  \norm{a_{t-1}}
+\end{equation}
+
+Penalise large torque
+
+\begin{equation}
+r = - d_t^2+ \frac{d_{t-1} - d_t}{d_t}
+\end{equation}
+
+\subsection{Sparse rewards}
+
+\begin{equation}
+r = \begin{cases}
+    -1, & \text{if $d \geq \epsilon $}\\
+    0, & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+\begin{equation}
+r = \begin{cases}
+    1, & \text{if $s \in G $}\\
+    0, & \text{otherwise}
+  \end{cases}
+\end{equation}
+
+
+
+\subsection{Dense + sparse rewards}
+
+\begin{equation}
+r = \begin{cases}
+    -d_t, & \text{if no collision and $d \geq 3$}\\
+    -d_t - 20\beta , & \text{if collision and $d \geq 3$}\\
+    -d_t + 2 , & \text{if no collision and $d < 3$} \\
+    -d_t - 20\beta + 2, & \text{if collision and $d < 3$}\\
+  \end{cases}
+\end{equation}
+
+\begin{equation}
+r = \begin{cases}
+    - 1 - \beta \norm{a_{t-1}}^2, & \text{if $d \geq \epsilon $}\\
+    1 - \beta \norm{a_{t-1}}^2, & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+where $\beta \norm{a_{t-1}}^2 \ll 1$ (penalise large actions)
+
+\begin{equation}
+r = \begin{cases}
+    - d_t , & \text{if $d \geq \epsilon $}\\
+    1 , & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+\begin{equation}
+r = \begin{cases}
+    - 0.02 , & \text{if $d \geq \epsilon $}\\
+    1 , & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+\begin{equation}
+r = \begin{cases}
+\alpha (d_{t-1} - d_t), & \text{if $d \geq \epsilon $}\\
+\alpha (d_{t-1} - d_t) + 10, & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+\begin{equation}
+r = \begin{cases}
+    - 0.001 , & \text{if $d \geq \epsilon $}\\
+    10 , & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+
+\begin{equation}
+r = \begin{cases}
+    - 0.001 , & \text{if $d \geq \epsilon $}\\
+    10 , & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+My attempts:
+
+\begin{equation}
+r = - d_t - \beta \norm{a_{t-1}}
+\end{equation}
+
+\begin{equation}
+r = - d_t^2 - \beta \norm{a_{t-1}}
+\end{equation}
+
+
+\end{document}
