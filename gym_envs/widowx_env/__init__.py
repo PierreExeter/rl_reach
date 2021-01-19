@@ -75,6 +75,11 @@ register(
     entry_point='widowx_env.envs.12_widowx_pybullet_random_gymEnv_obs5:WidowxEnv',
     max_episode_steps=100)
 
+# Pybullet environment + random goal + gym environment + obs5 + large joint limits + action coeff 10
+register(
+    id='widowx_reacher-v13',
+    entry_point='widowx_env.envs.13_widowx_pybullet_random_gymEnv_obs5_LargeJointLimit_actionCoeff10:WidowxEnv',
+    max_episode_steps=100)
 
 
 
