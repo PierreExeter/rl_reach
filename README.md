@@ -7,7 +7,7 @@
 RL Reach is a platform for running reproducible reinforcement learning experiments. Training environments are provided to solve the reaching task with the WidowX MK-II robotic arm.
 The Gym environments and training scripts are adapted from [Replab](https://github.com/bhyang/replab) and [Stable Baselines Zoo](https://github.com/DLR-RM/rl-baselines3-zoo), respectively.
 
-![Alt text](/docs/widowx_env.gif?raw=true "The Widowx Gym environment in Pybullet")
+![Alt text](/docs/images/widowx_env.gif?raw=true "The Widowx Gym environment in Pybullet")
 
 
 
@@ -122,11 +122,11 @@ The plots are generated in the associated experiment folder, e.g. `logs/exp_99/p
 
 Environment evaluation plot:
 
-![Alt text](/docs/plot_episode_eval_log.png)
+![Alt text](/docs/images/plot_episode_eval_log.png)
 
 Experiment learning curves:
 
-![Alt text](/docs/reward_vs_timesteps_smoothed.png)
+![Alt text](/docs/images/reward_vs_timesteps_smoothed.png)
 
 ## Benchmark
 

@@ -6,13 +6,15 @@ dependencies:
   - python=3.7
   - pip
   - pip:
-    - gym>=0.17.3
-    - stable-baselines3>=0.11.0a4
-    - pybullet>=3.0.6
-    - pytest>=6.1.2
-    - seaborn>=0.11.0
-    - PyYAML>=5.1
-    - sb3-contrib>=0.11.0a4
-    - pytablewriter>=0.58.0
-    - scikit-optimize>=0.8.1
-    - optuna>=2.3.0
+    - gym==0.17.3
+    - stable-baselines3==0.11.0a4
+    - pybullet==3.0.6
+    - pytest==6.1.2
+    - seaborn==0.11.0
+    - PyYAML==5.1
+    - sb3-contrib==0.11.0a4
+    - pytablewriter==0.58.0
+    - scikit-optimize==0.8.1
+    - optuna==2.3.0
+    - sphinx==3.4.3
+    - sphinx_rtd_theme==0.5.1

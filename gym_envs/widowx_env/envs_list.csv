@@ -1,13 +1,14 @@
-env_id,nb_joints,action,obs,reward,random_goal,goal_env,ep_len,actionStepCoeff,bounds
-widowx_reacher-v1,6,"[D1, D2, D3, D4, D5, D6]",obs1,-D^2,0,0,100,30,large
-widowx_reacher-v2,6,"[D1, D2, D3, D4, D5, D6]",obs1,-D^2,0,1,100,30,large
-widowx_reacher-v3,6,"[D1, D2, D3, D4, D5, D6]",obs1,-D^2,1,0,100,30,large
-widowx_reacher-v4,6,"[D1, D2, D3, D4, D5, D6]",obs1,-D^2,1,1,100,30,large
-widowx_reacher-v5,6,"[D1, D2, D3, D4, D5, D6]",obs2,-D^2,0,0,100,30,large
-widowx_reacher-v6,6,"[D1, D2, D3, D4, D5, D6]",obs3,-D^2,0,0,100,30,large
-widowx_reacher-v7,6,"[D1, D2, D3, D4, D5, D6]",obs4,-D^2,0,0,100,30,large
-widowx_reacher-v8,6,"[D1, D2, D3, D4, D5, D6]",obs5,-D^2,0,0,100,30,large
-widowx_reacher-v9,6,"[D1, D2, D3, D4, D5, D6]",obs2,-D^2,1,0,100,30,large
-widowx_reacher-v10,6,"[D1, D2, D3, D4, D5, D6]",obs3,-D^2,1,0,100,30,large
-widowx_reacher-v11,6,"[D1, D2, D3, D4, D5, D6]",obs4,-D^2,1,0,100,30,large
-widowx_reacher-v12,6,"[D1, D2, D3, D4, D5, D6]",obs5,-D^2,1,0,100,30,large
+env_id,nb_joints,action,obs,reward,random_goal,goal_env,ep_len,actionStepCoeff,bounds,joint limits
+widowx_reacher-v1,6,"[D1, D2, D3, D4, D5, D6]",obs1,-D^2,0,0,100,30,large,small
+widowx_reacher-v2,6,"[D1, D2, D3, D4, D5, D6]",obs1,-D^2,0,1,100,30,large,small
+widowx_reacher-v3,6,"[D1, D2, D3, D4, D5, D6]",obs1,-D^2,1,0,100,30,large,small
+widowx_reacher-v4,6,"[D1, D2, D3, D4, D5, D6]",obs1,-D^2,1,1,100,30,large,small
+widowx_reacher-v5,6,"[D1, D2, D3, D4, D5, D6]",obs2,-D^2,0,0,100,30,large,small
+widowx_reacher-v6,6,"[D1, D2, D3, D4, D5, D6]",obs3,-D^2,0,0,100,30,large,small
+widowx_reacher-v7,6,"[D1, D2, D3, D4, D5, D6]",obs4,-D^2,0,0,100,30,large,small
+widowx_reacher-v8,6,"[D1, D2, D3, D4, D5, D6]",obs5,-D^2,0,0,100,30,large,small
+widowx_reacher-v9,6,"[D1, D2, D3, D4, D5, D6]",obs2,-D^2,1,0,100,30,large,small
+widowx_reacher-v10,6,"[D1, D2, D3, D4, D5, D6]",obs3,-D^2,1,0,100,30,large,small
+widowx_reacher-v11,6,"[D1, D2, D3, D4, D5, D6]",obs4,-D^2,1,0,100,30,large,small
+widowx_reacher-v12,6,"[D1, D2, D3, D4, D5, D6]",obs5,-D^2,1,0,100,30,large,small
+widowx_reacher-v13,6,"[D1, D2, D3, D4, D5, D6]",obs5,-D^2,1,0,100,10,large,large
