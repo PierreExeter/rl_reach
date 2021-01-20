@@ -1,6 +1,7 @@
 # RL Reach
 
 [![Build Status](https://travis-ci.com/PierreExeter/rl_reach.svg?branch=master)](https://travis-ci.com/PierreExeter/rl_reach)
+[![Documentation Status](https://readthedocs.org/projects/rl-reach/badge/?version=latest)](https://rl-reach.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 
@@ -9,6 +10,10 @@ The Gym environments and training scripts are adapted from [Replab](https://gith
 
 ![Alt text](/docs/images/widowx_env.gif?raw=true "The Widowx Gym environment in Pybullet")
 
+
+## Documentation
+
+Please read the [documentation](https://rl-reach.readthedocs.io/en/latest/) to get started with RL Reach.
 
 
 ## Installation
