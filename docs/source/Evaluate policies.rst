@@ -28,10 +28,10 @@ If ``--log-info`` was enabled during evaluation, it is possible to plot some use
 
 The plots are printed in the associated experiment folder, e.g. `logs/exp_99/ppo/`.
 
-Environment evaluation plot:
+An example of environment evaluation plot:
 
 .. image:: ../images/plot_episode_eval_log.png
 
-Experiment learning curves:
+An example of experiment learning curve:
 
 .. image:: ../images/reward_vs_timesteps_smoothed.png

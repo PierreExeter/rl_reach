@@ -27,3 +27,4 @@ Contents
    Benchmark
    Optimise hyperparameters
    Training environments
+   Documentation

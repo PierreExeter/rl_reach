@@ -21,3 +21,8 @@ Example:
 .. code-block:: bash
 
    python scripts/plot_benchmark.py --exp-list 26 27 28 29 --col n_timesteps
+
+
+An example of experiment benchmark plot:
+
+.. image:: ../images/benchmark_plot.png
