@@ -4,4 +4,4 @@ __pycache__
 *.run
 sonic_cluster.sh
 kay_cluster.slurm
-
+docs/build/
