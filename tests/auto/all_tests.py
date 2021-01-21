@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import pytest
 import gym
+import widowx_env
 
 ######## TEST ENVIRONMENTS ###########
 
