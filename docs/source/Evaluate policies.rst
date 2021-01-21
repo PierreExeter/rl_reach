@@ -13,12 +13,19 @@ Trained models can be evaluated and the results can be saved with the script ``e
    ``--plot-dim``,	Live rendering of end-effector and goal positions,	*int*,	0: do not plot (default), 2: 2D or 3: 3D
    ``--render``,	Render environment during evaluation,	*bool*,	0 (default) or 1
 
-
 Example:
 
 .. code-block:: bash
 
    python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
+
+With Docker:
+
+.. code-block:: bash
+
+   ./docker/run_docker_cpu.sh python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
+
+The experiment's log files will generated in the working directory of the local machine.
 
 If ``--log-info`` was enabled during evaluation, it is possible to plot some useful information as shown in the plot below.
 

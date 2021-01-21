@@ -19,6 +19,13 @@ Example:
 
    python run_experiments.py --exp-id 99 --algo ppo --env widowx_reacher-v1 --n-timesteps 10000 --n-seeds 3
 
+With Docker:
+
+.. code-block:: bash
+
+   ./docker/run_docker_cpu.sh python run_experiments.py --exp-id 99 --algo ppo --env widowx_reacher-v1 --n-timesteps 10000 --n-seeds 2
+
+The experiment's log files will generated in the working directory of the local machine.
 
 A convenience Bash script is provided to run multiple experiments:
 

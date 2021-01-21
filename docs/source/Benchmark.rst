@@ -1,11 +1,12 @@
-**********
+*********
 Benchmark
-**********
+*********
 
+The performance metrics of a number of experiments can be compared.
 The evaluation metrics, environment's variables, hyperparameters used during the training 
 and parameters for evaluating the environments are logged for each experiments in the file 
 ``benchmark/benchmark_results.csv``. Evaluation metrics of selected experiments ID can be plotted 
-with the script ``scripts/plot_benchmark.py``. The plots are generated in the folder ``benchmark/plots/``.
+with the script ``scripts/plot_benchmark.py``.
 
 
 .. csv-table:: Usage
@@ -22,7 +23,13 @@ Example:
 
    python scripts/plot_benchmark.py --exp-list 26 27 28 29 --col n_timesteps
 
+With Docker:
 
-An example of experiment benchmark plot:
+.. code-block:: bash
+
+   ./docker/run_docker_cpu.sh python scripts/plot_benchmark.py --exp-list 26 27 28 29 --col n_timesteps
+
+
+The plots are generated in the folder ``benchmark/plots/``. Here is an example of experiment benchmark plot:
 
 .. image:: ../images/benchmark_plot.png
