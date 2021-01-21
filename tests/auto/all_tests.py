@@ -1,10 +1,10 @@
-import gym
-import widowx_env
-import pytest
+""" Automated test script with pytest """
+
 import os
 import shutil
 import subprocess
-from stable_baselines3.common.env_checker import check_env
+import pytest
+import gym
 
 ######## TEST ENVIRONMENTS ###########
 
@@ -15,16 +15,16 @@ from stable_baselines3.common.env_checker import check_env
                           'widowx_reacher-v3',
                           'widowx_reacher-v4'])
 def test_envs(env_id):
+    """ Test first Gym environments """
     env = gym.make(env_id)
-    # check_env(env)
 
     env.reset()
 
-    for t in range(100):
+    for timestep in range(100):
         action = env.action_space.sample()
         _, _, done, _ = env.step(action)
 
-    assert t == 99
+    assert timestep == 99
     assert done
 
     env.close()
@@ -40,18 +40,19 @@ def test_envs(env_id):
 ######## TEST TRAIN AND ENJOY SCRIPTS ###########
 
 # # Clean up: delete logs from previous test
-log_folder = "logs/test/ppo/"
-if os.path.isdir(log_folder):
-    shutil.rmtree(log_folder)
+LOG_FOLDER = "logs/test/ppo/"
+if os.path.isdir(LOG_FOLDER):
+    shutil.rmtree(LOG_FOLDER)
 
 
 def test_train():
+    """ Test train.py script """
 
     args = [
         "-n", 1000,
         "--algo", "ppo",
         "--env", 'CartPole-v1',
-        "-f", log_folder
+        "-f", LOG_FOLDER
     ]
 
     args = list(map(str, args))
@@ -62,12 +63,13 @@ def test_train():
 
 
 def test_enjoy():
+    """ Test enjoy script """
 
     args = [
         "-n", 300,
         "--algo", "ppo",
         "--env", 'CartPole-v1',
-        "-f", log_folder,
+        "-f", LOG_FOLDER,
         "--render", 0
     ]
 
@@ -83,12 +85,13 @@ def test_enjoy():
 
 # Clean up: delete logs from previous test
 for i in range(1001, 1005):
-    log_folder = "logs/exp_" + str(i)
-    if os.path.isdir(log_folder):
-        shutil.rmtree(log_folder)
+    LOG_FOLDER = "logs/exp_" + str(i)
+    if os.path.isdir(LOG_FOLDER):
+        shutil.rmtree(LOG_FOLDER)
 
 
 def test_exp1():
+    """ Test run_experiment script + fixed gym env """
 
     args = [
         "--exp-id", 1001,
@@ -106,6 +109,7 @@ def test_exp1():
 
 
 def test_exp2():
+    """ Test run_experiment script + fixed gym env """
 
     args = [
         "--exp-id", 1002,
@@ -123,6 +127,7 @@ def test_exp2():
 
 
 def test_exp3():
+    """ Test run_experiment script + random gym env """
 
     args = [
         "--exp-id", 1003,
@@ -140,6 +145,7 @@ def test_exp3():
 
 
 def test_exp4():
+    """ Test run_experiment script + fixed goal env """
 
     args = [
         "--exp-id", 1004,
@@ -160,6 +166,7 @@ def test_exp4():
 
 
 def test_eval1():
+    """ Eval exp 1001 """
 
     args = [
         '--exp-id', 1001,
@@ -177,6 +184,7 @@ def test_eval1():
 
 
 def test_eval2():
+    """ Eval exp 1002 """
 
     args = [
         '--exp-id', 1002,
@@ -194,6 +202,7 @@ def test_eval2():
 
 
 def test_eval3():
+    """ Eval exp 1003 """
 
     args = [
         '--exp-id', 1003,
@@ -211,6 +220,7 @@ def test_eval3():
 
 
 def test_eval4():
+    """ Eval exp 1004 """
 
     args = [
         '--exp-id', 1004,
@@ -230,12 +240,13 @@ def test_eval4():
 ######## TEST HYPERPARAMETER OPTIMISATION ###########
 
 # # Clean up: delete logs from previous test
-log_folder = "logs/test/opti/"
-if os.path.isdir(log_folder):
-    shutil.rmtree(log_folder)
+LOG_FOLDER = "logs/test/opti/"
+if os.path.isdir(LOG_FOLDER):
+    shutil.rmtree(LOG_FOLDER)
 
 
 def test_opti():
+    """ Test hyperparameter optimisation """
 
     args = [
         "-optimize",
@@ -248,7 +259,7 @@ def test_opti():
         "--pruner", "median",
         "--n-startup-trials", 1,
         "--n-evaluations", 5,
-        "--log-folder", log_folder
+        "--log-folder", LOG_FOLDER
     ]
 
     args = list(map(str, args))

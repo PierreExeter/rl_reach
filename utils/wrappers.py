@@ -1,3 +1,6 @@
+""" Custom wrapper classes """
+
+
 import gym
 import numpy as np
 from matplotlib import pyplot as plt
@@ -498,8 +501,9 @@ class PlotActionWrapper(gym.Wrapper):
         return obs, reward, done, info
 
     def plot(self):
+        """ Plot action during exploration """
         actions = self.actions
-        x = np.arange(sum([len(episode) for episode in actions]))
+        x_list = np.arange(sum([len(episode) for episode in actions]))
         plt.figure("Actions")
         plt.title("Actions during exploration", fontsize=14)
         plt.xlabel("Timesteps", fontsize=14)
@@ -508,7 +512,7 @@ class PlotActionWrapper(gym.Wrapper):
         start = 0
         for i in range(len(self.actions)):
             end = start + len(self.actions[i])
-            plt.plot(x[start:end], self.actions[i])
+            plt.plot(x_list[start:end], self.actions[i])
             # Clipped actions: real behavior, note that it is between [-2, 2] for the Pendulum
             # plt.scatter(x[start:end], np.clip(self.actions[i], -1, 1), s=1)
             # plt.scatter(x[start:end], self.actions[i], s=1)

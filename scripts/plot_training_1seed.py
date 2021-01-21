@@ -5,7 +5,8 @@ Plot the learning curves for each seed in the log folder
 import argparse
 import pandas as pd
 from matplotlib import pyplot as plt
-from stable_baselines3.common.results_plotter import X_EPISODES, X_TIMESTEPS, X_WALLTIME, plot_results, load_results
+from stable_baselines3.common.results_plotter import X_EPISODES, X_TIMESTEPS, X_WALLTIME
+from stable_baselines3.common.results_plotter import plot_results, load_results
 
 
 if __name__ == '__main__':
@@ -38,16 +39,16 @@ if __name__ == '__main__':
 
     # Plot training rewards
 
-    timesteps = 1e10
+    TIMESTEPS = 1e10
 
-    plot_results([log_dir], timesteps, X_TIMESTEPS, args.env)
+    plot_results([log_dir], TIMESTEPS, X_TIMESTEPS, args.env)
     plt.savefig(log_dir + "reward_vs_timesteps.png")
     # plt.show()
 
-    plot_results([log_dir], timesteps, X_EPISODES, args.env)
+    plot_results([log_dir], TIMESTEPS, X_EPISODES, args.env)
     plt.savefig(log_dir + "reward_vs_episodes.png")
     # plt.show()
 
-    plot_results([log_dir], timesteps, X_WALLTIME, args.env)
+    plot_results([log_dir], TIMESTEPS, X_WALLTIME, args.env)
     plt.savefig(log_dir + "reward_vs_walltime.png")
     # plt.show()

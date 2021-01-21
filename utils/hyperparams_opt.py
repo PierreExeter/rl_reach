@@ -1,11 +1,12 @@
-from typing import Any, Dict
+""" Define hyperparameter gridsearch for each algorithm """
 
+
+from typing import Any, Dict
 import numpy as np
 import optuna
 from stable_baselines3 import DDPG, SAC, TD3
 from stable_baselines3.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
-from torch import nn as nn
-
+from torch import nn
 from utils import linear_schedule
 
 
@@ -39,7 +40,8 @@ def sample_ppo_params(trial: optuna.Trial) -> Dict[str, Any]:
         "sde_sample_freq", [-1, 8, 16, 32, 64, 128, 256])
     ortho_init = False
     # ortho_init = trial.suggest_categorical('ortho_init', [False, True])
-    # activation_fn = trial.suggest_categorical('activation_fn', ['tanh', 'relu', 'elu', 'leaky_relu'])
+    # activation_fn = trial.suggest_categorical(
+    #   'activation_fn', ['tanh', 'relu', 'elu', 'leaky_relu'])
     activation_fn = trial.suggest_categorical(
         "activation_fn", ["tanh", "relu"])
 
@@ -110,7 +112,8 @@ def sample_a2c_params(trial: optuna.Trial) -> Dict[str, Any]:
     net_arch = trial.suggest_categorical("net_arch", ["small", "medium"])
     # sde_net_arch = trial.suggest_categorical("sde_net_arch", [None, "tiny", "small"])
     # full_std = trial.suggest_categorical("full_std", [False, True])
-    # activation_fn = trial.suggest_categorical('activation_fn', ['tanh', 'relu', 'elu', 'leaky_relu'])
+    # activation_fn = trial.suggest_categorical(
+    #   'activation_fn', ['tanh', 'relu', 'elu', 'leaky_relu'])
     activation_fn = trial.suggest_categorical(
         "activation_fn", ["tanh", "relu"])
 
@@ -184,7 +187,8 @@ def sample_sac_params(trial: optuna.Trial) -> Dict[str, Any]:
     log_std_init = trial.suggest_uniform("log_std_init", -4, 1)
     net_arch = trial.suggest_categorical(
         "net_arch", ["small", "medium", "big"])
-    # activation_fn = trial.suggest_categorical('activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
+    # activation_fn = trial.suggest_categorical(
+    #   'activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
 
     net_arch = {
         "small": [64, 64],
@@ -194,7 +198,8 @@ def sample_sac_params(trial: optuna.Trial) -> Dict[str, Any]:
 
     target_entropy = "auto"
     # if ent_coef == 'auto':
-    #     # target_entropy = trial.suggest_categorical('target_entropy', ['auto', 5, 1, 0, -1, -5, -10, -20, -50])
+    #     # target_entropy = trial.suggest_categorical(
+    #                           'target_entropy', ['auto', 5, 1, 0, -1, -5, -10, -20, -50])
     #     target_entropy = trial.suggest_uniform('target_entropy', -10, 10)
 
     return {
@@ -244,7 +249,8 @@ def sample_td3_params(trial: optuna.Trial) -> Dict[str, Any]:
 
     net_arch = trial.suggest_categorical(
         "net_arch", ["small", "medium", "big"])
-    # activation_fn = trial.suggest_categorical('activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
+    # activation_fn = trial.suggest_categorical(
+    #   'activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
 
     net_arch = {
         "small": [64, 64],
@@ -308,7 +314,8 @@ def sample_ddpg_params(trial: optuna.Trial) -> Dict[str, Any]:
 
     net_arch = trial.suggest_categorical(
         "net_arch", ["small", "medium", "big"])
-    # activation_fn = trial.suggest_categorical('activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
+    # activation_fn = trial.suggest_categorical(
+    #   'activation_fn', [nn.Tanh, nn.ReLU, nn.ELU, nn.LeakyReLU])
 
     net_arch = {
         "small": [64, 64],

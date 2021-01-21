@@ -5,12 +5,12 @@ Extract tuned hyperparameters after optimisation run
 import yaml
 
 
-log_folder = "../logs/opti/ppo/widowx_reacher-v1_1/"
+LOG_FOLDER = "../logs/opti/ppo/widowx_reacher-v1_1/"
 
-with open(log_folder + "default_hyperparams.yml", "r") as f:
+with open(LOG_FOLDER + "default_hyperparams.yml", "r") as f:
     default_hyperparams = yaml.safe_load(f)
 
-with open(log_folder + "tuned_hyperparams.yml", "r") as f:
+with open(LOG_FOLDER + "tuned_hyperparams.yml", "r") as f:
     d = yaml.safe_load(f)
 
 print(default_hyperparams)
@@ -52,5 +52,5 @@ default_hyperparams['widowx_reacher-v1']['sde_sample_freq'] = d['sde_sample_freq
 default_hyperparams['widowx_reacher-v1']['vf_coef'] = d['vf_coef']
 default_hyperparams['widowx_reacher-v1']['policy_kwargs'] = d['policy_kwargs']
 
-with open(log_folder + "final_hyperparams.yml", 'w') as f:
+with open(LOG_FOLDER + "final_hyperparams.yml", 'w') as f:
     yaml.dump(default_hyperparams, f)

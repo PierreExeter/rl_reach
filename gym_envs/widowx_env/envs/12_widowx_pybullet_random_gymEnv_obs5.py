@@ -17,21 +17,21 @@ RESET_VALUES = [
 
 # Joint boundaries
 JOINT_MIN = np.array([
-    -3.14,
-    -3.14,
-    -3.14,
-    -3.14,
-    -3.14,
-    -3.14
+    -3.1,
+    -1.6,
+    -1.6,
+    -1.8,
+    -3.1,
+    0.0
 ])
 
 JOINT_MAX = np.array([
-    3.14,
-    3.14,
-    3.14,
-    3.14,
-    3.14,
-    3.14
+    3.1,
+    1.6,
+    1.6,
+    1.8,
+    3.1,
+    0.0
 ])
 
 
@@ -57,8 +57,8 @@ class WidowxEnv(gym.Env):
 
         # Define action space
         self.action_space = spaces.Box(
-            low=np.float32(np.array([-0.5, -0.25, -0.25, -0.25, -0.5, -0.005]) / 10),
-            high=np.float32(np.array([0.5, 0.25, 0.25, 0.25, 0.5, 0.005]) / 10),
+            low=np.float32(np.array([-0.5, -0.25, -0.25, -0.25, -0.5, -0.005]) / 30),
+            high=np.float32(np.array([0.5, 0.25, 0.25, 0.25, 0.5, 0.005]) / 30),
             dtype=np.float32)
 
         # Define observation space

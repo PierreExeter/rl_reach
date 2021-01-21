@@ -1,5 +1,7 @@
-import gym
+""" Test env with random actions """
+
 import time
+import gym
 import widowx_env
 from stable_baselines3.common.env_checker import check_env
 

@@ -3,15 +3,14 @@ Log all metrics and environment variables in benchmark/benchmark_results.csv
 Plot learning curves of all the seed runs in the experiment
 """
 
+import sys
 import argparse
 import os
+from pathlib import Path
 import pandas as pd
 import yaml
-import sys
 import matplotlib.pyplot as plt
-from pathlib import Path
 from stable_baselines3.common.results_plotter import load_results
-from sys import exit
 
 
 if __name__ == '__main__':
@@ -50,8 +49,9 @@ if __name__ == '__main__':
         env_dict = df_env.to_dict('records')[0]
         # print(env_dict)
     except BaseException:
-        print("The environment specified is missing! Please update gym_envs/widowx_env/envs_list.csv. Exiting...")
-        exit(0)
+        print(("The environment specified is missing! "
+            "Please update gym_envs/widowx_env/envs_list.csv. Exiting..."))
+        sys.exit(0)
 
     env_dict['exp_id'] = args.exp_id
     env_dict['algo'] = args.algo
@@ -97,14 +97,14 @@ if __name__ == '__main__':
     # print(res_file_list)
 
     li = []
-    count = 0
+    COUNT = 0
 
     for filename in res_file_list:
         df = pd.read_csv(filename, index_col=None, header=0)
-        df['seed'] = count
+        df['seed'] = COUNT
         df['log_dir'] = filename
         li.append(df)
-        count += 1
+        COUNT += 1
 
     # print(li)
 
@@ -172,19 +172,19 @@ if __name__ == '__main__':
     # transform into a dataframe
     df_bench = pd.DataFrame(benchmark_dict, index=[0])
 
-    bench_path = "benchmark/benchmark_results.csv"
-    if os.path.isfile(bench_path):
+    BENCH_PATH = "benchmark/benchmark_results.csv"
+    if os.path.isfile(BENCH_PATH):
 
-        backedup_df = pd.read_csv(bench_path)
+        backedup_df = pd.read_csv(BENCH_PATH)
         # If experiment hasn't been evaluated yet
         if args.exp_id in backedup_df['exp_id'].values:
-            answer = None
-            while answer not in ("Y", "n"):
-                answer = input(
-                    "This experiment has already been evaluated and added to the benchmark file. Do you still want to continue ? [Y/n] ")
-                if answer == "Y":
+            ANSWER = None
+            while ANSWER not in ("Y", "n"):
+                ANSWER = input(("This experiment has already been evaluated and "
+                "added to the benchmark file. Do you still want to continue ? [Y/n] "))
+                if ANSWER == "Y":
                     break
-                elif answer == "n":
+                if ANSWER == "n":
                     print("Aborting...")
                     sys.exit()
                 else:
@@ -192,10 +192,10 @@ if __name__ == '__main__':
 
         # add to existing results and save
         appended_df = backedup_df.append(df_bench, ignore_index=True)
-        appended_df.to_csv(bench_path, index=False)
+        appended_df.to_csv(BENCH_PATH, index=False)
     else:
         # if benchmark file doesn't exist, save df_bench
-        df_bench.to_csv(bench_path, index=False)
+        df_bench.to_csv(BENCH_PATH, index=False)
 
     ###############
     # 2. PLOT LEARNING CURVES OF ALL THE SEED RUNS IN THE EXPERIMENT
@@ -213,18 +213,18 @@ if __name__ == '__main__':
 
     df_list = []
     col_list = []
-    count = 1
+    COUNT = 1
 
     for filename in res_file_list:
         # print(filename)
-        filename = str(filename)  # convert from Posixpath to string
+        FILENAME = str(filename)  # convert from Posixpath to string
 
-        W = load_results(filename)
+        W = load_results(FILENAME)
         # print(W['r'])
 
         df_list.append(W['r'])
-        col_list.append("seed " + str(count))
-        count += 1
+        col_list.append("seed " + str(COUNT))
+        COUNT += 1
 
     all_rewards = pd.concat(df_list, axis=1)
     all_rewards.columns = col_list

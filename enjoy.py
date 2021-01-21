@@ -1,8 +1,12 @@
+"""
+Evaluate trained policies and compute metrics
+"""
+
 import argparse
 import importlib
 import os
-import widowx_env
 import time
+from collections import OrderedDict
 import pandas as pd
 import numpy as np
 import torch as th
@@ -11,18 +15,18 @@ import matplotlib.pyplot as plt
 from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv, VecEnv, VecEnvWrapper
 from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams
-from utils.utils import calc_ep_success, calc_success_list, calc_reach_time, calc_mean_successratio_reachtime
+from utils.utils import calc_ep_success, calc_success_list, calc_reach_time
+from utils.utils import calc_mean_successratio_reachtime
 from utils.utils import StoreDict
-from collections import OrderedDict
 
 
-def main():  # noqa: C901
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--env",
         help="environment ID",
         type=str,
-        default="CartPole-v1")
+        default="widowx_reacher-v1")
     parser.add_argument(
         "-f",
         "--log-folder",
@@ -125,7 +129,7 @@ def main():  # noqa: C901
         default=0)
     parser.add_argument(
         "--plot-dim",
-        help="Plot end effector and goal position in real time (0: Don't plot, 2: 2D (default), 3: 3D)",
+        help="Plot end effector and goal position in real time (0: no plot, 2: 2D, 3: 3D)",
         type=int,
         default=0,
         choices=[0, 2, 3])
@@ -145,7 +149,7 @@ def main():  # noqa: C901
         fig = plt.figure()
         ax = fig.gca(projection='3d')
 
-    # Going through custom gym packages to let them register 
+    # Going through custom gym packages to let them register
     # in the global registry
     for env_module in args.gym_packages:
         importlib.import_module(env_module)
@@ -166,23 +170,23 @@ def main():  # noqa: C901
 
     assert os.path.isdir(log_path), f"The {log_path} folder was not found"
 
-    found = False
+    FOUND = False
     for ext in ["zip"]:
         model_path = os.path.join(log_path, f"{env_id}.{ext}")
-        found = os.path.isfile(model_path)
-        if found:
+        FOUND = os.path.isfile(model_path)
+        if FOUND:
             break
 
     if args.load_best:
         model_path = os.path.join(log_path, "best_model.zip")
-        found = os.path.isfile(model_path)
+        FOUND = os.path.isfile(model_path)
 
     if args.load_checkpoint is not None:
         model_path = os.path.join(
             log_path, f"rl_model_{args.load_checkpoint}_steps.zip")
-        found = os.path.isfile(model_path)
+        FOUND = os.path.isfile(model_path)
 
-    if not found:
+    if not FOUND:
         raise ValueError(
             f"No model found for {algo} on {env_id}, path: {model_path}")
 
@@ -241,19 +245,18 @@ def main():  # noqa: C901
     deterministic = args.deterministic or algo in off_policy_algos and not args.stochastic
 
     state = None
-    episode_reward = 0.0
+    EPISODE_REWARD = 0.0
     episode_rewards, episode_lengths = [], []
-    ep_len = 0
+    EP_LEN = 0
     successes = []  # For HER, monitor success rate
-
-    episode_nb = 0
-    success_threshold_50 = 0.05
-    success_threshold_20 = 0.02
-    success_threshold_10 = 0.01
-    success_threshold_5 = 0.005
-    success_threshold_2 = 0.002
-    success_threshold_1 = 0.001
-    success_threshold_05 = 0.0005
+    EPISODE_NB = 0
+    SUCCESS_THRESHOLD_50 = 0.05
+    SUCCESS_THRESHOLD_20 = 0.02
+    SUCCESS_THRESHOLD_10 = 0.01
+    SUCCESS_THRESHOLD_5 = 0.005
+    SUCCESS_THRESHOLD_2 = 0.002
+    SUCCESS_THRESHOLD_1 = 0.001
+    SUCCESS_THRESHOLD_05 = 0.0005
     ep_success_list_50 = []
     ep_success_list_20 = []
     ep_success_list_10 = []
@@ -288,22 +291,22 @@ def main():  # noqa: C901
         if "widowx" in env_id:
             # Update episode success list
             ep_success_list_50 = calc_ep_success(
-                success_threshold_50, ep_success_list_50, infos)
+                SUCCESS_THRESHOLD_50, ep_success_list_50, infos)
             ep_success_list_20 = calc_ep_success(
-                success_threshold_20, ep_success_list_20, infos)
+                SUCCESS_THRESHOLD_20, ep_success_list_20, infos)
             ep_success_list_10 = calc_ep_success(
-                success_threshold_10, ep_success_list_10, infos)
+                SUCCESS_THRESHOLD_10, ep_success_list_10, infos)
             ep_success_list_5 = calc_ep_success(
-                success_threshold_5, ep_success_list_5, infos)
+                SUCCESS_THRESHOLD_5, ep_success_list_5, infos)
             ep_success_list_2 = calc_ep_success(
-                success_threshold_2, ep_success_list_2, infos)
+                SUCCESS_THRESHOLD_2, ep_success_list_2, infos)
             ep_success_list_1 = calc_ep_success(
-                success_threshold_1, ep_success_list_1, infos)
+                SUCCESS_THRESHOLD_1, ep_success_list_1, infos)
             ep_success_list_05 = calc_ep_success(
-                success_threshold_05, ep_success_list_05, infos)
+                SUCCESS_THRESHOLD_05, ep_success_list_05, infos)
 
-        episode_reward += reward[0]
-        ep_len += 1
+        EPISODE_REWARD += reward[0]
+        EP_LEN += 1
 
         # Real time plot
         if args.plot_dim == 2:
@@ -320,7 +323,7 @@ def main():  # noqa: C901
             circ_1_50 = plt.Circle(
                 (goal[0],
                  goal[2]),
-                radius=success_threshold_50,
+                radius=SUCCESS_THRESHOLD_50,
                 edgecolor='g',
                 facecolor='w',
                 linestyle='--',
@@ -328,7 +331,7 @@ def main():  # noqa: C901
             circ_1_20 = plt.Circle(
                 (goal[0],
                  goal[2]),
-                radius=success_threshold_20,
+                radius=SUCCESS_THRESHOLD_20,
                 edgecolor='b',
                 facecolor='w',
                 linestyle='--',
@@ -336,7 +339,7 @@ def main():  # noqa: C901
             circ_1_10 = plt.Circle(
                 (goal[0],
                  goal[2]),
-                radius=success_threshold_10,
+                radius=SUCCESS_THRESHOLD_10,
                 edgecolor='m',
                 facecolor='w',
                 linestyle='--',
@@ -344,7 +347,7 @@ def main():  # noqa: C901
             circ_1_5 = plt.Circle(
                 (goal[0],
                  goal[2]),
-                radius=success_threshold_5,
+                radius=SUCCESS_THRESHOLD_5,
                 edgecolor='r',
                 facecolor='w',
                 linestyle='--',
@@ -374,28 +377,28 @@ def main():  # noqa: C901
             circ_2_50 = plt.Circle(
                 (goal[1],
                  goal[2]),
-                radius=success_threshold_50,
+                radius=SUCCESS_THRESHOLD_50,
                 edgecolor='g',
                 facecolor='w',
                 linestyle='--')
             circ_2_20 = plt.Circle(
                 (goal[1],
                  goal[2]),
-                radius=success_threshold_20,
+                radius=SUCCESS_THRESHOLD_20,
                 edgecolor='b',
                 facecolor='w',
                 linestyle='--')
             circ_2_10 = plt.Circle(
                 (goal[1],
                  goal[2]),
-                radius=success_threshold_10,
+                radius=SUCCESS_THRESHOLD_10,
                 edgecolor='m',
                 facecolor='w',
                 linestyle='--')
             circ_2_5 = plt.Circle(
                 (goal[1],
                  goal[2]),
-                radius=success_threshold_5,
+                radius=SUCCESS_THRESHOLD_5,
                 edgecolor='r',
                 facecolor='w',
                 linestyle='--')
@@ -412,7 +415,7 @@ def main():  # noqa: C901
             ax1.legend(loc='upper left', bbox_to_anchor=(
                 0, 1.2), ncol=3, fancybox=True, shadow=True)
 
-            fig.suptitle("timestep " + str(ep_len) + " | distance to target: " +
+            fig.suptitle("timestep " + str(EP_LEN) + " | distance to target: " +
                          str(round(infos[0]['distance'] * 1000, 1)) + " mm")
             plt.pause(0.01)
             # plt.show()
@@ -434,14 +437,14 @@ def main():  # noqa: C901
             ax.set_ylabel("y (m)", fontsize=15)
             ax.set_zlabel("z (m)", fontsize=15)
 
-            fig.suptitle("timestep " + str(ep_len) + " | distance to target: " +
+            fig.suptitle("timestep " + str(EP_LEN) + " | distance to target: " +
                          str(round(infos[0]['distance'] * 1000, 1)) + " mm")
             plt.pause(0.01)
             # plt.show()
 
         if args.log_info:
 
-            log_dict['episode'] = episode_nb
+            log_dict['episode'] = EPISODE_NB
             log_dict['timestep'] = t
             log_dict['action_1'] = action[0][0]
             log_dict['action_2'] = action[0][1]
@@ -480,7 +483,7 @@ def main():  # noqa: C901
             log_dict['action_high5'] = env.action_space.high[4]
             log_dict['action_high6'] = env.action_space.high[5]
             log_dict['reward'] = reward[0]
-            log_dict['return'] = episode_reward
+            log_dict['return'] = EPISODE_REWARD
             log_dict['distance'] = infos[0]['distance']
             log_dict['goal_x'] = infos[0]['goal_pos'][0]
             log_dict['goal_y'] = infos[0]['goal_pos'][1]
@@ -500,11 +503,11 @@ def main():  # noqa: C901
             if done and args.verbose > 0:
                 # NOTE: for env using VecNormalize, the mean reward
                 # is a normalized reward when `--norm_reward` flag is passed
-                # print(f"Episode Reward: {episode_reward:.2f}") # commented by Pierre
-                # print("Episode Length", ep_len)  # commented by Pierre
-                episode_rewards.append(episode_reward)
-                episode_lengths.append(ep_len)
-                episode_nb += 1
+                # print(f"Episode Reward: {EPISODE_REWARD:.2f}") # commented by Pierre
+                # print("Episode Length", EP_LEN)  # commented by Pierre
+                episode_rewards.append(EPISODE_REWARD)
+                episode_lengths.append(EP_LEN)
+                EPISODE_NB += 1
 
                 if "widowx" in env_id:
                     # append the last element of the episode success list when
@@ -538,7 +541,7 @@ def main():  # noqa: C901
                     # sort columns
                     log_df = log_df[log_dict.keys()]
 
-                    # add estimated tip velocity and acceleration 
+                    # add estimated tip velocity and acceleration
                     # (according to the Pybullet documentation, 1 timestep = 240 Hz)
                     log_df['est_vel'] = log_df['distance'].diff() * 240
                     log_df['est_vel'].loc[0] = 0    # initial velocity is 0
@@ -549,22 +552,22 @@ def main():  # noqa: C901
                     log_df.to_csv(
                         log_path +
                         "/res_episode_" +
-                        str(episode_nb) +
+                        str(EPISODE_NB) +
                         ".csv",
                         index=False)  # slow
                     # log_df.to_pickle(
-                    #     log_path + 
-                    #     "/res_episode_" + 
-                    #     str(episode_nb) + 
+                    #     log_path +
+                    #     "/res_episode_" +
+                    #     str(EPISODE_NB) +
                     #     ".pkl")  # fast
-                    
+
                     # Reset for next episode log
                     log_df = pd.DataFrame()
                     log_dict = OrderedDict()
 
                 # Reset for the new episode
-                episode_reward = 0.0
-                ep_len = 0
+                EPISODE_REWARD = 0.0
+                EP_LEN = 0
                 state = None
                 ep_success_list_50 = []
                 ep_success_list_20 = []
@@ -584,14 +587,14 @@ def main():  # noqa: C901
                     obs = env.reset()
                 if infos[0].get("is_success") is not None:
                     successes.append(infos[0].get("is_success", False))
-                    episode_reward, ep_len = 0.0, 0
+                    EPISODE_REWARD, EP_LEN = 0.0, 0
 
     if args.verbose > 0 and len(successes) > 0:
         print(f"Success rate: {100 * np.mean(successes):.2f}%")
 
     if args.verbose > 0 and len(episode_lengths) > 0:
         print(
-            f"Mean episode length: {np.mean(episode_lengths):.2f} +/- {np.std(episode_lengths):.2f}")
+        f"Mean episode length: {np.mean(episode_lengths):.2f} +/- {np.std(episode_lengths):.2f}")
 
     if args.verbose > 0 and len(episode_rewards) > 0:
         print(
@@ -599,19 +602,19 @@ def main():  # noqa: C901
 
         if "widowx" in env_id:
             SR_mean_50, RT_mean_50 = calc_mean_successratio_reachtime(
-                success_threshold_50, success_list_50, reachtime_list_50)
+                SUCCESS_THRESHOLD_50, success_list_50, reachtime_list_50)
             SR_mean_20, RT_mean_20 = calc_mean_successratio_reachtime(
-                success_threshold_20, success_list_20, reachtime_list_20)
+                SUCCESS_THRESHOLD_20, success_list_20, reachtime_list_20)
             SR_mean_10, RT_mean_10 = calc_mean_successratio_reachtime(
-                success_threshold_10, success_list_10, reachtime_list_10)
+                SUCCESS_THRESHOLD_10, success_list_10, reachtime_list_10)
             SR_mean_5, RT_mean_5 = calc_mean_successratio_reachtime(
-                success_threshold_5, success_list_5, reachtime_list_5)
+                SUCCESS_THRESHOLD_5, success_list_5, reachtime_list_5)
             SR_mean_2, RT_mean_2 = calc_mean_successratio_reachtime(
-                success_threshold_2, success_list_2, reachtime_list_2)
+                SUCCESS_THRESHOLD_2, success_list_2, reachtime_list_2)
             SR_mean_1, RT_mean_1 = calc_mean_successratio_reachtime(
-                success_threshold_1, success_list_1, reachtime_list_1)
+                SUCCESS_THRESHOLD_1, success_list_1, reachtime_list_1)
             SR_mean_05, RT_mean_05 = calc_mean_successratio_reachtime(
-                success_threshold_05, success_list_05, reachtime_list_05)
+                SUCCESS_THRESHOLD_05, success_list_05, reachtime_list_05)
 
             # log metrics to stats.csv
             d = {
@@ -652,7 +655,3 @@ def main():  # noqa: C901
         else:
             # SubprocVecEnv
             env.close()
-
-
-if __name__ == "__main__":
-    main()

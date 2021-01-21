@@ -1,6 +1,8 @@
-import os
-from typing import Optional
+""" Callback classes """
 
+
+from typing import Optional
+import os
 import numpy as np
 import optuna
 from matplotlib import pyplot as plt
@@ -53,7 +55,8 @@ class SaveVecNormalizeCallback(BaseCallback):
     Callback for saving a VecNormalize wrapper every ``save_freq`` steps
 
     :param save_freq: (int)
-    :param save_path: (str) Path to the folder where ``VecNormalize`` will be saved, as ``vecnormalize.pkl``
+    :param save_path: (str) Path to the folder where ``VecNormalize``
+                            will be saved, as ``vecnormalize.pkl``
     :param name_prefix: (str) Common prefix to the saved ``VecNormalize``, if None (default)
         only one file will be kept.
     """
@@ -124,7 +127,7 @@ class PlotNoiseRatioCallback(BaseCallback):
         self.noises.append(noise)
 
         if self.n_calls % self.display_freq == 0:
-            x = np.arange(len(self.noisy_actions))
+            x_list = np.arange(len(self.noisy_actions))
 
             self.deterministic_actions = np.array(self.deterministic_actions)
             self.noises = np.array(self.noises)
@@ -139,12 +142,12 @@ class PlotNoiseRatioCallback(BaseCallback):
             plt.xticks(fontsize=13)
             plt.ylabel("Action", fontsize=14)
             plt.plot(
-                x,
+                x_list,
                 self.deterministic_actions,
                 label="deterministic action",
                 linewidth=2)
-            plt.plot(x, self.noises, label="exploration noise", linewidth=2)
-            plt.plot(x, self.noisy_actions, label="noisy action", linewidth=2)
+            plt.plot(x_list, self.noises, label="exploration noise", linewidth=2)
+            plt.plot(x_list, self.noisy_actions, label="noisy action", linewidth=2)
             plt.legend(fontsize=13)
             plt.show()
             # Reset

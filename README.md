@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/PierreExeter/rl_reach.svg?branch=master)](https://travis-ci.com/PierreExeter/rl_reach)
 [![Documentation Status](https://readthedocs.org/projects/rl-reach/badge/?version=latest)](https://rl-reach.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
-
+[![pylint Score](/docs/images/train.svg)](https://www.pylint.org/)
 
 RL Reach is a platform for running reproducible reinforcement learning experiments. Training environments are provided to solve the reaching task with the WidowX MK-II robotic arm.
 The Gym environments and training scripts are adapted from [Replab](https://github.com/bhyang/replab) and [Stable Baselines Zoo](https://github.com/DLR-RM/rl-baselines3-zoo), respectively.

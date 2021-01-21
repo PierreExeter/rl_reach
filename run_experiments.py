@@ -45,13 +45,13 @@ if __name__ == "__main__":
 
     # Check if experiment exist
     if os.path.isdir(LOG_FOLDER):
-        answer = None
-        while answer not in ("Y", "n"):
-            answer = input(
-                "This experiment ID already exist. Do you still want to launch the experiment ? [Y/n] ")
-            if answer == "Y":
+        ANSWER = None
+        while ANSWER not in ("Y", "n"):
+            ANSWER = input(("This experiment ID already exist. "
+            "Do you still want to launch the experiment ? [Y/n] "))
+            if ANSWER == "Y":
                 break
-            elif answer == "n":
+            if ANSWER == "n":
                 print("Aborting launch...")
                 sys.exit()
             else:

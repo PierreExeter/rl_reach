@@ -1,9 +1,9 @@
 """ plot episode evaluation log and save """
 
+from pathlib import Path
+import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
-import argparse
-from pathlib import Path
 
 
 if __name__ == '__main__':
@@ -12,13 +12,13 @@ if __name__ == '__main__':
     parser.add_argument('--exp-id', help='Experiment ID', type=int)
     args = parser.parse_args()
 
-    log_dir = "logs/exp_"+str(args.exp_id)
+    LOG_DIR = "logs/exp_"+str(args.exp_id)
 
-    file_path = str(list(Path(log_dir).rglob('res_episode_1.csv'))[0])
-    save_path = file_path.replace("res_episode_1.csv", "plot_episode_eval_log.png")
+    FILE_PATH = str(list(Path(LOG_DIR).rglob('res_episode_1.csv'))[0])
+    SAVE_PATH = FILE_PATH.replace("res_episode_1.csv", "plot_episode_eval_log.png")
 
     # # read data
-    log_df = pd.read_csv(file_path)
+    log_df = pd.read_csv(FILE_PATH)
 
     # plot
     fig, axs = plt.subplots(4, 4, figsize=(20, 10), dpi=300, sharex=True)
@@ -124,4 +124,4 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     # plt.show()
-    plt.savefig(save_path)
+    plt.savefig(SAVE_PATH)

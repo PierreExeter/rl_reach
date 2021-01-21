@@ -1,3 +1,5 @@
+""" Setup file for custom Gym environments (PIP package )"""
+
 from setuptools import setup
 
 

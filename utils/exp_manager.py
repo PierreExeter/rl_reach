@@ -1,3 +1,5 @@
+""" Define class experiment manager """
+
 import argparse
 import csv
 import json
@@ -5,7 +7,6 @@ import os
 import time
 import warnings
 from collections import OrderedDict
-from pprint import pprint
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import gym
@@ -21,9 +22,9 @@ from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines3.common.preprocessing import is_image_space
-from stable_baselines3.common.sb2_compat.rmsprop_tf_like import RMSpropTFLike  # noqa: F401
 from stable_baselines3.common.utils import constant_fn
-from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnv, VecFrameStack, VecNormalize, VecTransposeImage
+from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnv
+from stable_baselines3.common.vec_env import VecFrameStack, VecNormalize, VecTransposeImage
 from stable_baselines3.common.vec_env.obs_dict_wrapper import ObsDictWrapper
 
 # For custom activation fn
@@ -31,10 +32,11 @@ from torch import nn as nn  # noqa: F401
 
 from utils.callbacks import SaveVecNormalizeCallback, TrialEvalCallback
 from utils.hyperparams_opt import HYPERPARAMS_SAMPLER
-from utils.utils import ALGOS, get_callback_list, get_latest_run_id, get_wrapper_class, linear_schedule
+from utils.utils import ALGOS, get_callback_list, get_latest_run_id
+from utils.utils import get_wrapper_class, linear_schedule
 
 
-class ExperimentManager(object):
+class ExperimentManager():
     """
     Experiment manager: read the hyperparameters,
     preprocess them, create the environment and the RL model.
@@ -140,7 +142,8 @@ class ExperimentManager(object):
 
     def setup_experiment(self) -> Optional[BaseAlgorithm]:
         """
-        Read hyperparameters, pre-process them (create schedules, wrappers, callbacks, action noise objects)
+        Read hyperparameters, pre-process them (create schedules,
+        wrappers, callbacks, action noise objects),
         create the environment and possibly the model.
 
         :return: the initialized RL model
@@ -228,21 +231,21 @@ class ExperimentManager(object):
         :param saved_hyperparams:
         """
         # Save hyperparams
-        with open(os.path.join(self.params_path, "config.yml"), "w") as f:
-            yaml.dump(saved_hyperparams, f)
+        with open(os.path.join(self.params_path, "config.yml"), "w") as filename:
+            yaml.dump(saved_hyperparams, filename)
 
         # save command line arguments
-        with open(os.path.join(self.params_path, "args.yml"), "w") as f:
+        with open(os.path.join(self.params_path, "args.yml"), "w") as filename:
             ordered_args = OrderedDict(
                 [(key, vars(self.args)[key]) for key in sorted(vars(self.args).keys())])
-            yaml.dump(ordered_args, f)
+            yaml.dump(ordered_args, filename)
 
         print(f"Log path: {self.save_path}")
 
     def read_hyperparameters(self) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-        # Load hyperparameters from yaml file
-        with open(f"hyperparams/{self.algo}.yml", "r") as f:
-            hyperparams_dict = yaml.safe_load(f)
+        """ Load hyperparameters from yaml file """
+        with open(f"hyperparams/{self.algo}.yml", "r") as filename:
+            hyperparams_dict = yaml.safe_load(filename)
             if self.env_id in list(hyperparams_dict.keys()):
                 hyperparams = hyperparams_dict[self.env_id]
             elif self._is_atari:
@@ -399,9 +402,11 @@ class ExperimentManager(object):
         return hyperparams
 
     def create_log_folder(self):
+        """ Create log directory """
         os.makedirs(self.params_path, exist_ok=True)
 
     def create_callbacks(self):
+        """ Create callback """
 
         if self.save_freq > 0:
             # Account for the number of parallel environments
@@ -439,10 +444,12 @@ class ExperimentManager(object):
 
     @staticmethod
     def is_atari(env_id: str) -> bool:
+        """ Assess if an environment is an Atari game """
         return "AtariEnv" in gym.envs.registry.env_specs[env_id].entry_point
 
     @staticmethod
     def is_robotics_env(env_id: str) -> bool:
+        """ Assess if an environment is a robotic env """
         return "gym.envs.robotics" in gym.envs.registry.env_specs[env_id].entry_point
 
     def _maybe_normalize(self, env: VecEnv, eval_env: bool) -> VecEnv:
@@ -642,6 +649,7 @@ class ExperimentManager(object):
         return pruner
 
     def objective(self, trial: optuna.Trial) -> float:
+        """ Define objective function to optimise (reward) """
 
         kwargs = self._hyperparams.copy()
 
@@ -684,13 +692,13 @@ class ExperimentManager(object):
             # Free memory
             model.env.close()
             eval_env.close()
-        except AssertionError as e:
+        except AssertionError as error_message:
             # Sometimes, random hyperparams can generate NaN
             # Free memory
             model.env.close()
             eval_env.close()
             # Prune hyperparams that generate NaNs
-            print(e)
+            print(error_message)
             raise optuna.exceptions.TrialPruned()
         is_pruned = eval_callback.is_pruned
         reward = eval_callback.last_mean_reward
@@ -704,6 +712,7 @@ class ExperimentManager(object):
         return reward
 
     def hyperparameters_optimization(self) -> None:
+        """ Run hyperparameter optimisation """
 
         if self.verbose > 0:
             print("Optimizing hyperparameters")
@@ -711,8 +720,8 @@ class ExperimentManager(object):
         if self.storage is not None and self.study_name is None:
             warnings.warn(
                 f"You passed a remote storage: {self.storage} but no `--study-name`."
-                "The study name will be generated by Optuna, make sure to re-use the same study name "
-                "when you want to do distributed hyperparameter optimization.")
+                "The study name will be generated by Optuna, make sure to re-use "
+                "the same study name when you want to do distributed hyperparameter optimization.")
 
         if self.tensorboard_log is not None:
             warnings.warn(
@@ -757,8 +766,8 @@ class ExperimentManager(object):
 
         # export best params (Pierre)
         log_path = os.path.join(self.save_path, 'tuned_hyperparams.yml')
-        with open(log_path, 'w') as f:
-            yaml.dump(trial.params, f)
+        with open(log_path, 'w') as filename:
+            yaml.dump(trial.params, filename)
 
         # export default params (Pierre)
         default_hyperparams, _ = self.read_hyperparameters()
@@ -766,8 +775,8 @@ class ExperimentManager(object):
         hyperparams_dict = {self.env_id: default_hyperparams}
 
         log_path = os.path.join(self.save_path, 'default_hyperparams.yml')
-        with open(log_path, 'w') as f:
-            yaml.dump(hyperparams_dict, f)
+        with open(log_path, 'w') as filename:
+            yaml.dump(hyperparams_dict, filename)
 
         report_name = (
             f"report_{self.env_id}_{self.n_trials}-trials-{self.n_timesteps}"

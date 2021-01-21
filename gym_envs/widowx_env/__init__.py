@@ -1,3 +1,6 @@
+""" Register Gym environments """
+
+
 from gym.envs.registration import register
 
 

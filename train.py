@@ -1,5 +1,5 @@
 """
-Train RL agent in a virtual environment
+Train RL agent in a Pybullet virtual environment
 """
 
 import argparse
@@ -8,7 +8,6 @@ import importlib
 import os
 import uuid
 import gym
-import widowx_env
 import numpy as np
 import seaborn
 import torch as th
@@ -196,8 +195,8 @@ if __name__ == "__main__":  # noqa: C901
         help="Ensure that the run has a unique ID")
     args = parser.parse_args()
 
-    # Going through custom gym packages to let them register in the global
-    # registory
+    # Going through custom gym packages to let them
+    # register in the global registry
     for env_module in args.gym_packages:
         importlib.import_module(env_module)
 

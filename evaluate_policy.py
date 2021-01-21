@@ -1,9 +1,10 @@
 """ Evaluate RL experiment and plot """
 
-import subprocess
-import yaml
-import argparse
+
 from pathlib import Path
+import subprocess
+import argparse
+import yaml
 
 
 if __name__ == "__main__":
@@ -28,7 +29,7 @@ if __name__ == "__main__":
         default=0)
     parser.add_argument(
         '--plot-dim',
-        help="Plot end effector and goal position in real time (0: Don't plot, 2: 2D (default), 3: 3D)",
+        help="Plot end effector and goal position in real time (0: no plot, 2: 2D, 3: 3D)",
         type=int,
         default=0,
         choices=[

@@ -2,10 +2,9 @@
 Plot data from benchmark file
 """
 
+import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-import argparse
 
 
 if __name__ == "__main__":
@@ -24,14 +23,13 @@ if __name__ == "__main__":
     df = pd.read_csv("benchmark/benchmark_results.csv")
     # print(df)
 
-    # select experiments ID to plot and column
-    exp_list = args.exp_list  # [13, 36, 37]
-    exp_list_string = '_'.join(exp_list) # concatenate list: used for plot title
-
+    # select experiments ID to plot
+    exp_list = args.exp_list
+    EXP_LIST_STRING = '_'.join(exp_list) # concatenate list: used for plot title
     exp_list = list(map(int, exp_list))  # convert list of string to list of ints
-    col = args.col  # "n_timesteps"
     df_plot = df[df['exp_id'].isin(exp_list)]
 
+    col = args.col
     # ent_coef is a string and must be converted into a float
     if col == "ent_coef":
         df_plot['ent_coef'] = df_plot['ent_coef'].astype(float)
@@ -85,4 +83,4 @@ if __name__ == "__main__":
 
     plt.tight_layout()
     # plt.show()
-    plt.savefig("benchmark/plots/" + col + "_exp_" + exp_list_string + ".png")
+    plt.savefig("benchmark/plots/" + col + "_exp_" + EXP_LIST_STRING + ".png")
