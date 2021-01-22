@@ -249,6 +249,7 @@ widowx_reacher-v12:
   vf_coef: 0.5
   ent_coef: 0.01
 
+# SB2 hyperparams
 widowx_reacher-v13:
   n_timesteps: 100000
   normalize: true
@@ -261,6 +262,91 @@ widowx_reacher-v13:
   clip_range: 0.2
   vf_coef: 0.5
   ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v14:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v15:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v16:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v17:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v18:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v19:
+  n_timesteps: 100000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
 
 
 

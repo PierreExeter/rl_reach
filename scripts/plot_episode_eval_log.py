@@ -72,11 +72,12 @@ if __name__ == '__main__':
     log_df.plot(x='timestep', y='action_high6', ax=axs[1, 3], style="r--")
 
     log_df.plot(x='timestep', y='reward', ax=axs[2, 2], color="b")
-    ax_1 = axs[2, 2].twinx()
-    log_df.plot(x='timestep', y='return', ax=ax_1, color="r")
+    log_df.plot(x='timestep', y='term1', ax=axs[2, 2], color="r")
+    log_df.plot(x='timestep', y='term2', ax=axs[2, 2], color="g")
+    # ax_1 = axs[2, 2].twinx()
+    # log_df.plot(x='timestep', y='return', ax=ax_1, color="r")
 
-    log_df.plot(x='timestep', y='distance',
-                ax=axs[2, 3], color="b", marker="x")
+    log_df.plot(x='timestep', y='distance', ax=axs[2, 3], color="b", marker="x")
 
     log_df.plot(x='timestep', y='est_acc', ax=axs[3, 2], color="g", marker="*")
     ax_3 = axs[3, 2].twinx()
@@ -97,16 +98,17 @@ if __name__ == '__main__':
     axs[1, 2].set_ylabel("joint6 pos (rad)")
 
     axs[0, 1].set_ylabel("action1 (rad)")
-    axs[1, 1].set_ylabel("action1 (rad)")
-    axs[2, 1].set_ylabel("action1 (rad)")
-    axs[3, 1].set_ylabel("action1 (rad)")
-    axs[0, 3].set_ylabel("action1 (rad)")
-    axs[1, 3].set_ylabel("action1 (rad)")
+    axs[1, 1].set_ylabel("action2 (rad)")
+    axs[2, 1].set_ylabel("action3 (rad)")
+    axs[3, 1].set_ylabel("action4 (rad)")
+    axs[0, 3].set_ylabel("action5 (rad)")
+    axs[1, 3].set_ylabel("action6 (rad)")
 
-    axs[2, 2].set_ylabel("reward (m^2)", color="b")
-    ax_1.set_ylabel("return (m^2)", color="r")
-    axs[2, 2].tick_params(axis='y', labelcolor="b")
-    ax_1.tick_params(axis='y', labelcolor="r")
+    axs[2, 2].set_ylabel("reward")
+    # axs[2, 2].set_ylabel("reward (m^2)", color="b")
+    # ax_1.set_ylabel("return (m^2)", color="r")
+    # axs[2, 2].tick_params(axis='y', labelcolor="b")
+    # ax_1.tick_params(axis='y', labelcolor="r")
 
     axs[2, 3].set_ylabel("distance (m)")
     # axs[2, 3].tick_params(axis='y', labelcolor="b")

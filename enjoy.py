@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import torch as th
 import yaml
+import widowx_env
 import matplotlib.pyplot as plt
 from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv, VecEnv, VecEnvWrapper
@@ -458,18 +459,18 @@ if __name__ == "__main__":
             log_dict['joint_pos4'] = infos[0]['joint_pos'][3]
             log_dict['joint_pos5'] = infos[0]['joint_pos'][4]
             log_dict['joint_pos6'] = infos[0]['joint_pos'][5]
-            log_dict['joint1_min'] = -3.1
-            log_dict['joint1_max'] = 3.1
-            log_dict['joint2_min'] = -1.6
-            log_dict['joint2_max'] = 1.6
-            log_dict['joint3_min'] = -1.6
-            log_dict['joint3_max'] = 1.6
-            log_dict['joint4_min'] = -1.8
-            log_dict['joint4_max'] = 1.8
-            log_dict['joint5_min'] = -3.1
-            log_dict['joint5_max'] = 3.1
-            log_dict['joint6_min'] = 0.0
-            log_dict['joint6_max'] = 0.0
+            log_dict['joint1_min'] = infos[0]['joint_min'][0]
+            log_dict['joint2_min'] = infos[0]['joint_min'][1]
+            log_dict['joint3_min'] = infos[0]['joint_min'][2]
+            log_dict['joint4_min'] = infos[0]['joint_min'][3]
+            log_dict['joint5_min'] = infos[0]['joint_min'][4]
+            log_dict['joint6_min'] = infos[0]['joint_min'][5]
+            log_dict['joint1_max'] = infos[0]['joint_max'][0]
+            log_dict['joint2_max'] = infos[0]['joint_max'][1]
+            log_dict['joint3_max'] = infos[0]['joint_max'][2]
+            log_dict['joint4_max'] = infos[0]['joint_max'][3]
+            log_dict['joint5_max'] = infos[0]['joint_max'][4]
+            log_dict['joint6_max'] = infos[0]['joint_max'][5]
             log_dict['action_low1'] = env.action_space.low[0]
             log_dict['action_low2'] = env.action_space.low[1]
             log_dict['action_low3'] = env.action_space.low[2]
@@ -492,6 +493,9 @@ if __name__ == "__main__":
             log_dict['tip_x'] = infos[0]['endeffector_pos'][0]
             log_dict['tip_z'] = infos[0]['endeffector_pos'][2]
             log_dict['done'] = done[0]
+            log_dict['term1'] = infos[0]['term1']
+            log_dict['term2'] = infos[0]['term2']
+
             # log_dict['obs'] = obs
             # log_dict['obs_space_low'] = env.observation_space.low
             # log_dict['obs_space_high'] = env.observation_space.high

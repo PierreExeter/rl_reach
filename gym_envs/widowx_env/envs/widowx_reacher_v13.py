@@ -1,7 +1,12 @@
+"""
+Implements the Gym training environment in Pybullet
+WidowX MK-II robot manipulator reaching a target position
+"""
+
+import os
 import gym
 import pybullet as p
 import pybullet_data
-import os
 import numpy as np
 from gym import spaces
 
@@ -15,72 +20,86 @@ RESET_VALUES = [
     -0.07158577010132992,
     .027]
 
-# Joint boundaries
-JOINT_MIN = np.array([
-    -3.1,
-    -1.6,
-    -1.6,
-    -1.8,
-    -3.1,
-    0.0
-])
-
-JOINT_MAX = np.array([
-    3.1,
-    1.6,
-    1.6,
-    1.8,
-    3.1,
-    0.0
-])
-
-
 MIN_GOAL_COORDS = np.array([-.14, -.13, 0.26])
 MAX_GOAL_COORDS = np.array([.14, .13, .39])
-FIXED_GOAL_COORDS  = np.array([.14, .0, 0.26])
 MIN_END_EFF_COORDS = np.array([-.16, -.15, 0.14])
 MAX_END_EFF_COORDS = np.array([.16, .15, .41])
+FIXED_GOAL_COORDS  = np.array([.14, .0, 0.26])
 
 
 class WidowxEnv(gym.Env):
+    """ WidowX reacher Gym environment """
 
     def __init__(self):
         """
         Initialise the environment
         """
 
-        self.random_goal = False
+        self.random_goal = True
         self.goal_oriented = False
-        self.obs_type = 2
+        self.obs_type = 5
         self.reward_type = 1
         self.action_type = 1
+        self.joint_limits = "large"
+        self.action_coeff = 10
+
+        self.endeffector_pos = None
+        self.torso_pos = None
+        self.end_torso = None
+        self.end_goal = None
+        self.joint_positions = None
+        self.reward = None
+        self.obs = None
+        self.action = None
+        self.new_joint_positions = None
+        self.dist = None
+        self.old_dist = None
+        self.term1 = None
+        self.term2 = None
+
+        if self.joint_limits == "small":
+            self.joint_min = np.array([-3.1, -1.6, -1.6, -1.8, -3.1, 0.0])
+            self.joint_max = np.array([3.1, 1.6, 1.6, 1.8, 3.1, 0.0])
+        elif self.joint_limits == "large":
+            self.joint_min = np.array([-3.2, -3.2, -3.2, -3.2, -3.2, -3.2])
+            self.joint_max = np.array([3.2, 3.2, 3.2, 3.2, 3.2, 3.2])
 
         # Define action space
         self.action_space = spaces.Box(
-            low=np.float32(np.array([-0.5, -0.25, -0.25, -0.25, -0.5, -0.005]) / 30),
-            high=np.float32(np.array([0.5, 0.25, 0.25, 0.25, 0.5, 0.005]) / 30),
+            low=np.float32(np.array([-0.5, -0.25, -0.25, -0.25, -0.5, -0.005]) / self.action_coeff),
+            high=np.float32(np.array([0.5, 0.25, 0.25, 0.25, 0.5, 0.005]) / self.action_coeff),
             dtype=np.float32)
 
         # Define observation space
         if self.obs_type == 1:
-            self.obs_space_low = np.float32(np.concatenate((MIN_END_EFF_COORDS, JOINT_MIN), axis=0))
-            self.obs_space_high = np.float32(np.concatenate((MAX_END_EFF_COORDS, JOINT_MAX), axis=0))
-            
+            self.obs_space_low = np.float32(
+                np.concatenate((MIN_END_EFF_COORDS, self.joint_min), axis=0))
+            self.obs_space_high = np.float32(
+                np.concatenate((MAX_END_EFF_COORDS, self.joint_max), axis=0))
+
         elif self.obs_type == 2:
-            self.obs_space_low = np.float32(np.concatenate((MIN_GOAL_COORDS, JOINT_MIN), axis=0))
-            self.obs_space_high = np.float32(np.concatenate((MAX_GOAL_COORDS, JOINT_MAX), axis=0))
-            
+            self.obs_space_low = np.float32(
+                np.concatenate((MIN_GOAL_COORDS, self.joint_min), axis=0))
+            self.obs_space_high = np.float32(
+                np.concatenate((MAX_GOAL_COORDS, self.joint_max), axis=0))
+
         elif self.obs_type == 3:
-            self.obs_space_low = np.float32(np.concatenate(([-1.0]*6, JOINT_MIN), axis=0))
-            self.obs_space_high = np.float32(np.concatenate(([1.0]*6, JOINT_MAX), axis=0))
-            
+            self.obs_space_low = np.float32(
+                np.concatenate(([-1.0]*6, self.joint_min), axis=0))
+            self.obs_space_high = np.float32(
+                np.concatenate(([1.0]*6, self.joint_max), axis=0))
+
         elif self.obs_type == 4:
-            self.obs_space_low = np.float32(np.concatenate(([-1.0]*3, JOINT_MIN), axis=0))
-            self.obs_space_high = np.float32(np.concatenate(([1.0]*3, JOINT_MAX), axis=0))
-            
+            self.obs_space_low = np.float32(
+                np.concatenate(([-1.0]*3, self.joint_min), axis=0))
+            self.obs_space_high = np.float32(
+                np.concatenate(([1.0]*3, self.joint_max), axis=0))
+
         elif self.obs_type == 5:
-            self.obs_space_low = np.float32(np.concatenate(([-1.0]*6, MIN_GOAL_COORDS, JOINT_MIN), axis=0))
-            self.obs_space_high = np.float32(np.concatenate(([1.0]*6, MAX_GOAL_COORDS, JOINT_MAX), axis=0))
+            self.obs_space_low = np.float32(
+                np.concatenate(([-1.0]*6, MIN_GOAL_COORDS, self.joint_min), axis=0))
+            self.obs_space_high = np.float32(
+                np.concatenate(([1.0]*6, MAX_GOAL_COORDS, self.joint_max), axis=0))
 
         self.observation_space = spaces.Box(
                     low=self.obs_space_low,
@@ -89,8 +108,14 @@ class WidowxEnv(gym.Env):
 
         if self.goal_oriented:
             self.observation_space = spaces.Dict(dict(
-                desired_goal=spaces.Box(low=np.float32(MIN_GOAL_COORDS), high=np.float32(MAX_GOAL_COORDS), dtype=np.float32),
-                achieved_goal=spaces.Box(low=np.float32(MIN_END_EFF_COORDS), high=np.float32(MAX_END_EFF_COORDS), dtype=np.float32),
+                desired_goal=spaces.Box(
+                    low=np.float32(MIN_GOAL_COORDS),
+                    high=np.float32(MAX_GOAL_COORDS),
+                    dtype=np.float32),
+                achieved_goal=spaces.Box(
+                    low=np.float32(MIN_END_EFF_COORDS),
+                    high=np.float32(MAX_END_EFF_COORDS),
+                    dtype=np.float32),
                 observation=self.observation_space))
 
         # Initialise goal position
@@ -109,10 +134,11 @@ class WidowxEnv(gym.Env):
         self.reset()
 
     def sample_random_goal(self):
-        """ sample random goal """
+        """ Sample random goal """
         return np.random.uniform(low=MIN_GOAL_COORDS, high=MAX_GOAL_COORDS)
 
     def create_world(self):
+        """ Setup camera and load URDFs"""
 
         # Initialise camera angle
         p.resetDebugVisualizerCamera(
@@ -174,10 +200,11 @@ class WidowxEnv(gym.Env):
         return self.obs
 
     def _get_general_obs(self):
+        """ Get information for generating observation array """
         self.endeffector_pos = self._get_end_effector_position()
         self.torso_pos = self._get_torso_position()
-        self.ET = self.endeffector_pos - self.torso_pos 
-        self.EG = self.endeffector_pos - self.goal
+        self.end_torso = self.endeffector_pos - self.torso_pos
+        self.end_goal = self.endeffector_pos - self.goal
         self.joint_positions = self._get_joint_positions()
 
     def _get_obs1(self):
@@ -203,7 +230,7 @@ class WidowxEnv(gym.Env):
         self._get_general_obs()
 
         robot_obs = np.concatenate(
-            [self.ET, self.EG, self.joint_positions]).ravel()
+            [self.end_torso, self.end_goal, self.joint_positions]).ravel()
 
         return robot_obs
 
@@ -212,7 +239,7 @@ class WidowxEnv(gym.Env):
         self._get_general_obs()
 
         robot_obs = np.concatenate(
-            [self.EG, self.joint_positions]).ravel()
+            [self.end_goal, self.joint_positions]).ravel()
 
         return robot_obs
 
@@ -221,7 +248,7 @@ class WidowxEnv(gym.Env):
         self._get_general_obs()
 
         robot_obs = np.concatenate(
-            [self.ET, self.EG, self.goal, self.joint_positions]).ravel()
+            [self.end_torso, self.end_goal, self.goal, self.joint_positions]).ravel()
 
         return robot_obs
 
@@ -232,16 +259,16 @@ class WidowxEnv(gym.Env):
     def _get_end_effector_position(self):
         """ Get end effector coordinates """
         return np.array(p.getLinkState(
-                self.arm, 
-                5, 
+                self.arm,
+                5,
                 computeForwardKinematics=True)
             [0])
 
     def _get_torso_position(self):
         """ Get torso coordinates """
         return np.array(p.getLinkState(
-                self.arm, 
-                0, 
+                self.arm,
+                0,
                 computeForwardKinematics=True)
             [0])
 
@@ -270,6 +297,9 @@ class WidowxEnv(gym.Env):
             info (dict)
         """
 
+        # get distance before taking the action
+        self.old_dist = np.linalg.norm(self.endeffector_pos - self.goal)
+
         # take action
         if self.action_type == 1:
             self._take_action1(action)
@@ -285,23 +315,39 @@ class WidowxEnv(gym.Env):
             self.obs = self._get_obs4()
         elif self.obs_type == 5:
             self.obs = self._get_obs5()
-        elif self.obs_type == 2:
-            self.obs = self._get_obs2()
 
         # update observation if goal oriented environment
         if self.goal_oriented:
             self.obs = self._get_goal_oriented_obs()
 
+        # get new distance
+        self.dist = np.linalg.norm(self.endeffector_pos - self.goal)
+
         # get reward
         if self.reward_type == 1:
             self.reward = self._get_reward1()
+        elif self.reward_type == 2:
+            self.reward = self._get_reward2()
+        elif self.reward_type == 3:
+            self.reward = self._get_reward3()
+        elif self.reward_type == 4:
+            self.reward = self._get_reward4()
+        elif self.reward_type == 5:
+            self.reward = self._get_reward5()
+        elif self.reward_type == 6:
+            self.reward = self._get_reward6()
 
         # Create info
         info = {}
-        info['distance'] = np.linalg.norm(self.endeffector_pos - self.goal)
+        info['old_distance'] = self.old_dist
+        info['distance'] = self.dist
         info['goal_pos'] = self.goal
         info['endeffector_pos'] = self.endeffector_pos
         info['joint_pos'] = self.joint_positions
+        info['joint_min'] = self.joint_min
+        info['joint_max'] = self.joint_max
+        info['term1'] = self.term1
+        info['term2'] = self.term2
 
         # Create "episode_over": never end episode prematurily
         episode_over = False
@@ -320,15 +366,60 @@ class WidowxEnv(gym.Env):
         # Clip the joint position to fit the joint's allowed boundaries
         self.new_joint_positions = np.clip(
             np.array(self.new_joint_positions),
-            JOINT_MIN,
-            JOINT_MAX)
+            self.joint_min,
+            self.joint_max)
 
         # Instantaneously reset the joint position (no torque applied)
         self._force_joint_positions(self.new_joint_positions)
 
     def _get_reward1(self):
-        """ Calculate the reward as - distance **2 """
-        rew = - (np.linalg.norm(self.endeffector_pos - self.goal) ** 2)
+        """ Compute reward function 1 (dense) """
+        self.term1 = - self.dist ** 2
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward2(self):
+        """ Compute reward function 2 (dense) """
+        alpha = 1
+        self.term1 = - self.dist ** 2
+        self.term2 = - alpha * np.linalg.norm(self.action)
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward3(self):
+        """ Compute reward function 3 (dense) """
+        self.term1 = self.old_dist - self.dist
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward4(self):
+        """ Compute reward function 4 (dense) """
+        alpha = 1
+        self.term1 = - self.dist ** 2
+        self.term2 = - alpha * (self.old_dist - self.dist) / self.dist
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward5(self):
+        """ Compute reward function 5 (sparse) """
+        if self.dist >= 0.001:
+            self.term1 = -1
+        else:
+            self.term1 = 0
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward6(self):
+        """ Compute reward function 6 (sparse) """
+        if self.dist >= 0.001:
+            self.term1 = 0
+        else:
+            self.term1 = 1
+        self.term2 = 0
+        rew = self.term1 + self.term2
         return rew
 
     def render(self, mode='human'):
@@ -337,7 +428,7 @@ class WidowxEnv(gym.Env):
         self.physics_client = p.connect(p.GUI)
         self.create_world()
 
-    def compute_reward(self, achieved_goal, goal, info):
+    def compute_reward(self, achieved_goal, goal):
         """ Function necessary for goal Env"""
         return - (np.linalg.norm(achieved_goal - goal)**2)
 

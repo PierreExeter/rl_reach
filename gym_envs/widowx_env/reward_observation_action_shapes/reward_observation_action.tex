@@ -15,7 +15,7 @@
 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
-\title{Reward, observation and action shapes considered in the training environments}
+\title{Reward, observation and action shapes used in the training environments}
 \date{}
 
 \begin{document}
@@ -25,52 +25,102 @@
 
 \section{Observation}
 
-OBS1
+\subsection*{OBS1} 
 \begin{equation}
 [Ex, Ey, Ez, A1, A2, A3, A4, A5, A6]
 \end{equation}
 
-OBS2
+\subsection*{OBS2}
 \begin{equation}
 [Gx, Gy, Gz, A1, A2, A3, A4, A5, A6]
 \end{equation}
 
-OBS3
+\subsection*{OBS3}
 \begin{equation}
 [ETx, ETy, ETz, EGx, EGy, EGz, A1, A2, A3, A4, A5, A6]
 \end{equation}
 
-OBS4
+\subsection*{OBS4}
 \begin{equation}
 [EGx, EGy, EGz, A1, A2, A3, A4, A5, A6]
 \end{equation}
 
-OBS5
+\subsection*{OBS5}
 \begin{equation}
 [ETx, ETy, ETz, EGx, EGy, EGz, Gx, Gy, Gz, A1, A2, A3, A4, A5, A6]
 \end{equation}
 
+where
+\begin{itemize}  
+\item $Ei$ : End effector coordinate along the $i$ axis
+\item $Gi$ : Goal coordinate along the $i$ axis 
+\item $EGi$ : Vector End effector - Goal along the $i$ axis 
+\item $ETx$ : Vector End effector - Torso along the $i$ axis
+\item $Ai$ : Angular position of joint $i$
+\end{itemize}
 
-$Ei$ = End effector coordinate along the $i$ axis \\
-$Gi$ = Goal coordinate along the $i$ axis \\
-$EGi$ = Vector End effector - Goal along the $i$ axis \\
-$ETx$ = Vector End effector - Torso along the $i$ axis  \\
-$Ai$ = Angular position of joint $i$ \\
 
-
-\section{Action}
 
 
 \section{Reward}
 
 
-$r$ = reward  \\
-$d_t$ = distance at time t \\
-$a$ = action \\
-$s$ = state \\
-$G$ = set of goals \\
 
-\subsection{Dense rewards}
+\subsection*{REW1} 
+
+\begin{equation}
+r = - d_t^2
+\end{equation}
+
+\subsection*{REW2} 
+
+\begin{equation}
+r = - d_t^2 - \alpha \norm{a_t}
+\end{equation}
+
+\subsection*{REW3} 
+
+\begin{equation}
+r = d_{t-1} - d_t
+\end{equation}
+
+\subsection*{REW4} 
+
+\begin{equation}
+r = - d_t^2 - \alpha \frac{d_{t-1} - d_t}{d_t}
+\end{equation}
+
+\subsection*{REW5} 
+
+\begin{equation}
+r = \begin{cases}
+    -1, & \text{if $d \geq \epsilon $}\\
+    0, & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+\subsection*{REW6} 
+
+
+\begin{equation}
+r = \begin{cases}
+    1, & \text{if $d \geq \epsilon $}\\
+    0, & \text{if  $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
+where
+\begin{itemize}  
+\item $r$ : Reward
+\item $d_t$ : Distance at time $t$ 
+\item $a_t$ : Action at time $t$ 
+\item $\alpha$ : Scaling coefficient (1)
+\item $\epsilon$ : Threshold for sparse reward (0.001)
+\end{itemize}
+
+
+\subsection{From the literature}
+\subsubsection{Dense rewards}
 
 \begin{equation}
 r = - d_t^2
@@ -104,7 +154,7 @@ Penalise large torque
 r = - d_t^2+ \frac{d_{t-1} - d_t}{d_t}
 \end{equation}
 
-\subsection{Sparse rewards}
+\subsubsection{Sparse rewards}
 
 \begin{equation}
 r = \begin{cases}
@@ -121,8 +171,7 @@ r = \begin{cases}
 \end{equation}
 
 
-
-\subsection{Dense + sparse rewards}
+\subsubsection{Dense + sparse rewards}
 
 \begin{equation}
 r = \begin{cases}
@@ -178,15 +227,26 @@ r = \begin{cases}
   \end{cases}
 \end{equation}
 
-My attempts:
+Where
+$s$ = state \\
+$G$ = set of goals \\
+
+
+\section{Action}
+
+Also make the difference between immediate reset and continuous position control.
+
+\subsection*{ACT1 : Relative joint position}
 
 \begin{equation}
-r = - d_t - \beta \norm{a_{t-1}}
+[\delta_1, delta_2, delta_3, delta_4, delta_5, delta_6]
 \end{equation}
 
-\begin{equation}
-r = - d_t^2 - \beta \norm{a_{t-1}}
-\end{equation}
+\subsection*{ACT2 : Absolute joint position}
+
+\subsection*{ACT3 : Relative joint torque}
+
+\subsection*{ACT4 : Absolute joint torque}
 
 
 \end{document}

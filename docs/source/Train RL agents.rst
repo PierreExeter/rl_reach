@@ -27,7 +27,7 @@ With Docker:
 
 The experiment's log files will generated in the working directory of the local machine.
 
-A convenience Bash script is provided to run multiple experiments:
+A Bash script that launches multiple experiments is provided for convenience:
 
 .. code-block:: bash
 

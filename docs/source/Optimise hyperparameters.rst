@@ -33,7 +33,7 @@ With Docker:
 
    ./docker/run_docker_cpu.sh python train.py -optimize --algo ppo --env widowx_reacher-v1 --n-timesteps 100000 --n-trials 100 --n-jobs 8 --sampler tpe --pruner median --n-startup-trials 10 --n-evaluations 10 --log-folder logs/opti
 
-A convenience Bash script is provided to run multiple hyperparameter optimisation:
+A Bash script is provided that lanches multiple hyperparameter optimisation runs is provided for convenience:
 
 .. code-block:: bash
 
