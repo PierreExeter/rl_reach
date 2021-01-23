@@ -2,10 +2,12 @@
 Optimise hyperparameters
 *************************
 
-
 Hyperparameters can be tuned automatically with the optimisation 
 framework `Optuna <https://optuna.readthedocs.io/en/stable/>`_ using
 the script ``train.py -optimize``.
+
+With the local installation
+===========================
 
 .. csv-table:: Usage
    :header:  Flag , Description , Type , Example 
@@ -27,14 +29,30 @@ Example:
 
    python train.py -optimize --algo ppo --env widowx_reacher-v1 --n-timesteps 100000 --n-trials 100 --n-jobs 8 --sampler tpe --pruner median --n-startup-trials 10 --n-evaluations 10 --log-folder logs/opti
 
-With Docker:
-
-.. code-block:: bash
-
-   ./docker/run_docker_cpu.sh python train.py -optimize --algo ppo --env widowx_reacher-v1 --n-timesteps 100000 --n-trials 100 --n-jobs 8 --sampler tpe --pruner median --n-startup-trials 10 --n-evaluations 10 --log-folder logs/opti
-
-A Bash script is provided that lanches multiple hyperparameter optimisation runs is provided for convenience:
+A Bash script is provided that lanches multiple hyperparameter optimisation runs is provided for convenience.
 
 .. code-block:: bash
 
    ./opti_all.sh
+
+
+With Docker
+===========
+
+Hyperparameter optimisation can be carried out using the Docker images.
+
+.. code-block:: bash
+
+   # CPU
+   docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/rl_reach/,type=bind rlreach/rlreach-cpu:latest bash -c "python train.py -optimize --algo ppo --env widowx_reacher-v1 --n-timesteps 100000 --n-trials 100 --n-jobs 8 --sampler tpe --pruner median --n-startup-trials 10 --n-evaluations 10 --log-folder logs/opti"
+   # GPU 
+   docker run -it --rm --runtime=nvidia --network host --ipc=host --mount src=$(pwd),target=/root/rl_reach/,type=bind rlreach/rlreach-gpu:latest bash -c "python train.py -optimize --algo ppo --env widowx_reacher-v1 --n-timesteps 100000 --n-trials 100 --n-jobs 8 --sampler tpe --pruner median --n-startup-trials 10 --n-evaluations 10 --log-folder logs/opti"
+
+A Shell script is provided for ease of usability.
+
+.. code-block:: bash
+
+   # CPU
+   ./docker/run_docker_cpu.sh python train.py -optimize --algo ppo --env widowx_reacher-v1 --n-timesteps 100000 --n-trials 100 --n-jobs 8 --sampler tpe --pruner median --n-startup-trials 10 --n-evaluations 10 --log-folder logs/opti
+   # GPU
+   ./docker/run_docker_gpu.sh python train.py -optimize --algo ppo --env widowx_reacher-v1 --n-timesteps 100000 --n-trials 100 --n-jobs 8 --sampler tpe --pruner median --n-startup-trials 10 --n-evaluations 10 --log-folder logs/opti

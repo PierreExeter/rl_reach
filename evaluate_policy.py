@@ -110,5 +110,5 @@ if __name__ == "__main__":
     if args.log_info:
         subprocess.call(["python",
                          "scripts/plot_episode_eval_log.py",
-                         "--log-folder",
-                         LOG_FOLDER_SEED])
+                         "--exp-id",
+                         str(EXP_ID)])

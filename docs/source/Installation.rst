@@ -59,6 +59,15 @@ Automated tests
 Docker installation
 ===================
 
+.. note::
+    The GPU image requires `nvidia-docker <https://github.com/NVIDIA/nvidia-docker>`_.
+
+Clone the repository
+
+.. code-block:: bash
+
+    git clone https://github.com/PierreExeter/rl_reach.git && cd rl_reach/
+
 Pull the Docker image (CPU or GPU)
 
 .. code-block:: bash
@@ -72,6 +81,3 @@ or build the images from the Dockerfiles
 
     docker build -t rlreach/rlreach-cpu:latest . -f docker/Dockerfile_cpu
     docker build -t rlreach/rlreach-gpu:latest . -f docker/Dockerfile_gpu
-
-.. note::
-    The GPU image requires `nvidia-docker <https://github.com/NVIDIA/nvidia-docker>`_.

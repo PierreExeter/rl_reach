@@ -7,7 +7,7 @@ and `Readthedocs <https://readthedocs.org/>`_.
 
 The documentation source files are located in ``docs/source``.
 
-In order to buil the documentation locally, execute the following command in the ``docs/`` directory:
+In order to build the documentation locally, execute the following command in the ``docs/`` directory:
 
 .. code-block:: bash
 

@@ -40,11 +40,7 @@ def test_envs(env_id):
 
 ######## TEST TRAIN AND ENJOY SCRIPTS ###########
 
-# # Clean up: delete logs from previous test
-LOG_FOLDER = "logs/test/ppo/"
-if os.path.isdir(LOG_FOLDER):
-    shutil.rmtree(LOG_FOLDER)
-
+LOG_FOLDER = "logs/test/"
 
 def test_train():
     """ Test train.py script """
@@ -82,14 +78,6 @@ def test_enjoy():
 
 
 ######## TEST RUN EXPERIMENTS ###########
-
-
-# Clean up: delete logs from previous test
-for i in range(1001, 1005):
-    LOG_FOLDER = "logs/exp_" + str(i)
-    if os.path.isdir(LOG_FOLDER):
-        shutil.rmtree(LOG_FOLDER)
-
 
 def test_exp1():
     """ Test run_experiment script + fixed gym env """
@@ -238,13 +226,9 @@ def test_eval4():
     assert return_code == 0
 
 
+
+
 ######## TEST HYPERPARAMETER OPTIMISATION ###########
-
-# # Clean up: delete logs from previous test
-LOG_FOLDER = "logs/test/opti/"
-if os.path.isdir(LOG_FOLDER):
-    shutil.rmtree(LOG_FOLDER)
-
 
 def test_opti():
     """ Test hyperparameter optimisation """
@@ -268,3 +252,20 @@ def test_opti():
     return_code = subprocess.call(['python', 'train.py'] + args)
 
     assert return_code == 0
+
+
+@pytest.fixture(scope="session", autouse=True)
+def cleanup(request):
+    """Cleanup logs files once we are finished testing."""
+
+    def remove_test_dir():
+        log_dir = "logs/test/"
+        if os.path.isdir(log_dir):
+            shutil.rmtree(log_dir)
+
+        for i in range(1001, 1005):
+            log_dir = "logs/exp_" + str(i)
+            if os.path.isdir(log_dir):
+                shutil.rmtree(log_dir)
+
+    request.addfinalizer(remove_test_dir)

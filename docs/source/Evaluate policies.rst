@@ -2,6 +2,9 @@
 Evaluate trained policies
 *************************
 
+With the local installation
+===========================
+
 Trained models can be evaluated and the results can be saved with the script ``evaluate_policy.py``.
 
 .. csv-table:: Usage
@@ -19,21 +22,13 @@ Example:
 
    python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
 
-With Docker:
-
-.. code-block:: bash
-
-   ./docker/run_docker_cpu.sh python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
-
-The experiment's log files will generated in the working directory of the local machine.
+The plots are printed in the associated experiment folder, e.g. `logs/exp_99/ppo/`.
 
 If ``--log-info`` was enabled during evaluation, it is possible to plot some useful information as shown in the plot below.
 
 .. code-block:: bash
 
    python scripts/plot_episode_eval_log.py --exp-id 99
-
-The plots are printed in the associated experiment folder, e.g. `logs/exp_99/ppo/`.
 
 An example of environment evaluation plot:
 
@@ -42,3 +37,26 @@ An example of environment evaluation plot:
 An example of experiment learning curve:
 
 .. image:: ../images/reward_vs_timesteps_smoothed.png
+
+
+With Docker
+===========
+
+Trained policies can be evaluated from the Docker containers. The result files and plots will generated in the working directory of the host machine.
+
+.. code-block:: bash
+
+   # CPU
+   docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/rl_reach/,type=bind rlreach/rlreach-cpu:latest bash -c "python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0"
+   # GPU 
+   docker run -it --rm --runtime=nvidia --network host --ipc=host --mount src=$(pwd),target=/root/rl_reach/,type=bind rlreach/rlreach-gpu:latest bash -c "python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0"
+
+
+A Shell script is provided for ease of usability.
+
+.. code-block:: bash
+
+   # CPU
+   ./docker/run_docker_cpu.sh python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
+   # GPU 
+   ./docker/run_docker_gpu.sh python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
