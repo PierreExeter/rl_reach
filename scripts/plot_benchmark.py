@@ -83,4 +83,4 @@ if __name__ == "__main__":
 
     plt.tight_layout()
     # plt.show()
-    plt.savefig("benchmark/plots/" + col + "_exp_" + EXP_LIST_STRING + ".png")
+    plt.savefig("benchmark/plots/" + col + "_exp_" + EXP_LIST_STRING + ".png", bbox_inches='tight')

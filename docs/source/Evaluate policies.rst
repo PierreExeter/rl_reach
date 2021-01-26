@@ -37,6 +37,7 @@ An example of environment evaluation plot:
 An example of experiment learning curve:
 
 .. image:: ../images/reward_vs_timesteps_smoothed.png
+.. image:: ../images/reward_vs_timesteps_fill_smoothed.png
 
 
 With Docker
@@ -60,3 +61,17 @@ A Shell script is provided for ease of usability.
    ./docker/run_docker_cpu.sh python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
    # GPU 
    ./docker/run_docker_gpu.sh python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
+
+
+Reset the repository
+====================
+
+It can sometimes be convenient to clean all the results and log files and reset the repository. This can be done with the following Shell script.
+
+.. code-block:: bash
+
+   ./cleanAll.sh
+
+.. warning::
+
+   Warning, this cannot be undone!

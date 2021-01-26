@@ -176,6 +176,15 @@ A Bash script that launches multiple hyperparameter optimisation runs is provide
 ./opti_all.sh
 ```
 
+
+# Clean all the results (Reset the repository)
+
+It could be convenient to clean all the results and log files. Warning, this cannot be undone!
+
+```bash
+./cleanAll.sh
+```
+
 ## Training environments
 
 A number of custom Gym environments are available in the `gym_envs` directory. They simulate the WidowX MK-II robotic manipulator with the Pybullet physics engine. The objective is to bring the end-effector as close as possible to a target position.

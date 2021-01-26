@@ -126,4 +126,4 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     # plt.show()
-    plt.savefig(SAVE_PATH)
+    plt.savefig(SAVE_PATH, bbox_inches='tight')

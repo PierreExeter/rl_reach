@@ -72,12 +72,27 @@ Pull the Docker image (CPU or GPU)
 
 .. code-block:: bash
 
+    # CPU
     docker pull rlreach/rlreach-cpu:latest
+    # GPU
     docker pull rlreach/rlreach-gpu:latest
 
 or build the images from the Dockerfiles
 
 .. code-block:: bash
 
+    # CPU
     docker build -t rlreach/rlreach-cpu:latest . -f docker/Dockerfile_cpu
+    # GPU
     docker build -t rlreach/rlreach-gpu:latest . -f docker/Dockerfile_gpu
+
+
+Test the Docker images
+----------------------
+
+.. code-block:: bash
+
+    # CPU
+    ./docker/run_docker_cpu.sh pytest tests/auto/all_tests.py -v
+    # GPU
+    ./docker/run_docker_gpu.sh pytest tests/auto/all_tests.py -v

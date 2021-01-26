@@ -198,10 +198,10 @@ if __name__ == '__main__':
         df_bench.to_csv(BENCH_PATH, index=False)
 
     ###############
-    # 2. PLOT LEARNING CURVES OF ALL THE SEED RUNS IN THE EXPERIMENT
+    # 2. PLOT LEARNING CURVES
     ###############
 
-    # Plot the learning curve of all the seed runs in the experiment
+    ##### 2.1. create all_reward dataframe
 
     res_file_list = []
 
@@ -239,45 +239,90 @@ if __name__ == '__main__':
     all_rewards['timesteps'] = W['l'].cumsum()
     all_rewards.to_csv(log_dir + "all_rewards.csv", index=False)
 
-    # plot
-    plt.figure(1, figsize=(10, 5))
-    ax = plt.axes()
-
-    for seed_col in col_list:
-        # print(seed_col)
-        all_rewards.plot(x='timesteps', y=seed_col, ax=ax)
-
-    all_rewards.plot(x='timesteps', y='mean_reward', ax=ax, color='k')
-
-    plt.xlabel('Time steps')
-    plt.ylabel('Rewards')
-
-    plt.legend()
-    plt.savefig(log_dir + "reward_vs_timesteps.png", dpi=100)
-    # plt.show()
-
     # apply rolling window (except on timesteps)
-    for col in all_rewards.columns[:-1]:
+    all_rewards_smoothed = all_rewards.copy()
+
+    for col in all_rewards_smoothed.columns[:-1]:
         # print(col)
-        all_rewards[col] = all_rewards[col].rolling(window=50).mean()
+        all_rewards_smoothed[col] = all_rewards_smoothed[col].rolling(window=50).mean()
 
-    all_rewards.dropna(inplace=True)  # remove NaN due to rolling average
-    all_rewards.to_csv(log_dir + "all_rewards_smooth.csv", index=False)
-    # print(all_rewards)
+    all_rewards_smoothed.dropna(inplace=True)  # remove NaN due to rolling average
+    all_rewards_smoothed.to_csv(log_dir + "all_rewards_smooth.csv", index=False)
+    # print(all_rewards_smoothed)
 
-    # plot
-    plt.figure(2, figsize=(10, 5))
-    ax = plt.axes()
+    # remove underscore in column name (issue with tex)
+    all_rewards.rename(lambda s: s.replace('_', ' '), axis='columns', inplace=True)
+    all_rewards_smoothed.rename(lambda s: s.replace('_', ' '), axis='columns', inplace=True)
+
+    ###### 2.2. Plot
+
+    fs = 15
+    plt.rc('text', usetex=True)
+    plt.rc('font', family='serif')
+    plt.rc('xtick', labelsize=fs)
+    plt.rc('ytick', labelsize=fs)
+
+    ##### 2.2.1. plot reward vs timesteps
+    fig, ax = plt.subplots(figsize=(10, 7))
 
     for seed_col in col_list:
         # print(seed_col)
         all_rewards.plot(x='timesteps', y=seed_col, ax=ax)
 
-    all_rewards.plot(x='timesteps', y='mean_reward', ax=ax, color='k')
+    all_rewards.plot(x='timesteps', y='mean reward', ax=ax, color='k')
+    ax.ticklabel_format(axis='x', style='sci', scilimits=(0, 5))
 
-    plt.xlabel('Time steps')
-    plt.ylabel('Rewards')
+    plt.xlabel(r'Time steps', fontsize=fs)
+    plt.ylabel(r'Average return', fontsize=fs)
+    plt.legend(loc="lower right", fontsize=fs)
 
-    plt.legend()
-    plt.savefig(log_dir + "reward_vs_timesteps_smoothed.png", dpi=100)
+    plt.savefig(log_dir + "reward_vs_timesteps.png", bbox_inches='tight', dpi=100)
     # plt.show()
+
+    ########## 2.2.2. plot reward vs timesteps (smoothed)
+    fig, ax = plt.subplots(figsize=(10, 7))
+
+    for seed_col in col_list:
+        # print(seed_col)
+        all_rewards_smoothed.plot(x='timesteps', y=seed_col, ax=ax)
+
+    all_rewards_smoothed.plot(x='timesteps', y='mean reward', ax=ax, color='k')
+    ax.ticklabel_format(axis='x', style='sci', scilimits=(0, 5))
+
+    plt.xlabel(r'Time steps', fontsize=fs)
+    plt.ylabel(r'Average return', fontsize=fs)
+    plt.legend(loc="lower right", fontsize=fs)
+
+    plt.savefig(log_dir + "reward_vs_timesteps_smoothed.png", bbox_inches='tight', dpi=100)
+    # plt.show()
+
+    # ####### 2.2.3. plot reward vs timesteps (fill between)
+    fig, ax = plt.subplots(figsize=(10, 7))
+
+    ax.plot(all_rewards['timesteps'], all_rewards['mean reward'], color='k', label='Mean return', linewidth=0.5)
+    ax.fill_between(all_rewards['timesteps'], all_rewards['lower'], all_rewards['upper'], color='r', alpha=0.35, label='Confidence interval')
+    # plt.axhline(y=0, color='r', linestyle='--', label="min reward")
+    ax.ticklabel_format(axis='x', style='sci', scilimits=(0, 5))
+
+    plt.xlabel(r'Time steps', fontsize=fs)
+    plt.ylabel(r'Average return', fontsize=fs)
+    plt.legend(loc="lower right", fontsize=fs)
+
+    plt.savefig(log_dir + "reward_vs_timesteps_fill.png", bbox_inches='tight', dpi=100)
+    # plt.show()
+
+    # ####### 2.2.4. plot reward vs timesteps (fill between) + smoothed
+    fig, ax = plt.subplots(figsize=(10, 7))
+
+    ax.plot(all_rewards_smoothed['timesteps'], all_rewards_smoothed['mean reward'], color='k', label='Mean return')
+    ax.fill_between(all_rewards_smoothed['timesteps'], all_rewards_smoothed['lower'], all_rewards_smoothed['upper'], color='r', alpha=0.35, label='Confidence interval')
+    # plt.axhline(y=0, color='r', linestyle='--', label="min reward")
+    ax.ticklabel_format(axis='x', style='sci', scilimits=(0, 5))
+
+    plt.xlabel(r'Time steps', fontsize=fs)
+    plt.ylabel(r'Average return', fontsize=fs)
+    plt.legend(loc="lower right", fontsize=fs)
+
+    plt.savefig(log_dir + "reward_vs_timesteps_fill_smoothed.png", bbox_inches='tight', dpi=100)
+    # plt.show()
+
