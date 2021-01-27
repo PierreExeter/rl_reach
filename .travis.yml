@@ -17,7 +17,7 @@ before_install:
 install:
   - conda env create -f environment.yml
   - conda activate rl_reach
-  - cd gym_envs/ && pip install -e . && cd ..
+  - cd code/gym_envs/ && pip install -e . && cd ../../
 
 script:
   - pytest tests/auto/all_tests.py -v

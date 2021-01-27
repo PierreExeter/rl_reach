@@ -22,7 +22,7 @@ Please read the [documentation](https://rl-reach.readthedocs.io/en/latest/) to g
 
 ```bash
 # Clone the repository
-git clone https://github.com/PierreExeter/rl_reach.git && cd rl_reach/
+git clone https://github.com/PierreExeter/rl_reach.git && cd rl_reach/code/
 
 # Install and activate the Conda environment
 conda env create -f environment.yml
