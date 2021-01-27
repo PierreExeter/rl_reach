@@ -27,10 +27,6 @@ git clone https://github.com/PierreExeter/rl_reach.git && cd rl_reach/code/
 # Install and activate the Conda environment
 conda env create -f environment.yml
 conda activate rl_reach
-
-# Install the custom Gym environments
-cd gym_envs/
-pip install -e .
 ```
 
 Note, this Conda environment assumes that you have CUDA 11.1 installed. If you are using another version of CUDA, you will have to install Pytorch manually as indicated [here](https://pytorch.org/get-started/locally/).

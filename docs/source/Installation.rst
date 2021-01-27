@@ -15,7 +15,7 @@ Clone the repository
 
 .. code-block:: bash
 
-    git clone https://github.com/PierreExeter/rl_reach.git && cd rl_reach/
+    git clone https://github.com/PierreExeter/rl_reach.git && cd rl_reach/code/
 
 Install and activate the Conda environment
 
@@ -23,13 +23,6 @@ Install and activate the Conda environment
 
     conda env create -f environment.yml
     conda activate rl_reach
-
-Install the custom Gym environments
-
-.. code-block:: bash
-
-    cd gym_envs/
-    pip install -e .
 
 .. note::
     This Conda environment assumes that you have CUDA 11.1 installed. 

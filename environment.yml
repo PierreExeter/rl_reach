@@ -18,3 +18,5 @@ dependencies:
     - optuna==2.3.0
     - sphinx==3.4.3
     - sphinx_rtd_theme==0.5.1
+    - -e code/gym_envs/
+    
