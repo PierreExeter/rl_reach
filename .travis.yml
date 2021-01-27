@@ -19,5 +19,7 @@ install:
   - conda activate rl_reach
   - cd code/gym_envs/ && pip install -e . && cd ../../
 
+before_script: cd code
+
 script:
   - pytest tests/auto/all_tests.py -v
