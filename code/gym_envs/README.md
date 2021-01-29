@@ -1,3 +1,5 @@
-# WidowX-gym environment
-OpenAI Gym Environment for the WidowX arm (reaching task).
-It includes both the physical arm and the Pybullet environment.
+# widowx_env
+
+widowx_env is a series of OpenAI Gym reinforcement learning environments. 
+It simulates a robotic arm (WidowX MK-II) with the Pybullet engine. The goal is to bring the end-effector as close as possible to the target position (represented as a green sphere).
+
