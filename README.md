@@ -4,6 +4,7 @@
 [![Documentation Status](https://readthedocs.org/projects/rl-reach/badge/?version=latest)](https://rl-reach.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![pylint Score](/docs/images/train.svg)](https://www.pylint.org/)
+[![Open in Code Ocean](https://codeocean.com/codeocean-assets/badge/open-in-code-ocean.svg)](https://codeocean.com/capsule/4112840/tree/v1)
 
 RL Reach is a platform for running reproducible reinforcement learning experiments. Training environments are provided to solve the reaching task with the WidowX MK-II robotic arm.
 The Gym environments and training scripts are adapted from [Replab](https://github.com/bhyang/replab) and [Stable Baselines Zoo](https://github.com/DLR-RM/rl-baselines3-zoo), respectively.
@@ -51,8 +52,8 @@ Run commands inside the docker container with `run_docker_cpu.sh` and `run_docke
 
 Example:
 ```bash
-./docker/run_docker_cpu.sh python run_experiments.py --exp-id 99 --algo ppo --env widowx_reacher-v1 --n-timesteps 30000 --n-seeds 2
-./docker/run_docker_cpu.sh python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
+./docker/run_docker_cpu.sh python run_experiments.py --exp-id 999 --algo ppo --env widowx_reacher-v1 --n-timesteps 30000 --n-seeds 2
+./docker/run_docker_cpu.sh python evaluate_policy.py --exp-id 999 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
 ```
 
 Note, the GPU image requires [nvidia-docker](https://github.com/NVIDIA/nvidia-docker).
@@ -81,7 +82,7 @@ RL experiments can be launched with the script `run_experiments.py`.
 Usage:
 |    Flag        |              Description                           |  Type   |    Example                        |
 |----------------|----------------------------------------------------|---------|-----------------------------------|
-|`--exp-id`      |Unique experiment ID                                | *int*   | 99                                |  
+|`--exp-id`      |Unique experiment ID                                | *int*   | 999                                |  
 |`--algo`        |RL algorithm                                        | *str*   | a2c, ddpg, her, ppo, sac, td3     |
 |`--env`         |Training environment ID                             | *str*   | widowx_reacher-v1                 |
 |`--n-timesteps` |Number of training timesteps                        | *int*   | 10<sup>3</sup> to 10<sup>12</sup> | 
@@ -90,7 +91,7 @@ Usage:
 
 Example:
 ```bash
-python run_experiments.py --exp-id 99 --algo ppo --env widowx_reacher-v1 --n-timesteps 10000 --n-seeds 3
+python run_experiments.py --exp-id 999 --algo ppo --env widowx_reacher-v1 --n-timesteps 10000 --n-seeds 3
 ```
 A Bash script that launches multiple experiments is provided for convenience:
 ```bash
@@ -104,7 +105,7 @@ Trained models can be evaluated and the results can be saved with the script `ev
 Usage:
 |    Flag        |              Description                            |  Type   |    Example                              |
 |----------------|-----------------------------------------------------|---------|-----------------------------------------|
-|`--exp-id`      | Unique experiment ID                                | *int*   | 99                                      | 
+|`--exp-id`      | Unique experiment ID                                | *int*   | 999                                      | 
 |`--n-eval-steps`| Number of evaluation timesteps                      | *int*   | 1000                                    |
 |`--log-info`    | Enable information logging at each evaluation steps | *bool*  | 0 (default) or 1                        |
 |`--plot-dim`    | Live rendering of end-effector and goal positions   | *int*   | 0: do not plot (default), 2: 2D or 3: 3D| 
@@ -112,14 +113,14 @@ Usage:
 
 Example:
 ```bash
-python evaluate_policy.py --exp-id 99 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
+python evaluate_policy.py --exp-id 999 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
 ```
 
 If `--log-info` was enabled during evaluation, it is possible to plot some useful information as shown in the plot below.
 ```bash
-python scripts/plot_episode_eval_log.py --exp-id 99
+python scripts/plot_episode_eval_log.py --exp-id 999
 ```
-The plots are generated in the associated experiment folder, e.g. `logs/exp_99/ppo/`.
+The plots are generated in the associated experiment folder, e.g. `logs/exp_999/ppo/`.
 
 Environment evaluation plot:
 

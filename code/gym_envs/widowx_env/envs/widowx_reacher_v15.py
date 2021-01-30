@@ -381,9 +381,9 @@ class WidowxEnv(gym.Env):
 
     def _get_reward2(self):
         """ Compute reward function 2 (dense) """
-        alpha = 1
-        self.term1 = - self.dist ** 2
-        self.term2 = - alpha * np.linalg.norm(self.action)
+        alpha = 0.1
+        self.term1 = 0 #- self.dist ** 2
+        self.term2 = - np.linalg.norm(self.action[0])  #- alpha * np.linalg.norm(self.action)
         rew = self.term1 + self.term2
         return rew
 

@@ -71,17 +71,17 @@ if __name__ == '__main__':
     log_df.plot(x='timestep', y='action_low6', ax=axs[1, 3], style="r--")
     log_df.plot(x='timestep', y='action_high6', ax=axs[1, 3], style="r--")
 
-    log_df.plot(x='timestep', y='reward', ax=axs[2, 2], color="b")
+    log_df.plot(x='timestep', y='reward', ax=axs[2, 2], color="b", marker="x")
     log_df.plot(x='timestep', y='term1', ax=axs[2, 2], color="r")
     log_df.plot(x='timestep', y='term2', ax=axs[2, 2], color="g")
     # ax_1 = axs[2, 2].twinx()
     # log_df.plot(x='timestep', y='return', ax=ax_1, color="r")
 
-    log_df.plot(x='timestep', y='distance', ax=axs[2, 3], color="b", marker="x")
+    log_df.plot(x='timestep', y='distance', ax=axs[2, 3], color="b")
 
-    log_df.plot(x='timestep', y='est_acc', ax=axs[3, 2], color="g", marker="*")
+    log_df.plot(x='timestep', y='est_acc', ax=axs[3, 2], color="g")
     ax_3 = axs[3, 2].twinx()
-    log_df.plot(x='timestep', y='est_vel', ax=ax_3, color="r", marker="+")
+    log_df.plot(x='timestep', y='est_vel', ax=ax_3, color="r")
 
     log_df.plot(x='timestep', y='goal_x', ax=axs[3, 3], style='or')
     log_df.plot(x='timestep', y='goal_y', ax=axs[3, 3], style='ob')
