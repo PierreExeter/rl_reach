@@ -89,3 +89,9 @@ Test the Docker images
     ./docker/run_docker_cpu.sh pytest tests/auto/all_tests.py -v
     # GPU
     ./docker/run_docker_gpu.sh pytest tests/auto/all_tests.py -v
+
+
+CodeOcean
+===================
+
+A `reproducible capsule <https://codeocean.com/capsule/4112840/tree/v1>`_ is available on the `CodeOcean <https://codeocean.com/>`_ platform.

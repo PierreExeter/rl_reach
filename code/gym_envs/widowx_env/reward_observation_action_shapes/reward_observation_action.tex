@@ -101,7 +101,6 @@ r = \begin{cases}
 
 \subsection*{REW6} 
 
-
 \begin{equation}
 r = \begin{cases}
     1, & \text{if $d \geq \epsilon $}\\
@@ -109,11 +108,19 @@ r = \begin{cases}
   \end{cases}
 \end{equation}
 
+\subsection*{REW7} 
+
+\begin{equation}
+r = 1 - abs(A_t[0])
+\end{equation}
+
+
 where
 \begin{itemize}  
 \item $r$ : Reward
 \item $d_t$ : Distance at time $t$ 
 \item $a_t$ : Action at time $t$ 
+\item $A_t$ : Action normalised between -1 and 1 
 \item $\alpha$ : Scaling coefficient (1)
 \item $\epsilon$ : Threshold for sparse reward (0.001)
 \end{itemize}

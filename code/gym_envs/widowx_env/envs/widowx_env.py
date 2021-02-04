@@ -30,18 +30,26 @@ FIXED_GOAL_COORDS  = np.array([.14, .0, 0.26])
 class WidowxEnv(gym.Env):
     """ WidowX reacher Gym environment """
 
-    def __init__(self):
+    def __init__(
+        self, 
+        random_goal, 
+        goal_oriented,
+        obs_type,
+        reward_type,
+        action_type,
+        joint_limits,
+        action_coeff):
         """
         Initialise the environment
         """
 
-        self.random_goal = True
-        self.goal_oriented = False
-        self.obs_type = 3
-        self.reward_type = 1
-        self.action_type = 1
-        self.joint_limits = "small"
-        self.action_coeff = 30
+        self.random_goal = random_goal
+        self.goal_oriented = goal_oriented
+        self.obs_type = obs_type
+        self.reward_type = reward_type
+        self.action_type = action_type
+        self.joint_limits = joint_limits
+        self.action_coeff = action_coeff
 
         self.endeffector_pos = None
         self.torso_pos = None
@@ -51,6 +59,7 @@ class WidowxEnv(gym.Env):
         self.reward = None
         self.obs = None
         self.action = None
+        self.normalized_action = np.zeros(6)
         self.new_joint_positions = None
         self.dist = None
         self.old_dist = None
@@ -304,6 +313,15 @@ class WidowxEnv(gym.Env):
         if self.action_type == 1:
             self._take_action1(action)
 
+        # compute normalised action
+        for i in range(6):
+            self.normalized_action[i] = self._normalize_scalar(
+                self.action[i],
+                self.action_space.low[i],
+                self.action_space.high[i],
+                -1,
+                1)
+
         # get observation
         if self.obs_type == 1:
             self.obs = self._get_obs1()
@@ -336,6 +354,8 @@ class WidowxEnv(gym.Env):
             self.reward = self._get_reward5()
         elif self.reward_type == 6:
             self.reward = self._get_reward6()
+        elif self.reward_type == 7:
+            self.reward = self._get_reward7()
 
         # Create info
         info = {}
@@ -348,6 +368,7 @@ class WidowxEnv(gym.Env):
         info['joint_max'] = self.joint_max
         info['term1'] = self.term1
         info['term2'] = self.term2
+        info['normalized_action'] = self.normalized_action
 
         # Create "episode_over": never end episode prematurily
         episode_over = False
@@ -372,6 +393,10 @@ class WidowxEnv(gym.Env):
         # Instantaneously reset the joint position (no torque applied)
         self._force_joint_positions(self.new_joint_positions)
 
+    def _normalize_scalar(self, var, old_min, old_max, new_min, new_max):
+        """ normalize scalar var from one range to another """
+        return ((new_max - new_min) * (var - old_min) / (old_max - old_min)) + new_min
+
     def _get_reward1(self):
         """ Compute reward function 1 (dense) """
         self.term1 = - self.dist ** 2
@@ -381,7 +406,7 @@ class WidowxEnv(gym.Env):
 
     def _get_reward2(self):
         """ Compute reward function 2 (dense) """
-        alpha = 1
+        alpha = 0.1
         self.term1 = - self.dist ** 2
         self.term2 = - alpha * np.linalg.norm(self.action)
         rew = self.term1 + self.term2
@@ -419,6 +444,13 @@ class WidowxEnv(gym.Env):
         else:
             self.term1 = 1
         self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward7(self):
+        """ Compute reward function 7 (dense) """
+        self.term1 = 1
+        self.term2 = - abs(self.normalized_action[0])
         rew = self.term1 + self.term2
         return rew
 

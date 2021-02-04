@@ -58,6 +58,11 @@ Example:
 
 Note, the GPU image requires [nvidia-docker](https://github.com/NVIDIA/nvidia-docker).
 
+## 3. CodeOcean
+
+A [reproducible capsule](https://codeocean.com/capsule/4112840/tree/v1) is available on CodeOcean.
+
+
 ## Test the installation
 
 Manual tests
