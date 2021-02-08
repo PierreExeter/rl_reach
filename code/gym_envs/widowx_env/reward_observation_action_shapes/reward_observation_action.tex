@@ -75,53 +75,89 @@ r = - d_t^2
 \subsection*{REW2} 
 
 \begin{equation}
-r = - d_t^2 - \alpha \norm{a_t}
+r = \frac{1}{abs(A_t[0])}
 \end{equation}
 
 \subsection*{REW3} 
 
 \begin{equation}
-r = d_{t-1} - d_t
+r = 1 - abs(A_t[0])
 \end{equation}
 
 \subsection*{REW4} 
 
 \begin{equation}
-r = - d_t^2 - \alpha \frac{d_{t-1} - d_t}{d_t}
+r = - d_t^2 - \alpha \norm{A_t}
 \end{equation}
 
 \subsection*{REW5} 
 
 \begin{equation}
-r = \begin{cases}
-    -1, & \text{if $d \geq \epsilon $}\\
-    0, & \text{if $d < \epsilon $}
-  \end{cases}
+r = - d_t^2 - \alpha \frac{\norm{A_t}}{d_t^2}
 \end{equation}
 
 \subsection*{REW6} 
 
 \begin{equation}
-r = \begin{cases}
-    1, & \text{if $d \geq \epsilon $}\\
-    0, & \text{if  $d < \epsilon $}
-  \end{cases}
+r = \Delta d_t
 \end{equation}
 
 \subsection*{REW7} 
 
 \begin{equation}
-r = 1 - abs(A_t[0])
+r = - d_t^2 + \alpha \frac{\Delta d_t}{d_t^2}
 \end{equation}
+
+\subsection*{REW8} 
+
+\begin{equation}
+r = \Delta E_t
+\end{equation}
+
+\subsection*{REW9} 
+
+\begin{equation}
+r = - d_t^2 + \alpha \frac{\Delta E_t}{d_t^2}
+\end{equation}
+
+\subsection*{REW10} 
+
+\begin{equation}
+r = \begin{cases}
+    -1, & \text{if $d_t \geq \epsilon $}\\
+    0, & \text{if $d_t < \epsilon $}
+  \end{cases}
+\end{equation}
+
+\subsection*{REW11}
+
+\begin{equation}
+r = \begin{cases}
+    1, & \text{if $d_t \geq \epsilon $}\\
+    0, & \text{if  $d_t < \epsilon $}
+  \end{cases}
+\end{equation}
+
+
+\subsection*{REW12} 
+
+\begin{equation}
+r = \norm{[1, 1, 1, 1, 1, 1]} - \norm{A_t}
+\end{equation}
+
+
 
 
 where
 \begin{itemize}  
 \item $r$ : Reward
 \item $d_t$ : Distance at time $t$ 
+\item $\Delta d_t$ : Change in distance
 \item $a_t$ : Action at time $t$ 
 \item $A_t$ : Action normalised between -1 and 1 
-\item $\alpha$ : Scaling coefficient (1)
+\item $E_t$ : End effector position at time $t$
+\item $\Delta E_t$ : Change in position
+\item $\alpha$ : Scaling coefficient (0.1)
 \item $\epsilon$ : Threshold for sparse reward (0.001)
 \end{itemize}
 

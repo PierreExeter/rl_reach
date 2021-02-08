@@ -246,7 +246,7 @@ if __name__ == "__main__":
     deterministic = args.deterministic or algo in off_policy_algos and not args.stochastic
 
     state = None
-    EPISODE_REWARD = 0.0
+    EPISODE_RETURN = 0.0
     episode_rewards, episode_lengths = [], []
     EP_LEN = 0
     successes = []  # For HER, monitor success rate
@@ -306,7 +306,7 @@ if __name__ == "__main__":
             ep_success_list_05 = calc_ep_success(
                 SUCCESS_THRESHOLD_05, ep_success_list_05, infos)
 
-        EPISODE_REWARD += reward[0]
+        EPISODE_RETURN += reward[0]
         EP_LEN += 1
 
         # Real time plot
@@ -447,12 +447,12 @@ if __name__ == "__main__":
 
             log_dict['episode'] = EPISODE_NB
             log_dict['timestep'] = t
-            log_dict['action_1'] = action[0][0]
-            log_dict['action_2'] = action[0][1]
-            log_dict['action_3'] = action[0][2]
-            log_dict['action_4'] = action[0][3]
-            log_dict['action_5'] = action[0][4]
-            log_dict['action_6'] = action[0][5]
+            log_dict['action_1'] = infos[0]['action'][0]
+            log_dict['action_2'] = infos[0]['action'][1]
+            log_dict['action_3'] = infos[0]['action'][2]
+            log_dict['action_4'] = infos[0]['action'][3]
+            log_dict['action_5'] = infos[0]['action'][4]
+            log_dict['action_6'] = infos[0]['action'][5]
             log_dict['normalized_action_1'] = infos[0]['normalized_action'][0]
             log_dict['normalized_action_2'] = infos[0]['normalized_action'][1]
             log_dict['normalized_action_3'] = infos[0]['normalized_action'][2]
@@ -490,7 +490,7 @@ if __name__ == "__main__":
             log_dict['action_high5'] = env.action_space.high[4]
             log_dict['action_high6'] = env.action_space.high[5]
             log_dict['reward'] = reward[0]
-            log_dict['return'] = EPISODE_REWARD
+            log_dict['return'] = EPISODE_RETURN
             log_dict['distance'] = infos[0]['distance']
             log_dict['goal_x'] = infos[0]['goal_pos'][0]
             log_dict['goal_y'] = infos[0]['goal_pos'][1]
@@ -501,6 +501,8 @@ if __name__ == "__main__":
             log_dict['done'] = done[0]
             log_dict['term1'] = infos[0]['term1']
             log_dict['term2'] = infos[0]['term2']
+            log_dict['vel'] = infos[0]['vel']
+            log_dict['vel2'] = infos[0]['vel2']
 
             # log_dict['obs'] = obs
             # log_dict['obs_space_low'] = env.observation_space.low
@@ -513,9 +515,9 @@ if __name__ == "__main__":
             if done and args.verbose > 0:
                 # NOTE: for env using VecNormalize, the mean reward
                 # is a normalized reward when `--norm_reward` flag is passed
-                # print(f"Episode Reward: {EPISODE_REWARD:.2f}") # commented by Pierre
+                # print(f"Episode Reward: {EPISODE_RETURN:.2f}") # commented by Pierre
                 # print("Episode Length", EP_LEN)  # commented by Pierre
-                episode_rewards.append(EPISODE_REWARD)
+                episode_rewards.append(EPISODE_RETURN)
                 episode_lengths.append(EP_LEN)
                 EPISODE_NB += 1
 
@@ -576,7 +578,7 @@ if __name__ == "__main__":
                     log_dict = OrderedDict()
 
                 # Reset for the new episode
-                EPISODE_REWARD = 0.0
+                EPISODE_RETURN = 0.0
                 EP_LEN = 0
                 state = None
                 ep_success_list_50 = []
@@ -597,7 +599,7 @@ if __name__ == "__main__":
                     obs = env.reset()
                 if infos[0].get("is_success") is not None:
                     successes.append(infos[0].get("is_success", False))
-                    EPISODE_REWARD, EP_LEN = 0.0, 0
+                    EPISODE_RETURN, EP_LEN = 0.0, 0
 
     if args.verbose > 0 and len(successes) > 0:
         print(f"Success rate: {100 * np.mean(successes):.2f}%")

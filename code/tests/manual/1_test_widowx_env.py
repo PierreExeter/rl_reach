@@ -5,7 +5,7 @@ import gym
 import widowx_env
 from stable_baselines3.common.env_checker import check_env
 
-env = gym.make('widowx_reacher-v15')
+env = gym.make('widowx_reacher-v24')
 print("any warnings?", check_env(env))
 
 # Comment this for goal environments
@@ -17,7 +17,7 @@ print("any warnings?", check_env(env))
 # print(env.observation_space.low)
 
 
-# env.render()
+env.render()
 
 
 for episode in range(2):
