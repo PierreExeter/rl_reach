@@ -405,9 +405,13 @@ class WidowxEnv(gym.Env):
         info['term2'] = self.term2
         info['normalized_action'] = self.normalized_action
         info['action'] = self.action
+        info['normalized_action_min'] = self.normalized_action_min
+        info['normalized_action_max'] = self.normalized_action_max
+        info['action_min'] = self.action_min
+        info['action_max'] = self.action_max
         # According to the Pybullet documentation, 1 timestep = 240 Hz
-        info['vel'] = self.delta_dist * 240
-        info['vel2'] = self.delta_pos * 240
+        info['vel_dist'] = self.delta_dist * 240
+        info['vel_pos'] = self.delta_pos * 240
 
         # Create "episode_over": never end episode prematurily
         episode_over = False

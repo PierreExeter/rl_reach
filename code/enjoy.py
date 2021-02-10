@@ -447,24 +447,48 @@ if __name__ == "__main__":
 
             log_dict['episode'] = EPISODE_NB
             log_dict['timestep'] = t
-            log_dict['action_1'] = infos[0]['action'][0]
-            log_dict['action_2'] = infos[0]['action'][1]
-            log_dict['action_3'] = infos[0]['action'][2]
-            log_dict['action_4'] = infos[0]['action'][3]
-            log_dict['action_5'] = infos[0]['action'][4]
-            log_dict['action_6'] = infos[0]['action'][5]
-            log_dict['normalized_action_1'] = infos[0]['normalized_action'][0]
-            log_dict['normalized_action_2'] = infos[0]['normalized_action'][1]
-            log_dict['normalized_action_3'] = infos[0]['normalized_action'][2]
-            log_dict['normalized_action_4'] = infos[0]['normalized_action'][3]
-            log_dict['normalized_action_5'] = infos[0]['normalized_action'][4]
-            log_dict['normalized_action_6'] = infos[0]['normalized_action'][5]
-            log_dict['joint_pos1'] = infos[0]['joint_pos'][0]
-            log_dict['joint_pos2'] = infos[0]['joint_pos'][1]
-            log_dict['joint_pos3'] = infos[0]['joint_pos'][2]
-            log_dict['joint_pos4'] = infos[0]['joint_pos'][3]
-            log_dict['joint_pos5'] = infos[0]['joint_pos'][4]
-            log_dict['joint_pos6'] = infos[0]['joint_pos'][5]
+            log_dict['action1'] = infos[0]['action'][0]
+            log_dict['action2'] = infos[0]['action'][1]
+            log_dict['action3'] = infos[0]['action'][2]
+            log_dict['action4'] = infos[0]['action'][3]
+            log_dict['action5'] = infos[0]['action'][4]
+            log_dict['action6'] = infos[0]['action'][5]
+            log_dict['action1_min'] = infos[0]['action_min'][0]
+            log_dict['action2_min'] = infos[0]['action_min'][1]
+            log_dict['action3_min'] = infos[0]['action_min'][2]
+            log_dict['action4_min'] = infos[0]['action_min'][3]
+            log_dict['action5_min'] = infos[0]['action_min'][4]
+            log_dict['action6_min'] = infos[0]['action_min'][5]
+            log_dict['action1_max'] = infos[0]['action_max'][0]
+            log_dict['action2_max'] = infos[0]['action_max'][1]
+            log_dict['action3_max'] = infos[0]['action_max'][2]
+            log_dict['action4_max'] = infos[0]['action_max'][3]
+            log_dict['action5_max'] = infos[0]['action_max'][4]
+            log_dict['action6_max'] = infos[0]['action_max'][5]
+            log_dict['norm_action1'] = infos[0]['normalized_action'][0]
+            log_dict['norm_action2'] = infos[0]['normalized_action'][1]
+            log_dict['norm_action3'] = infos[0]['normalized_action'][2]
+            log_dict['norm_action4'] = infos[0]['normalized_action'][3]
+            log_dict['norm_action5'] = infos[0]['normalized_action'][4]
+            log_dict['norm_action6'] = infos[0]['normalized_action'][5]
+            log_dict['norm_action1_min'] = infos[0]['normalized_action_min'][0]
+            log_dict['norm_action2_min'] = infos[0]['normalized_action_min'][1]
+            log_dict['norm_action3_min'] = infos[0]['normalized_action_min'][2]
+            log_dict['norm_action4_min'] = infos[0]['normalized_action_min'][3]
+            log_dict['norm_action5_min'] = infos[0]['normalized_action_min'][4]
+            log_dict['norm_action6_min'] = infos[0]['normalized_action_min'][5]
+            log_dict['norm_action1_max'] = infos[0]['normalized_action_max'][0]
+            log_dict['norm_action2_max'] = infos[0]['normalized_action_max'][1]
+            log_dict['norm_action3_max'] = infos[0]['normalized_action_max'][2]
+            log_dict['norm_action4_max'] = infos[0]['normalized_action_max'][3]
+            log_dict['norm_action5_max'] = infos[0]['normalized_action_max'][4]
+            log_dict['norm_action6_max'] = infos[0]['normalized_action_max'][5]
+            log_dict['joint1_pos'] = infos[0]['joint_pos'][0]
+            log_dict['joint2_pos'] = infos[0]['joint_pos'][1]
+            log_dict['joint3_pos'] = infos[0]['joint_pos'][2]
+            log_dict['joint4_pos'] = infos[0]['joint_pos'][3]
+            log_dict['joint5_pos'] = infos[0]['joint_pos'][4]
+            log_dict['joint6_pos'] = infos[0]['joint_pos'][5]
             log_dict['joint1_min'] = infos[0]['joint_min'][0]
             log_dict['joint2_min'] = infos[0]['joint_min'][1]
             log_dict['joint3_min'] = infos[0]['joint_min'][2]
@@ -477,18 +501,6 @@ if __name__ == "__main__":
             log_dict['joint4_max'] = infos[0]['joint_max'][3]
             log_dict['joint5_max'] = infos[0]['joint_max'][4]
             log_dict['joint6_max'] = infos[0]['joint_max'][5]
-            log_dict['action_low1'] = env.action_space.low[0]
-            log_dict['action_low2'] = env.action_space.low[1]
-            log_dict['action_low3'] = env.action_space.low[2]
-            log_dict['action_low4'] = env.action_space.low[3]
-            log_dict['action_low5'] = env.action_space.low[4]
-            log_dict['action_low6'] = env.action_space.low[5]
-            log_dict['action_high1'] = env.action_space.high[0]
-            log_dict['action_high2'] = env.action_space.high[1]
-            log_dict['action_high3'] = env.action_space.high[2]
-            log_dict['action_high4'] = env.action_space.high[3]
-            log_dict['action_high5'] = env.action_space.high[4]
-            log_dict['action_high6'] = env.action_space.high[5]
             log_dict['reward'] = reward[0]
             log_dict['return'] = EPISODE_RETURN
             log_dict['distance'] = infos[0]['distance']
@@ -501,8 +513,8 @@ if __name__ == "__main__":
             log_dict['done'] = done[0]
             log_dict['term1'] = infos[0]['term1']
             log_dict['term2'] = infos[0]['term2']
-            log_dict['vel'] = infos[0]['vel']
-            log_dict['vel2'] = infos[0]['vel2']
+            log_dict['vel_dist'] = infos[0]['vel_dist']
+            log_dict['vel_pos'] = infos[0]['vel_pos']
 
             # log_dict['obs'] = obs
             # log_dict['obs_space_low'] = env.observation_space.low
@@ -555,23 +567,26 @@ if __name__ == "__main__":
 
                     # add estimated tip velocity and acceleration
                     # (according to the Pybullet documentation, 1 timestep = 240 Hz)
-                    log_df['est_vel'] = log_df['distance'].diff() * 240
-                    log_df['est_vel'].loc[0] = 0    # initial velocity is 0
-                    log_df['est_acc'] = log_df['est_vel'].diff() * 240
-                    log_df['est_acc'].loc[0] = 0    # initial acceleration is 0
+                    log_df['acc_dist'] = log_df['vel_dist'].diff() * 240
+                    log_df['acc_pos'] = log_df['vel_pos'].diff() * 240
+                    # initial acceleration is 0
+                    log_df['acc_dist'].loc[0] = (log_df['vel_dist'].loc[0] - 0 ) * 240
+                    log_df['acc_pos'].loc[0] = (log_df['vel_pos'].loc[0] - 0 ) * 240
 
-                    # Write to file
-                    log_df.to_csv(
-                        log_path +
-                        "/res_episode_" +
-                        str(EPISODE_NB) +
-                        ".csv",
-                        index=False)  # slow
-                    # log_df.to_pickle(
-                    #     log_path +
-                    #     "/res_episode_" +
-                    #     str(EPISODE_NB) +
-                    #     ".pkl")  # fast
+                    # Only write log info for the first episode
+                    if EPISODE_NB == 1:
+                        # Write to file
+                        log_df.to_csv(
+                            log_path +
+                            "/res_episode_" +
+                            str(EPISODE_NB) +
+                            ".csv",
+                            index=False)  # slow
+                        # log_df.to_pickle(
+                        #     log_path +
+                        #     "/res_episode_" +
+                        #     str(EPISODE_NB) +
+                        #     ".pkl")  # fast
 
                     # Reset for next episode log
                     log_df = pd.DataFrame()
