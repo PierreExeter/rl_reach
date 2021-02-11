@@ -38,9 +38,10 @@ class WidowxEnv(gym.Env):
         reward_type,
         action_type,
         joint_limits,
-        action_coeff,
-        normalize_action,
-        alpha):
+        action_min,
+        action_max,
+        alpha_reward,
+        reward_coeff):
         """
         Initialise the environment
         """
@@ -51,20 +52,22 @@ class WidowxEnv(gym.Env):
         self.reward_type = reward_type
         self.action_type = action_type
         self.joint_limits = joint_limits
-        self.action_coeff = action_coeff
-        self.normalize_action = normalize_action
-        self.alpha = alpha
+        self.action_min = np.array(action_min)
+        self.action_max = np.array(action_max)
+        self.alpha_reward = alpha_reward
+        self.reward_coeff = reward_coeff
 
-        self.old_endeffector_pos = None
         self.endeffector_pos = None
+        self.old_endeffector_pos = None
         self.torso_pos = None
         self.end_torso = None
         self.end_goal = None
         self.joint_positions = None
         self.reward = None
         self.obs = None
-        self.action = np.zeros(6)
-        self.normalized_action = np.zeros(6)
+        self.pybullet_action = np.zeros(6)
+        self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, -0.0005])
+        self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.0005])
         self.new_joint_positions = None
         self.dist = 0
         self.old_dist = 0
@@ -74,21 +77,10 @@ class WidowxEnv(gym.Env):
         self.delta_dist = 0
 
         # Define action space
-        self.normalized_action_min = np.float32(np.array([-1, -1, -1, -1, -1, -1]))
-        self.normalized_action_max = np.float32(np.array([1, 1, 1, 1, 1, 1]))
-        self.action_min = np.float32(np.array([-0.5, -0.25, -0.25, -0.25, -0.5, -0.005]) / self.action_coeff)
-        self.action_max = np.float32(np.array([0.5, 0.25, 0.25, 0.25, 0.5, 0.005]) / self.action_coeff)
-
-        if self.normalize_action:
-            self.action_space = spaces.Box(
-                    low=self.normalized_action_min,
-                    high=self.normalized_action_max,
-                    dtype=np.float32)
-        else:
-            self.action_space = spaces.Box(
-                    low=self.action_min,
-                    high=self.action_max,
-                    dtype=np.float32)
+        self.action_space = spaces.Box(
+                low=np.float32(self.action_min),
+                high=np.float32(self.action_max),
+                dtype=np.float32)
 
         # Define observation space
         if self.joint_limits == "small":
@@ -329,16 +321,10 @@ class WidowxEnv(gym.Env):
         self.old_endeffector_pos = self.endeffector_pos
 
         # take action
-        self.normalized_action = np.array(action, dtype=np.float32)
+        self.action = np.array(action, dtype=np.float32)
 
-        if self.normalize_action:
-            for i in range(6):
-                self.action[i] = self._normalize_scalar(
-                    self.normalized_action[i],
-                    self.normalized_action_min[i],
-                    self.normalized_action_max[i],
-                    self.action_min[i],
-                    self.action_max[i])
+        # Scale action to pybullet range
+        self._scale_action_pybullet()
 
         if self.action_type == 1:
             self._take_action1()
@@ -388,6 +374,9 @@ class WidowxEnv(gym.Env):
         elif self.reward_type == 12:
             self.reward = self._get_reward12()
 
+        # Apply reward coefficient
+        self.reward *= self.reward_coeff
+
         # Create info
         self.delta_dist = self.old_dist - self.dist
         self.delta_pos = np.linalg.norm(self.old_endeffector_pos - self.endeffector_pos)
@@ -403,12 +392,12 @@ class WidowxEnv(gym.Env):
         info['joint_max'] = self.joint_max
         info['term1'] = self.term1
         info['term2'] = self.term2
-        info['normalized_action'] = self.normalized_action
         info['action'] = self.action
-        info['normalized_action_min'] = self.normalized_action_min
-        info['normalized_action_max'] = self.normalized_action_max
         info['action_min'] = self.action_min
         info['action_max'] = self.action_max
+        info['pybullet_action'] = self.pybullet_action
+        info['pybullet_action_min'] = self.pybullet_action_min
+        info['pybullet_action_max'] = self.pybullet_action_max
         # According to the Pybullet documentation, 1 timestep = 240 Hz
         info['vel_dist'] = self.delta_dist * 240
         info['vel_pos'] = self.delta_pos * 240
@@ -423,7 +412,7 @@ class WidowxEnv(gym.Env):
     def _take_action1(self):
         """ select action #1 (increments from previous joint position """
         # Update the new joint position with the action
-        self.new_joint_positions = self.joint_positions + self.action
+        self.new_joint_positions = self.joint_positions + self.pybullet_action
 
         # Clip the joint position to fit the joint's allowed boundaries
         self.new_joint_positions = np.clip(
@@ -435,8 +424,18 @@ class WidowxEnv(gym.Env):
         self._force_joint_positions(self.new_joint_positions)
 
     def _normalize_scalar(self, var, old_min, old_max, new_min, new_max):
-        """ normalize scalar var from one range to another """
+        """ Normalize scalar var from one range to another """
         return ((new_max - new_min) * (var - old_min) / (old_max - old_min)) + new_min
+
+    def _scale_action_pybullet(self):
+        """ Scale action to Pybullet action range """
+        for i in range(6):
+            self.pybullet_action[i] = self._normalize_scalar(
+                self.action[i],
+                self.action_min[i],
+                self.action_max[i],
+                self.pybullet_action_min[i],
+                self.pybullet_action_max[i])
 
     def _get_reward1(self):
         """ Compute reward function 1 (dense) """
@@ -447,7 +446,7 @@ class WidowxEnv(gym.Env):
 
     def _get_reward2(self):
         """ Compute reward function 2 (dense) """
-        self.term1 = 1 / abs(self.normalized_action[0])
+        self.term1 = 1 / abs(self.action[0])
         self.term2 = 0
         rew = self.term1 + self.term2
         return rew
@@ -455,21 +454,21 @@ class WidowxEnv(gym.Env):
     def _get_reward3(self):
         """ Compute reward function 3 (dense) """
         self.term1 = 1
-        self.term2 = - abs(self.normalized_action[0])
+        self.term2 = - abs(self.action[0])
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward4(self):
         """ Compute reward function 4 (dense) """
         self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha * np.linalg.norm(self.normalized_action)
+        self.term2 = - self.alpha_reward * np.linalg.norm(self.action)
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward5(self):
         """ Compute reward function 5 (dense) """
         self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha * np.linalg.norm(self.normalized_action) / self.dist ** 2
+        self.term2 = - self.alpha_reward * np.linalg.norm(self.action) / self.dist ** 2
         rew = self.term1 + self.term2
         return rew
 
@@ -483,7 +482,7 @@ class WidowxEnv(gym.Env):
     def _get_reward7(self):
         """ Compute reward function 7 (dense) """
         self.term1 = - self.dist ** 2
-        self.term2 = self.alpha * self.delta_dist / self.dist
+        self.term2 = self.alpha_reward * self.delta_dist / self.dist
         rew = self.term1 + self.term2
         return rew
 
@@ -497,7 +496,7 @@ class WidowxEnv(gym.Env):
     def _get_reward9(self):
         """ Compute reward function 9 (dense) """
         self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha * self.delta_pos / self.dist
+        self.term2 = - self.alpha_reward * self.delta_pos / self.dist
         rew = self.term1 + self.term2
         return rew
 
@@ -523,8 +522,8 @@ class WidowxEnv(gym.Env):
 
     def _get_reward12(self):
         """ Compute reward function 12 (dense) """
-        self.term1 = np.linalg.norm([1, 1, 1, 1, 1, 1])
-        self.term2 = - np.linalg.norm(self.normalized_action)
+        self.term1 = np.linalg.norm(self.action_max)
+        self.term2 = - np.linalg.norm(self.action)
         rew = self.term1 + self.term2
         return rew
 

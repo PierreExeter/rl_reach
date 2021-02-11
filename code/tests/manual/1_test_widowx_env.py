@@ -5,7 +5,7 @@ import gym
 import widowx_env
 from stable_baselines3.common.env_checker import check_env
 
-env = gym.make('widowx_reacher-v24')
+env = gym.make('widowx_reacher-v1')
 print("any warnings?", check_env(env))
 
 # Comment this for goal environments

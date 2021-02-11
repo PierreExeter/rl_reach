@@ -68,32 +68,32 @@ CartPole-v1:
 
 
 # # SB2 hyperparams
-# widowx_reacher-v1:
-#   n_timesteps: 100000
-#   normalize: true
-#   policy: 'MlpPolicy'
-#   n_envs: 8
-#   n_steps: 128
-#   n_epochs: 4
-#   batch_size: 256
-#   learning_rate: !!float 2.5e-4
-#   clip_range: 0.2
-#   vf_coef: 0.5
-#   ent_coef: 0.01
-
-# optimised hyperparameters: manual optimisation
 widowx_reacher-v1:
-  n_timesteps: 500000
+  n_timesteps: 100000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
-  n_steps: 1024
+  n_steps: 128
   n_epochs: 4
-  batch_size: 64
-  learning_rate: 0.0003
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
   clip_range: 0.2
   vf_coef: 0.5
   ent_coef: 0.01
+
+# optimised hyperparameters: manual optimisation
+# widowx_reacher-v1:
+#   n_timesteps: 500000
+#   normalize: true
+#   policy: 'MlpPolicy'
+#   n_envs: 8
+#   n_steps: 1024
+#   n_epochs: 4
+#   batch_size: 64
+#   learning_rate: 0.0003
+#   clip_range: 0.2
+#   vf_coef: 0.5
+#   ent_coef: 0.01
 
 # SB2 hyperparams
 widowx_reacher-v2:
