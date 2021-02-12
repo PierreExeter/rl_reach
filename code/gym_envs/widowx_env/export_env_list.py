@@ -116,8 +116,35 @@ d = {
         'alpha': 0.1,
         'reward_coeff': 1,
         },
+    
+    'widowx_reacher-v9':
+    {
+        'random_goal' : False,
+        'goal_oriented' : False,
+        'obs_type' : 5,
+        'reward_type' : 1,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-1, -1, -1, -1, -1, -1],
+        'action_max': [1, 1, 1, 1, 1, 1],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1000,
+    },
+    
+    'widowx_reacher-v10':
+    {   
+        'random_goal' : False,
+        'goal_oriented' : False,
+        'obs_type' : 5,
+        'reward_type' : 1,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-1, -1, -1, -1, -1, -1],
+        'action_max': [1, 1, 1, 1, 1, 1],
+        'alpha_reward': 0.1,
+        'reward_coeff': 0.001,
+        },
 }
-
 
 df = pd.DataFrame.from_dict(d, orient='index').reset_index()
 df.rename(columns={'index': 'env_id'}, inplace=True)

@@ -120,7 +120,7 @@ def test_exp3():
 
     args = [
         "--exp-id", 1003,
-        "--algo", "her",
+        "--algo", "ppo",
         "--env", 'widowx_reacher-v2',
         "--n-timesteps", 1000,
         "--n-seeds", 1
@@ -138,7 +138,7 @@ def test_exp4():
 
     args = [
         "--exp-id", 1004,
-        "--algo", "her",
+        "--algo", "ppo",
         "--env", 'widowx_reacher-v4',
         "--n-timesteps", 1000,
         "--n-seeds", 1

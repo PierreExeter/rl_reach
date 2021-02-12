@@ -1,0 +1,11 @@
+env_id,random_goal,goal_oriented,obs_type,reward_type,action_type,joint_limits,action_min,action_max,alpha,reward_coeff,alpha_reward
+widowx_reacher-v1,False,False,1,1,1,large,"[-1, -1, -1, -1, -1, -1]","[1, 1, 1, 1, 1, 1]",0.1,1.0,
+widowx_reacher-v2,False,False,2,1,1,large,"[-1, -1, -1, -1, -1, -1]","[1, 1, 1, 1, 1, 1]",0.1,1.0,
+widowx_reacher-v3,False,False,3,1,1,large,"[-1, -1, -1, -1, -1, -1]","[1, 1, 1, 1, 1, 1]",0.1,1.0,
+widowx_reacher-v4,False,False,4,1,1,large,"[-1, -1, -1, -1, -1, -1]","[1, 1, 1, 1, 1, 1]",0.1,1.0,
+widowx_reacher-v5,False,False,5,1,1,large,"[-1, -1, -1, -1, -1, -1]","[1, 1, 1, 1, 1, 1]",0.1,1.0,
+widowx_reacher-v6,False,False,5,1,1,large,"[-0.05, -0.025, -0.025, -0.025, -0.05, -0.0005]","[0.05, 0.025, 0.025, 0.025, 0.05, 0.0005]",0.1,1.0,
+widowx_reacher-v7,False,False,5,1,1,large,"[-2, -2, -2, -2, -2, -2]","[2, 2, 2, 2, 2, 2]",0.1,1.0,
+widowx_reacher-v8,False,False,5,1,1,large,"[-10, -10, -10, -10, -10, -10]","[10, 10, 10, 10, 10, 10]",0.1,1.0,
+widowx_reacher-v9,False,False,5,1,1,large,"[-1, -1, -1, -1, -1, -1]","[1, 1, 1, 1, 1, 1]",,1000.0,0.1
+widowx_reacher-v10,False,False,5,1,1,large,"[-1, -1, -1, -1, -1, -1]","[1, 1, 1, 1, 1, 1]",,0.001,0.1

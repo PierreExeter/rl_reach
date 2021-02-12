@@ -53,7 +53,7 @@ register(
         'joint_limits' : "large",
         'action_min': [-1, -1, -1, -1, -1, -1],
         'action_max': [1, 1, 1, 1, 1, 1],
-        'alpha': 0.1,
+        'alpha_reward': 0.1,
         'reward_coeff': 1,
         },
     )
@@ -71,7 +71,7 @@ register(
         'joint_limits' : "large",
         'action_min': [-1, -1, -1, -1, -1, -1],
         'action_max': [1, 1, 1, 1, 1, 1],
-        'alpha': 0.1,
+        'alpha_reward': 0.1,
         'reward_coeff': 1,
         },
     )
@@ -89,7 +89,7 @@ register(
         'joint_limits' : "large",
         'action_min': [-1, -1, -1, -1, -1, -1],
         'action_max': [1, 1, 1, 1, 1, 1],
-        'alpha': 0.1,
+        'alpha_reward': 0.1,
         'reward_coeff': 1,
         },
     )
@@ -107,7 +107,7 @@ register(
         'joint_limits' : "large",
         'action_min': [-0.05, -0.025, -0.025, -0.025, -0.05, -0.0005],
         'action_max': [0.05, 0.025, 0.025, 0.025, 0.05, 0.0005],
-        'alpha': 0.1,
+        'alpha_reward': 0.1,
         'reward_coeff': 1,
         },
     )
@@ -125,7 +125,7 @@ register(
         'joint_limits' : "large",
         'action_min': [-2, -2, -2, -2, -2, -2],
         'action_max': [2, 2, 2, 2, 2, 2],
-        'alpha': 0.1,
+        'alpha_reward': 0.1,
         'reward_coeff': 1,
         },
     )
@@ -143,11 +143,46 @@ register(
         'joint_limits' : "large",
         'action_min': [-10, -10, -10, -10, -10, -10],
         'action_max': [10, 10, 10, 10, 10, 10],
-        'alpha': 0.1,
+        'alpha_reward': 0.1,
         'reward_coeff': 1,
         },
     )
 
+register(
+    id='widowx_reacher-v9',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs={
+        'random_goal' : False,
+        'goal_oriented' : False,
+        'obs_type' : 5,
+        'reward_type' : 1,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-1, -1, -1, -1, -1, -1],
+        'action_max': [1, 1, 1, 1, 1, 1],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1000,
+        },
+    )
+
+register(
+    id='widowx_reacher-v10',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs={
+        'random_goal' : False,
+        'goal_oriented' : False,
+        'obs_type' : 5,
+        'reward_type' : 1,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-1, -1, -1, -1, -1, -1],
+        'action_max': [1, 1, 1, 1, 1, 1],
+        'alpha_reward': 0.1,
+        'reward_coeff': 0.001,
+        },
+    )
 
 
 
