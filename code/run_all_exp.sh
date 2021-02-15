@@ -28,12 +28,15 @@
 # echo "HER"
 # python run_experiments.py --exp-id 12 --algo her --env widowx_reacher-v4 --n-timesteps 100000 --n-seeds 2
 
-
-python run_experiments.py --exp-id 1 --algo ppo --env widowx_reacher-v1 --n-timesteps 500000 --n-seeds 2
-python run_experiments.py --exp-id 2 --algo ppo --env widowx_reacher-v2 --n-timesteps 500000 --n-seeds 2
-python run_experiments.py --exp-id 3 --algo ppo --env widowx_reacher-v3 --n-timesteps 500000 --n-seeds 2
-python run_experiments.py --exp-id 4 --algo ppo --env widowx_reacher-v4 --n-timesteps 500000 --n-seeds 2
-python run_experiments.py --exp-id 5 --algo ppo --env widowx_reacher-v5 --n-timesteps 500000 --n-seeds 2
-python run_experiments.py --exp-id 6 --algo ppo --env widowx_reacher-v6 --n-timesteps 500000 --n-seeds 2
-python run_experiments.py --exp-id 7 --algo ppo --env widowx_reacher-v7 --n-timesteps 500000 --n-seeds 2
-python run_experiments.py --exp-id 8 --algo ppo --env widowx_reacher-v8 --n-timesteps 500000 --n-seeds 2
+echo "31"
+python run_experiments.py --exp-id 31 --algo ppo --env widowx_reacher-v16 --n-timesteps 200000 --n-seeds 5
+echo "32"
+python run_experiments.py --exp-id 32 --algo ppo --env widowx_reacher-v17 --n-timesteps 200000 --n-seeds 5
+echo "33"
+python run_experiments.py --exp-id 33 --algo ppo --env widowx_reacher-v18 --n-timesteps 200000 --n-seeds 5
+echo "34"
+python run_experiments.py --exp-id 34 --algo ppo --env widowx_reacher-v19 --n-timesteps 1000000 --n-seeds 5
+echo "35"
+python run_experiments.py --exp-id 35 --algo ppo --env widowx_reacher-v26 --n-timesteps 1000000 --n-seeds 5
+echo "36"
+python run_experiments.py --exp-id 36 --algo ppo --env widowx_reacher-v27 --n-timesteps 1000000 --n-seeds 5

@@ -373,6 +373,14 @@ class WidowxEnv(gym.Env):
             self.reward = self._get_reward11()
         elif self.reward_type == 12:
             self.reward = self._get_reward12()
+        elif self.reward_type == 13:
+            self.reward = self._get_reward13()
+        elif self.reward_type == 14:
+            self.reward = self._get_reward14()
+        elif self.reward_type == 15:
+            self.reward = self._get_reward15()
+        elif self.reward_type == 16:
+            self.reward = self._get_reward16()
 
         # Apply reward coefficient
         self.reward *= self.reward_coeff
@@ -446,62 +454,69 @@ class WidowxEnv(gym.Env):
 
     def _get_reward2(self):
         """ Compute reward function 2 (dense) """
-        self.term1 = 1 / abs(self.action[0])
+        self.term1 = - self.dist
         self.term2 = 0
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward3(self):
         """ Compute reward function 3 (dense) """
-        self.term1 = 1
-        self.term2 = - abs(self.action[0])
+        self.term1 = - self.dist ** 3
+        self.term2 = 0
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward4(self):
         """ Compute reward function 4 (dense) """
-        self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha_reward * np.linalg.norm(self.action)
+        self.term1 = - self.dist ** 4
+        self.term2 = 0
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward5(self):
         """ Compute reward function 5 (dense) """
         self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha_reward * np.linalg.norm(self.action) / self.dist ** 2
+        self.term2 = - self.alpha_reward * np.linalg.norm(self.action)
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward6(self):
         """ Compute reward function 6 (dense) """
-        self.term1 = self.delta_dist
-        self.term2 = 0
+        self.term1 = - self.dist ** 2
+        self.term2 = - self.alpha_reward * np.linalg.norm(self.action) / self.dist ** 2
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward7(self):
         """ Compute reward function 7 (dense) """
-        self.term1 = - self.dist ** 2
-        self.term2 = self.alpha_reward * self.delta_dist / self.dist
+        self.term1 = self.delta_dist
+        self.term2 = 0
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward8(self):
         """ Compute reward function 8 (dense) """
-        self.term1 = self.delta_pos
-        self.term2 = 0
+        self.term1 = - self.dist ** 2
+        self.term2 = self.alpha_reward * abs(self.delta_dist / self.dist)
         rew = self.term1 + self.term2
         return rew
 
     def _get_reward9(self):
         """ Compute reward function 9 (dense) """
+        self.term1 = self.delta_pos
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward10(self):
+        """ Compute reward function 10 (dense) """
         self.term1 = - self.dist ** 2
         self.term2 = - self.alpha_reward * self.delta_pos / self.dist
         rew = self.term1 + self.term2
         return rew
 
-    def _get_reward10(self):
-        """ Compute reward function 10 (sparse) """
+    def _get_reward11(self):
+        """ Compute reward function 11 (sparse) """
         if self.dist >= 0.001:
             self.term1 = -1
         else:
@@ -510,8 +525,8 @@ class WidowxEnv(gym.Env):
         rew = self.term1 + self.term2
         return rew
 
-    def _get_reward11(self):
-        """ Compute reward function 11 (sparse) """
+    def _get_reward12(self):
+        """ Compute reward function 12 (sparse) """
         if self.dist >= 0.001:
             self.term1 = 0
         else:
@@ -520,10 +535,43 @@ class WidowxEnv(gym.Env):
         rew = self.term1 + self.term2
         return rew
 
-    def _get_reward12(self):
-        """ Compute reward function 12 (dense) """
-        self.term1 = np.linalg.norm(self.action_max)
-        self.term2 = - np.linalg.norm(self.action)
+    def _get_reward13(self):
+        """ Compute reward function 13 (sparse) """
+        if self.dist >= 0.001:
+            self.term1 = -0.02
+        else:
+            self.term1 = 1
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward14(self):
+        """ Compute reward function 14 (sparse) """
+        if self.dist >= 0.001:
+            self.term1 = -0.001
+        else:
+            self.term1 = 10
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward15(self):
+        """ Compute reward function 15 (sparse + dense) """
+        if self.dist >= 0.001:
+            self.term1 = - self.dist
+        else:
+            self.term1 = 1
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward16(self):
+        """ Compute reward function 16 (sparse + dense) """
+        if self.dist >= 0.001:
+            self.term1 = self.delta_dist
+        else:
+            self.term1 = self.delta_dist + 10
+        self.term2 = 0
         rew = self.term1 + self.term2
         return rew
 
