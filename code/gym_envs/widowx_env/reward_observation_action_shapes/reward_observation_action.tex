@@ -112,7 +112,7 @@ r = \Delta d_t
 \textbf{REW8} 
 
 \begin{equation}
-r = - d_t^2 + \alpha \frac{\Delta d_t}{d_t^2}
+r = - d_t^2 + \alpha abs( \frac{\Delta d_t}{d_t^2})
 \end{equation}
 
 \textbf{REW9} 
@@ -169,7 +169,7 @@ r = \begin{cases}
 \subsection{Sparse + dense reward functions}
 
 
-\textbf{REW15}
+\textbf{REW15: BEST REWARD FUNCTION FOR DISTANCE}
 
 \begin{equation}
 r = \begin{cases}
@@ -189,8 +189,19 @@ r = \begin{cases}
 \end{equation}
 
 
+\subsection{Position + orientation: Dense reward functions}
 
+\textbf{REW17}
 
+\begin{equation}
+r = - O_t^2
+\end{equation}
+
+\textbf{REW18}
+
+\begin{equation}
+r = - d_t^2 - O_t^2
+\end{equation}
 
 %%%% REWARD FUNCTION TO PREVENT JOINT 1 FROM MOVING
 
@@ -221,6 +232,7 @@ where
 \begin{itemize}  
 \item $r$ : Reward
 \item $d_t$ : Distance at time $t$ 
+\item $O_t$ : Orientation vector (collinearity between the end effector and the goal orientation)
 \item $\Delta d_t$ : Change in distance
 \item $a_t$ : Action at time $t$ 
 \item $A_t$ : Action normalised between -1 and 1 

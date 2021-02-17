@@ -7,7 +7,9 @@ import pandas as pd
 d = {
     'widowx_reacher-v1':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 1,
         'reward_type' : 1,
@@ -21,7 +23,9 @@ d = {
 
     'widowx_reacher-v2':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 2,
         'reward_type' : 1,
@@ -35,7 +39,9 @@ d = {
 
     'widowx_reacher-v3':
         {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 3,
         'reward_type' : 1,
@@ -49,7 +55,9 @@ d = {
 
     'widowx_reacher-v4':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 4,
         'reward_type' : 1,
@@ -63,7 +71,9 @@ d = {
 
     'widowx_reacher-v5':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 1,
@@ -77,7 +87,9 @@ d = {
 
     'widowx_reacher-v6':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 1,
@@ -91,7 +103,9 @@ d = {
 
     'widowx_reacher-v7':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 1,
@@ -105,7 +119,9 @@ d = {
 
     'widowx_reacher-v8':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 1,
@@ -119,7 +135,9 @@ d = {
 
     'widowx_reacher-v9':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 1,
@@ -133,7 +151,9 @@ d = {
 
     'widowx_reacher-v10':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 1,
@@ -147,7 +167,9 @@ d = {
 
     'widowx_reacher-v11':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 1,
@@ -161,7 +183,9 @@ d = {
 
     'widowx_reacher-v12':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 1,
@@ -175,7 +199,9 @@ d = {
 
     'widowx_reacher-v13':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 2,
@@ -189,7 +215,9 @@ d = {
 
     'widowx_reacher-v14':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 3,
@@ -203,7 +231,9 @@ d = {
 
     'widowx_reacher-v15':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 4,
@@ -217,7 +247,9 @@ d = {
 
     'widowx_reacher-v16':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 5,
@@ -231,7 +263,9 @@ d = {
 
     'widowx_reacher-v17':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 6,
@@ -239,13 +273,15 @@ d = {
         'joint_limits' : "large",
         'action_min': [-1.5, -1.5, -1.5, -1.5, -1.5, -1.5],
         'action_max': [1.5, 1.5, 1.5, 1.5, 1.5, 1.5],
-        'alpha_reward': 0.1,
+        'alpha_reward': 0.01,
         'reward_coeff': 1,
         },
 
     'widowx_reacher-v18':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 7,
@@ -253,13 +289,15 @@ d = {
         'joint_limits' : "large",
         'action_min': [-1.5, -1.5, -1.5, -1.5, -1.5, -1.5],
         'action_max': [1.5, 1.5, 1.5, 1.5, 1.5, 1.5],
-        'alpha_reward': 0.1,
+        'alpha_reward': 0.01,
         'reward_coeff': 1,
         },
 
     'widowx_reacher-v19':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 8,
@@ -273,7 +311,9 @@ d = {
 
     'widowx_reacher-v20':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 9,
@@ -287,7 +327,9 @@ d = {
 
     'widowx_reacher-v21':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 10,
@@ -301,7 +343,9 @@ d = {
 
     'widowx_reacher-v22':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 11,
@@ -315,7 +359,9 @@ d = {
 
     'widowx_reacher-v23':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 12,
@@ -329,7 +375,9 @@ d = {
 
     'widowx_reacher-v24':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 13,
@@ -343,7 +391,9 @@ d = {
 
     'widowx_reacher-v25':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 14,
@@ -357,28 +407,96 @@ d = {
 
     'widowx_reacher-v26':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 15,
         'action_type' : 1,
         'joint_limits' : "large",
-        'action_min': [-1.5, -1.5, -1.5, -1.5, -1.5, -1.5],
-        'action_max': [1.5, 1.5, 1.5, 1.5, 1.5, 1.5],
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         },
 
     'widowx_reacher-v27':
     {
-        'random_goal' : False,
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
         'reward_type' : 16,
         'action_type' : 1,
         'joint_limits' : "large",
-        'action_min': [-1.5, -1.5, -1.5, -1.5, -1.5, -1.5],
-        'action_max': [1.5, 1.5, 1.5, 1.5, 1.5, 1.5],
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        },
+
+    'widowx_reacher-v28':
+    {
+        'random_position' : True,
+        'random_orientation': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        },
+
+    'widowx_reacher-v29':
+    {
+        'random_position' : True,
+        'random_orientation': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obs_type' : 5,
+        'reward_type' : 16,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        },
+
+    'widowx_reacher-v30':
+    {
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "arrow",
+        'goal_oriented' : False,
+        'obs_type' : 6,
+        'reward_type' : 17,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        },
+
+    'widowx_reacher-v31':
+    {
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "arrow",
+        'goal_oriented' : False,
+        'obs_type' : 6,
+        'reward_type' : 18,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         },

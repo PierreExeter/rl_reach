@@ -17,7 +17,7 @@ With the local installation
    ``--exp-list``,	List of experiments to consider for plotting,	*list of int*,	26 27 28 29
    ``--col``,	Name of the hyperparameter for the X axis,	*str*,	n_timesteps
 
-The arguments of the ``--col`` flag correspond to the column headings of the `benchmark file <https://github.com/PierreExeter/rl_reach/blob/master/benchmark/benchmark_results.csv>`_.
+The arguments of the ``--col`` flag correspond to the column headings of the `benchmark file <https://github.com/PierreExeter/rl_reach/blob/master/code/benchmark/benchmark_results.csv>`_.
 
 Example:
 

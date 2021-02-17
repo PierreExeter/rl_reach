@@ -18,7 +18,7 @@ Useful links
 ==================
 
 * Github repository: `https://github.com/PierreExeter/rl_reach <https://github.com/PierreExeter/rl_reach>`_
-* CodeOcean capsule: `https://codeocean.com/capsule/4112840/tree/v1 <https://codeocean.com/capsule/4112840/tree/v1>`_
+* CodeOcean capsule: `https://codeocean.com/capsule/4112840/tree/ <https://codeocean.com/capsule/4112840/tree/>`_
 * Travis builds: `https://travis-ci.com/github/PierreExeter/rl_reach <https://travis-ci.com/github/PierreExeter/rl_reach>`_
 * DockerHub CPU image: `https://hub.docker.com/r/rlreach/rlreach-cpu <https://hub.docker.com/r/rlreach/rlreach-cpu>`_
 * DockerHub GPU image: `https://hub.docker.com/r/rlreach/rlreach-gpu <https://hub.docker.com/r/rlreach/rlreach-gpu>`_

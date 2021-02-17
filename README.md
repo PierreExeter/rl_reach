@@ -127,11 +127,11 @@ python scripts/plot_episode_eval_log.py --exp-id 999
 ```
 The plots are generated in the associated experiment folder, e.g. `logs/exp_999/ppo/`.
 
-Environment evaluation plot:
+Example of environment evaluation plot:
 
 ![Alt text](/docs/images/plot_episode_eval_log.png)
 
-Experiment learning curves:
+Example of experiment learning curves:
 
 ![Alt text](/docs/images/reward_vs_timesteps_smoothed.png)
 
@@ -143,12 +143,16 @@ Usage:
 |    Flag     |              Description                            |  Type        |    Example                       |
 |-------------|-----------------------------------------------------|--------------|----------------------------------|
 |`--exp-list` | List of experiments to consider for plotting        | *list of int*| 26 27 28 29                      | 
-|`--col`      | Name of the hyperparameter for the X axis, see column names [here](benchmark/benchmark_results.csv)   | *str*  | n_timesteps |
+|`--col`      | Name of the hyperparameter for the X axis, see column names [here](code/benchmark/benchmark_results.csv)   | *str*  | n_timesteps |
 
 Example:
 ```bash
 python scripts/plot_benchmark.py --exp-list 26 27 28 29 --col n_timesteps
 ```
+
+Example of benchmark plot:
+
+![Alt text](/docs/images/benchmark_plot.png)
 
 ## Optimise hyperparameters
 
@@ -191,7 +195,7 @@ It could be convenient to clean all the results and log files. Warning, this can
 
 A number of custom Gym environments are available in the `gym_envs` directory. They simulate the WidowX MK-II robotic manipulator with the Pybullet physics engine. The objective is to bring the end-effector as close as possible to a target position.
 
-Each implemented environment is described [here](gym_envs/widowx_env/envs_list.csv). The action, observation and reward functions are given in [this table](gym_envs/widowx_env/reward_observation_action_shapes/reward_observation_action.pdf).
+Each implemented environment is described [here](code/gym_envs/widowx_env/envs_list.csv). The action, observation and reward functions are given in [this table](code/gym_envs/widowx_env/reward_observation_action_shapes/reward_observation_action.pdf).
 
 
 ## Tested on

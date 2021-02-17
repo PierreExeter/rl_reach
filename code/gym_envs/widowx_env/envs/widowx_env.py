@@ -20,11 +20,15 @@ RESET_VALUES = [
     -0.07158577010132992,
     .027]
 
+
+MIN_GOAL_ORIENTATION = np.array([-np.pi, -np.pi, -np.pi])
+MAX_GOAL_ORIENTATION = np.array([np.pi, np.pi, np.pi])
 MIN_GOAL_COORDS = np.array([-.14, -.13, 0.26])
 MAX_GOAL_COORDS = np.array([.14, .13, .39])
 MIN_END_EFF_COORDS = np.array([-.16, -.15, 0.14])
 MAX_END_EFF_COORDS = np.array([.16, .15, .41])
 FIXED_GOAL_COORDS  = np.array([.14, .0, 0.26])
+FIXED_GOAL_ORIENTATION  = np.array([0, 0, -np.pi/2])
 
 
 class WidowxEnv(gym.Env):
@@ -32,7 +36,9 @@ class WidowxEnv(gym.Env):
 
     def __init__(
         self,
-        random_goal,
+        random_position,
+        random_orientation,
+        target_type,
         goal_oriented,
         obs_type,
         reward_type,
@@ -46,7 +52,9 @@ class WidowxEnv(gym.Env):
         Initialise the environment
         """
 
-        self.random_goal = random_goal
+        self.random_position = random_position
+        self.random_orientation = random_orientation
+        self.target_type = target_type
         self.goal_oriented = goal_oriented
         self.obs_type = obs_type
         self.reward_type = reward_type
@@ -59,12 +67,17 @@ class WidowxEnv(gym.Env):
 
         self.endeffector_pos = None
         self.old_endeffector_pos = None
+        self.endeffector_orient = None
         self.torso_pos = None
-        self.end_torso = None
-        self.end_goal = None
+        self.torso_orient = None
+        self.end_torso_pos = None
+        self.end_goal_pos = None
+        self.end_torso_orient = None
+        self.end_goal_orient = None
         self.joint_positions = None
         self.reward = None
         self.obs = None
+        self.action = np.zeros(6)
         self.pybullet_action = np.zeros(6)
         self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, -0.0005])
         self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.0005])
@@ -75,6 +88,18 @@ class WidowxEnv(gym.Env):
         self.term2 = 0
         self.delta_pos = 0
         self.delta_dist = 0
+
+        # Initialise goal position
+        if self.random_position:
+            self.goal_pos = self.sample_random_position()
+        else:
+            self.goal_pos = FIXED_GOAL_COORDS
+
+        # Initialise goal orientation
+        if self.random_orientation:
+            self.goal_orient = self.sample_random_orientation()
+        else:
+            self.goal_orient = FIXED_GOAL_ORIENTATION
 
         # Define action space
         self.action_space = spaces.Box(
@@ -120,6 +145,28 @@ class WidowxEnv(gym.Env):
             self.obs_space_high = np.float32(
                 np.concatenate(([1.0]*6, MAX_GOAL_COORDS, self.joint_max), axis=0))
 
+        elif self.obs_type == 6:
+            self.obs_space_low = np.float32(
+                np.concatenate((
+                    [-1.0]*6,
+                    [-np.pi]*6,
+                    MIN_GOAL_COORDS,
+                    MIN_GOAL_ORIENTATION,
+                    MIN_END_EFF_COORDS,
+                    [-np.pi]*3,
+                    self.joint_min
+                    ), axis=0))
+            self.obs_space_high = np.float32(
+                np.concatenate((
+                    [1.0]*6,
+                    [np.pi]*6,
+                    MAX_GOAL_COORDS,
+                    MAX_GOAL_ORIENTATION,
+                    MAX_END_EFF_COORDS,
+                    [np.pi]*3,
+                    self.joint_max
+                    ), axis=0))
+
         self.observation_space = spaces.Box(
                     low=self.obs_space_low,
                     high=self.obs_space_high,
@@ -137,12 +184,6 @@ class WidowxEnv(gym.Env):
                     dtype=np.float32),
                 observation=self.observation_space))
 
-        # Initialise goal position
-        if self.random_goal:
-            self.goal = self.sample_random_goal()
-        else:
-            self.goal = FIXED_GOAL_COORDS
-
         # Connect to physics client. By default, do not render
         self.physics_client = p.connect(p.DIRECT)
 
@@ -152,9 +193,13 @@ class WidowxEnv(gym.Env):
         # reset environment
         self.reset()
 
-    def sample_random_goal(self):
-        """ Sample random goal """
+    def sample_random_position(self):
+        """ Sample random target position """
         return np.random.uniform(low=MIN_GOAL_COORDS, high=MAX_GOAL_COORDS)
+
+    def sample_random_orientation(self):
+        """ Sample random target orientation """
+        return np.random.uniform(low=MIN_GOAL_ORIENTATION, high=MAX_GOAL_ORIENTATION)
 
     def create_world(self):
         """ Setup camera and load URDFs"""
@@ -167,7 +212,7 @@ class WidowxEnv(gym.Env):
             cameraTargetPosition=[0.2, 0, 0.1],
             physicsClientId=self.physics_client)
 
-        # Load robot, sphere and plane urdf
+        # Load robot, target object and plane urdf
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         path = os.path.abspath(os.path.dirname(__file__))
         self.arm = p.loadURDF(
@@ -175,12 +220,30 @@ class WidowxEnv(gym.Env):
                 path,
                 "URDFs/widowx/widowx.urdf"),
             useFixedBase=True)
-        self.sphere = p.loadURDF(
-            os.path.join(
-                path,
-                "URDFs/sphere.urdf"),
-            useFixedBase=True)
+
+        if self.target_type == "arrow":
+            self.target_object = p.loadURDF(
+                os.path.join(
+                    path,
+                    "URDFs/arrow.urdf"),
+                useFixedBase=True)
+        elif self.target_type == "sphere":
+            self.target_object = p.loadURDF(
+                os.path.join(
+                    path,
+                    "URDFs/sphere.urdf"),
+                useFixedBase=True)
+
         self.plane = p.loadURDF('plane.urdf')
+
+        # Reset robot at the origin and move the target object to the goal position and orientation
+        p.resetBasePositionAndOrientation(
+            self.arm, [0, 0, 0], p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
+        p.resetBasePositionAndOrientation(
+            self.target_object, self.goal_pos, p.getQuaternionFromEuler(self.goal_orient))
+
+        # Reset joint at initial angles
+        self._force_joint_positions(RESET_VALUES)
 
     def reset(self):
         """
@@ -188,14 +251,23 @@ class WidowxEnv(gym.Env):
         Returns observation
         """
 
-        if self.random_goal:
-            self.goal = self.sample_random_goal()
+        # Initialise goal position
+        if self.random_position:
+            self.goal_pos = self.sample_random_position()
+        else:
+            self.goal_pos = FIXED_GOAL_COORDS
 
-        # Reset robot at the origin and move sphere to the goal position
+        # Initialise goal orientation
+        if self.random_orientation:
+            self.goal_orient = self.sample_random_orientation()
+        else:
+            self.goal_orient = FIXED_GOAL_ORIENTATION
+
+        # Reset robot at the origin and move the target object to the goal position and orientation
         p.resetBasePositionAndOrientation(
             self.arm, [0, 0, 0], p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
         p.resetBasePositionAndOrientation(
-            self.sphere, self.goal, p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
+            self.target_object, self.goal_pos, p.getQuaternionFromEuler(self.goal_orient))
 
         # Reset joint at initial angles
         self._force_joint_positions(RESET_VALUES)
@@ -211,6 +283,8 @@ class WidowxEnv(gym.Env):
             self.obs = self._get_obs4()
         elif self.obs_type == 5:
             self.obs = self._get_obs5()
+        elif self.obs_type == 6:
+            self.obs = self._get_obs6()
 
         # update observation if goal oriented environment
         if self.goal_oriented:
@@ -221,9 +295,13 @@ class WidowxEnv(gym.Env):
     def _get_general_obs(self):
         """ Get information for generating observation array """
         self.endeffector_pos = self._get_end_effector_position()
+        self.endeffector_orient = self._get_end_effector_orientation()
         self.torso_pos = self._get_torso_position()
-        self.end_torso = self.endeffector_pos - self.torso_pos
-        self.end_goal = self.endeffector_pos - self.goal
+        self.torso_orient = self._get_torso_orientation()
+        self.end_torso_pos = self.endeffector_pos - self.torso_pos
+        self.end_goal_pos = self.endeffector_pos - self.goal_pos
+        self.end_torso_orient = self.endeffector_orient - self.torso_orient
+        self.end_goal_orient = self.endeffector_orient - self.goal_orient
         self.joint_positions = self._get_joint_positions()
 
     def _get_obs1(self):
@@ -240,7 +318,7 @@ class WidowxEnv(gym.Env):
         self._get_general_obs()
 
         robot_obs = np.concatenate(
-            [self.goal, self.joint_positions]).ravel()
+            [self.goal_pos, self.joint_positions]).ravel()
 
         return robot_obs
 
@@ -249,7 +327,7 @@ class WidowxEnv(gym.Env):
         self._get_general_obs()
 
         robot_obs = np.concatenate(
-            [self.end_torso, self.end_goal, self.joint_positions]).ravel()
+            [self.end_torso_pos, self.end_goal_pos, self.joint_positions]).ravel()
 
         return robot_obs
 
@@ -258,7 +336,7 @@ class WidowxEnv(gym.Env):
         self._get_general_obs()
 
         robot_obs = np.concatenate(
-            [self.end_goal, self.joint_positions]).ravel()
+            [self.end_goal_pos, self.joint_positions]).ravel()
 
         return robot_obs
 
@@ -267,7 +345,26 @@ class WidowxEnv(gym.Env):
         self._get_general_obs()
 
         robot_obs = np.concatenate(
-            [self.end_torso, self.end_goal, self.goal, self.joint_positions]).ravel()
+            [self.end_torso_pos, self.end_goal_pos, self.goal_pos, self.joint_positions]).ravel()
+
+        return robot_obs
+
+    def _get_obs6(self):
+        """ Returns observation #6 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [
+                self.end_torso_pos,
+                self.end_goal_pos,
+                self.end_torso_orient,
+                self.end_goal_orient,
+                self.goal_pos,
+                self.goal_orient,
+                self.endeffector_pos,
+                self.endeffector_orient,
+                self.joint_positions
+                ]).ravel()
 
         return robot_obs
 
@@ -283,6 +380,12 @@ class WidowxEnv(gym.Env):
                 computeForwardKinematics=True)
             [0])
 
+    def _get_end_effector_orientation(self):
+        """ Get end effector orientation """
+        orient_quat = p.getLinkState(self.arm, 5, computeForwardKinematics=True)[1]
+        orient_euler = p.getEulerFromQuaternion(orient_quat)
+        return np.array(orient_euler)
+
     def _get_torso_position(self):
         """ Get torso coordinates """
         return np.array(p.getLinkState(
@@ -291,11 +394,17 @@ class WidowxEnv(gym.Env):
                 computeForwardKinematics=True)
             [0])
 
+    def _get_torso_orientation(self):
+        """ Get torso orientation """
+        orient_quat = p.getLinkState(self.arm, 0, computeForwardKinematics=True)[1]
+        orient_euler = p.getEulerFromQuaternion(orient_quat)
+        return np.array(orient_euler)
+
     def _get_goal_oriented_obs(self):
         """ return goal_oriented observation """
         obs = {}
         obs['observation'] = self.obs
-        obs['desired_goal'] = self.goal
+        obs['desired_goal'] = self.goal_pos
         obs['achieved_goal'] = self.endeffector_pos
         return obs
 
@@ -317,8 +426,10 @@ class WidowxEnv(gym.Env):
         """
 
         # get distance and end effector position before taking the action
-        self.old_dist = np.linalg.norm(self.endeffector_pos - self.goal)
+        self.old_dist = np.linalg.norm(self.endeffector_pos - self.goal_pos)
         self.old_endeffector_pos = self.endeffector_pos
+        self.old_orient = np.linalg.norm(self.endeffector_orient - self.goal_orient)
+        self.old_endeffector_orient = self.endeffector_orient
 
         # take action
         self.action = np.array(action, dtype=np.float32)
@@ -340,13 +451,16 @@ class WidowxEnv(gym.Env):
             self.obs = self._get_obs4()
         elif self.obs_type == 5:
             self.obs = self._get_obs5()
+        elif self.obs_type == 6:
+            self.obs = self._get_obs6()
 
         # update observation if goal oriented environment
         if self.goal_oriented:
             self.obs = self._get_goal_oriented_obs()
 
         # get new distance
-        self.dist = np.linalg.norm(self.endeffector_pos - self.goal)
+        self.dist = np.linalg.norm(self.endeffector_pos - self.goal_pos)
+        self.orient = np.linalg.norm(self.endeffector_orient - self.goal_orient)
 
         # get reward
         if self.reward_type == 1:
@@ -381,6 +495,10 @@ class WidowxEnv(gym.Env):
             self.reward = self._get_reward15()
         elif self.reward_type == 16:
             self.reward = self._get_reward16()
+        elif self.reward_type == 17:
+            self.reward = self._get_reward17()
+        elif self.reward_type == 18:
+            self.reward = self._get_reward18()
 
         # Apply reward coefficient
         self.reward *= self.reward_coeff
@@ -388,13 +506,16 @@ class WidowxEnv(gym.Env):
         # Create info
         self.delta_dist = self.old_dist - self.dist
         self.delta_pos = np.linalg.norm(self.old_endeffector_pos - self.endeffector_pos)
+        self.delta_orient = self.old_orient - self.orient
+        self.delta_orient = np.linalg.norm(self.old_endeffector_orient - self.endeffector_orient)
 
         info = {}
-        info['old_distance'] = self.old_dist
         info['distance'] = self.dist
-        info['goal_pos'] = self.goal
-        info['old_endeffector_pos'] = self.old_endeffector_pos
+        info['goal_pos'] = self.goal_pos
         info['endeffector_pos'] = self.endeffector_pos
+        info['orientation'] = self.orient
+        info['goal_orient'] = self.goal_orient
+        info['endeffector_orient'] = self.endeffector_orient
         info['joint_pos'] = self.joint_positions
         info['joint_min'] = self.joint_min
         info['joint_max'] = self.joint_max
@@ -572,6 +693,20 @@ class WidowxEnv(gym.Env):
         else:
             self.term1 = self.delta_dist + 10
         self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward17(self):
+        """ Compute reward function 17 (dense) """
+        self.term1 = - self.orient ** 2
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward18(self):
+        """ Compute reward function 18 (dense) """
+        self.term1 = - self.dist ** 2
+        self.term2 = - self.orient ** 2
         rew = self.term1 + self.term2
         return rew
 

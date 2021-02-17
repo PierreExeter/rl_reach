@@ -94,4 +94,4 @@ Test the Docker images
 CodeOcean
 ===================
 
-A `reproducible capsule <https://codeocean.com/capsule/4112840/tree/v1>`_ is available on the `CodeOcean <https://codeocean.com/>`_ platform.
+A `reproducible capsule <https://codeocean.com/capsule/4112840/tree/>`_ is available on the `CodeOcean <https://codeocean.com/>`_ platform.

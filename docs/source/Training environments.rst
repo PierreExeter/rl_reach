@@ -9,6 +9,6 @@ The objective is to bring the end-effector as close as possible to a target posi
 .. image:: ../images/widowx_env.gif
 
 Each implemented environment is described 
-`here <https://github.com/PierreExeter/rl_reach/blob/master/gym_envs/widowx_env/envs_list.csv>`_. 
+`here <https://github.com/PierreExeter/rl_reach/blob/master/code/gym_envs/widowx_env/envs_list.csv>`_. 
 The action, observation and reward functions are given in 
-`this document <https://github.com/PierreExeter/rl_reach/blob/master/gym_envs/widowx_env/reward_observation_action_shapes/reward_observation_action.pdf>`_.
+`this document <https://github.com/PierreExeter/rl_reach/blob/master/code/gym_envs/widowx_env/reward_observation_action_shapes/reward_observation_action.pdf>`_.
