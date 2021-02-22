@@ -350,28 +350,36 @@ def get_saved_hyperparams(stats_path: str,
     return hyperparams, stats_path
 
 
-def calc_ep_success(success_threshold, episode_success_list, infos):
-    """update episode_success_list for the current timestep"""
-
+def calc_ep_success_pos(success_threshold, episode_success_list, infos):
+    """update episode_success_list for the current timestep (distance) """
     if infos[0]['distance'] <= success_threshold:
         episode_success_list.append(1)
     else:
         episode_success_list.append(0)
     return episode_success_list
 
+def calc_ep_success_orient(success_threshold, episode_success_list, infos):
+    """update episode_success_list for the current timestep (orientation) """
+    if infos[0]['orientation'] <= success_threshold:
+        episode_success_list.append(1)
+    else:
+        episode_success_list.append(0)
+    return episode_success_list
 
 def calc_success_list(episode_success_list, success_list):
     """ Append the last element of the episode success list when episode is done """
     success_list.append(episode_success_list[-1])
     return success_list
 
-
 def calc_reach_time(episode_success_list):
-    """ If the episode is successful and it starts from an unsucessful step, calculate reach time """
+    """
+    If the episode is successful and it starts from an unsucessful step,
+    calculate reach time
+    """
     reachtime_list = []
-    if episode_success_list[-1] and episode_success_list[0] == False:
+    if episode_success_list[-1] and not episode_success_list[0]:
         idx = 0
-        while episode_success_list[idx] == False:
+        while not episode_success_list[idx]:
             idx += 1
         reachtime_list.append(idx)
     return reachtime_list
@@ -382,14 +390,13 @@ def calc_mean_successratio_reachtime(
         success_list,
         reachtime_list):
     """ Calculate mean of success ratio and reach time """
-
     SR_mean = np.mean(success_list)
     if SR_mean == 0:
         RT_mean = None
     else:
         RT_mean = np.mean(reachtime_list)
     print(
-        "success threshold: {} | success ratio: {:.2f} | Average reach time: {}".format(
+        "Success threshold: {} | Success ratio: {:.2f} | Reach time: {}".format(
             success_threshold,
             SR_mean,
             RT_mean))

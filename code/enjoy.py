@@ -16,8 +16,8 @@ import matplotlib.pyplot as plt
 from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv, VecEnv, VecEnvWrapper
 from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams
-from utils.utils import calc_ep_success, calc_success_list, calc_reach_time
-from utils.utils import calc_mean_successratio_reachtime
+from utils.utils import calc_ep_success_pos, calc_ep_success_orient, calc_success_list
+from utils.utils import calc_mean_successratio_reachtime, calc_reach_time
 from utils.utils import StoreDict
 
 
@@ -272,6 +272,20 @@ if __name__ == "__main__":
     success_list_2 = []
     success_list_1 = []
     success_list_05 = []
+    ep_success_list_orient_50 = []
+    ep_success_list_orient_20 = []
+    ep_success_list_orient_10 = []
+    ep_success_list_orient_5 = []
+    ep_success_list_orient_2 = []
+    ep_success_list_orient_1 = []
+    ep_success_list_orient_05 = []
+    success_list_orient_50 = []
+    success_list_orient_20 = []
+    success_list_orient_10 = []
+    success_list_orient_5 = []
+    success_list_orient_2 = []
+    success_list_orient_1 = []
+    success_list_orient_05 = []
 
     # Moved render flag outside the loop (Pierre)
     if args.render:
@@ -291,21 +305,36 @@ if __name__ == "__main__":
 
         if "widowx" in env_id:
             # Update episode success list
-            ep_success_list_50 = calc_ep_success(
+            ep_success_list_50 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_50, ep_success_list_50, infos)
-            ep_success_list_20 = calc_ep_success(
+            ep_success_list_20 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_20, ep_success_list_20, infos)
-            ep_success_list_10 = calc_ep_success(
+            ep_success_list_10 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_10, ep_success_list_10, infos)
-            ep_success_list_5 = calc_ep_success(
+            ep_success_list_5 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_5, ep_success_list_5, infos)
-            ep_success_list_2 = calc_ep_success(
+            ep_success_list_2 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_2, ep_success_list_2, infos)
-            ep_success_list_1 = calc_ep_success(
+            ep_success_list_1 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_1, ep_success_list_1, infos)
-            ep_success_list_05 = calc_ep_success(
+            ep_success_list_05 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_05, ep_success_list_05, infos)
 
+            ep_success_list_orient_50 = calc_ep_success_pos(
+                SUCCESS_THRESHOLD_50, ep_success_list_orient_50, infos)
+            ep_success_list_orient_20 = calc_ep_success_pos(
+                SUCCESS_THRESHOLD_20, ep_success_list_orient_20, infos)
+            ep_success_list_orient_10 = calc_ep_success_pos(
+                SUCCESS_THRESHOLD_10, ep_success_list_orient_10, infos)
+            ep_success_list_orient_5 = calc_ep_success_pos(
+                SUCCESS_THRESHOLD_5, ep_success_list_orient_5, infos)
+            ep_success_list_orient_2 = calc_ep_success_pos(
+                SUCCESS_THRESHOLD_2, ep_success_list_orient_2, infos)
+            ep_success_list_orient_1 = calc_ep_success_pos(
+                SUCCESS_THRESHOLD_1, ep_success_list_orient_1, infos)
+            ep_success_list_orient_05 = calc_ep_success_pos(
+                SUCCESS_THRESHOLD_05, ep_success_list_orient_05, infos)
+            
         EPISODE_RETURN += reward[0]
         EP_LEN += 1
 
@@ -507,9 +536,15 @@ if __name__ == "__main__":
             log_dict['goal_x'] = infos[0]['goal_pos'][0]
             log_dict['goal_y'] = infos[0]['goal_pos'][1]
             log_dict['goal_z'] = infos[0]['goal_pos'][2]
-            log_dict['tip_y'] = infos[0]['endeffector_pos'][1]
             log_dict['tip_x'] = infos[0]['endeffector_pos'][0]
+            log_dict['tip_y'] = infos[0]['endeffector_pos'][1]
             log_dict['tip_z'] = infos[0]['endeffector_pos'][2]
+            log_dict['goal_yaw'] = infos[0]['goal_orient'][0]
+            log_dict['goal_pitch'] = infos[0]['goal_orient'][1]
+            log_dict['goal_roll'] = infos[0]['goal_orient'][2]
+            log_dict['tip_yaw'] = infos[0]['endeffector_orient'][0]
+            log_dict['tip_pitch'] = infos[0]['endeffector_orient'][1]
+            log_dict['tip_roll'] = infos[0]['endeffector_orient'][2]
             log_dict['done'] = done[0]
             log_dict['term1'] = infos[0]['term1']
             log_dict['term2'] = infos[0]['term2']
@@ -551,6 +586,21 @@ if __name__ == "__main__":
                     success_list_05 = calc_success_list(
                         ep_success_list_05, success_list_05)
 
+                    success_list_orient_50 = calc_success_list(
+                        ep_success_list_orient_50, success_list_orient_50)
+                    success_list_orient_20 = calc_success_list(
+                        ep_success_list_orient_20, success_list_orient_20)
+                    success_list_orient_10 = calc_success_list(
+                        ep_success_list_orient_10, success_list_orient_10)
+                    success_list_orient_5 = calc_success_list(
+                        ep_success_list_orient_5, success_list_orient_5)
+                    success_list_orient_2 = calc_success_list(
+                        ep_success_list_orient_2, success_list_orient_2)
+                    success_list_orient_1 = calc_success_list(
+                        ep_success_list_orient_1, success_list_orient_1)
+                    success_list_orient_05 = calc_success_list(
+                        ep_success_list_orient_05, success_list_orient_05)
+
                     # If the episode is successful and it starts from an
                     # unsucessful step, calculate reach time
                     reachtime_list_50 = calc_reach_time(ep_success_list_50)
@@ -560,6 +610,14 @@ if __name__ == "__main__":
                     reachtime_list_2 = calc_reach_time(ep_success_list_2)
                     reachtime_list_1 = calc_reach_time(ep_success_list_1)
                     reachtime_list_05 = calc_reach_time(ep_success_list_05)
+
+                    reachtime_list_orient_50 = calc_reach_time(ep_success_list_orient_50)
+                    reachtime_list_orient_20 = calc_reach_time(ep_success_list_orient_20)
+                    reachtime_list_orient_10 = calc_reach_time(ep_success_list_orient_10)
+                    reachtime_list_orient_5 = calc_reach_time(ep_success_list_orient_5)
+                    reachtime_list_orient_2 = calc_reach_time(ep_success_list_orient_2)
+                    reachtime_list_orient_1 = calc_reach_time(ep_success_list_orient_1)
+                    reachtime_list_orient_05 = calc_reach_time(ep_success_list_orient_05)
 
                 if args.log_info:
                     # sort columns
@@ -604,6 +662,14 @@ if __name__ == "__main__":
                 ep_success_list_1 = []
                 ep_success_list_05 = []
 
+                ep_success_list_orient_50 = []
+                ep_success_list_orient_20 = []
+                ep_success_list_orient_10 = []
+                ep_success_list_orient_5 = []
+                ep_success_list_orient_2 = []
+                ep_success_list_orient_1 = []
+                ep_success_list_orient_05 = []
+
             # Reset also when the goal is achieved when using HER
             if done and infos[0].get("is_success") is not None:
                 if args.verbose > 1:
@@ -628,6 +694,7 @@ if __name__ == "__main__":
             f"Mean reward: {np.mean(episode_rewards):.2f} +/- {np.std(episode_rewards):.2f}")
 
         if "widowx" in env_id:
+            print("******** Success ratios by position *********")
             SR_mean_50, RT_mean_50 = calc_mean_successratio_reachtime(
                 SUCCESS_THRESHOLD_50, success_list_50, reachtime_list_50)
             SR_mean_20, RT_mean_20 = calc_mean_successratio_reachtime(
@@ -643,24 +710,54 @@ if __name__ == "__main__":
             SR_mean_05, RT_mean_05 = calc_mean_successratio_reachtime(
                 SUCCESS_THRESHOLD_05, success_list_05, reachtime_list_05)
 
+            print("******** Success ratios by orientation *********")
+            SR_mean_orient_50, RT_mean_orient_50 = calc_mean_successratio_reachtime(
+                SUCCESS_THRESHOLD_50, success_list_orient_50, reachtime_list_orient_50)
+            SR_mean_orient_20, RT_mean_orient_20 = calc_mean_successratio_reachtime(
+                SUCCESS_THRESHOLD_20, success_list_orient_20, reachtime_list_orient_20)
+            SR_mean_orient_10, RT_mean_orient_10 = calc_mean_successratio_reachtime(
+                SUCCESS_THRESHOLD_10, success_list_orient_10, reachtime_list_orient_10)
+            SR_mean_orient_5, RT_mean_orient_5 = calc_mean_successratio_reachtime(
+                SUCCESS_THRESHOLD_5, success_list_orient_5, reachtime_list_orient_5)
+            SR_mean_orient_2, RT_mean_orient_2 = calc_mean_successratio_reachtime(
+                SUCCESS_THRESHOLD_2, success_list_orient_2, reachtime_list_orient_2)
+            SR_mean_orient_1, RT_mean_orient_1 = calc_mean_successratio_reachtime(
+                SUCCESS_THRESHOLD_1, success_list_orient_1, reachtime_list_orient_1)
+            SR_mean_orient_05, RT_mean_orient_05 = calc_mean_successratio_reachtime(
+                SUCCESS_THRESHOLD_05, success_list_orient_05, reachtime_list_orient_05)
+
             # log metrics to stats.csv
             d = {
                 "Eval mean reward": np.mean(episode_rewards),
                 "Eval std": np.std(episode_rewards),
-                "success ratio 50mm": SR_mean_50,
-                "Average reach time 50mm": RT_mean_50,
-                "success ratio 20mm": SR_mean_20,
-                "Average reach time 20mm": RT_mean_20,
-                "success ratio 10mm": SR_mean_10,
-                "Average reach time 10mm": RT_mean_10,
-                "success ratio 5mm": SR_mean_5,
-                "Average reach time 5mm": RT_mean_5,
-                "success ratio 2mm": SR_mean_2,
-                "Average reach time 2mm": RT_mean_2,
-                "success ratio 1mm": SR_mean_1,
-                "Average reach time 1mm": RT_mean_1,
-                "success ratio 0.5mm": SR_mean_05,
-                "Average reach time 0.5mm": RT_mean_05
+                "SR pos 50mm": SR_mean_50,
+                "RT pos 50mm": RT_mean_50,
+                "SR pos 20mm": SR_mean_20,
+                "RT pos 20mm": RT_mean_20,
+                "SR pos 10mm": SR_mean_10,
+                "RT pos 10mm": RT_mean_10,
+                "SR pos 5mm": SR_mean_5,
+                "RT pos 5mm": RT_mean_5,
+                "SR pos 2mm": SR_mean_2,
+                "RT pos 2mm": RT_mean_2,
+                "SR pos 1mm": SR_mean_1,
+                "RT pos 1mm": RT_mean_1,
+                "SR pos 0.5mm": SR_mean_05,
+                "RT pos 0.5mm": RT_mean_05,
+                "SR orient 50mm": SR_mean_orient_50,
+                "RT orient 50mm": RT_mean_orient_50,
+                "SR orient 20mm": SR_mean_orient_20,
+                "RT orient 20mm": RT_mean_orient_20,
+                "SR orient 10mm": SR_mean_orient_10,
+                "RT orient 10mm": RT_mean_orient_10,
+                "SR orient 5mm": SR_mean_orient_5,
+                "RT orient 5mm": RT_mean_orient_5,
+                "SR orient 2mm": SR_mean_orient_2,
+                "RT orient 2mm": RT_mean_orient_2,
+                "SR orient 1mm": SR_mean_orient_1,
+                "RT orient 1mm": RT_mean_orient_1,
+                "SR orient 0.5mm": SR_mean_orient_05,
+                "RT orient 0.5mm": RT_mean_orient_05
             }
 
             # print("path:", log_path)

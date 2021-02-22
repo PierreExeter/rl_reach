@@ -28,8 +28,8 @@ MAX_GOAL_COORDS = np.array([.14, .13, .39])
 MIN_END_EFF_COORDS = np.array([-.16, -.15, 0.14])
 MAX_END_EFF_COORDS = np.array([.16, .15, .41])
 FIXED_GOAL_COORDS  = np.array([.14, .0, 0.26])
-FIXED_GOAL_ORIENTATION  = np.array([0, 0, -np.pi/2])
-
+FIXED_GOAL_ORIENTATION  = np.array([-np.pi/4, 0, -np.pi/2])
+ARROW_OBJECT_ORIENTATION_CORRECTION = np.array([np.pi/2, 0, 0])
 
 class WidowxEnv(gym.Env):
     """ WidowX reacher Gym environment """
@@ -237,10 +237,14 @@ class WidowxEnv(gym.Env):
         self.plane = p.loadURDF('plane.urdf')
 
         # Reset robot at the origin and move the target object to the goal position and orientation
+        # Note: the arrow's STL is oriented  along a different axis and its
+        # orientation vector must be corrected (for consistency with the Pybullet rendering)
+        target_object_orient = self.goal_orient + ARROW_OBJECT_ORIENTATION_CORRECTION
+
         p.resetBasePositionAndOrientation(
             self.arm, [0, 0, 0], p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
         p.resetBasePositionAndOrientation(
-            self.target_object, self.goal_pos, p.getQuaternionFromEuler(self.goal_orient))
+            self.target_object, self.goal_pos, p.getQuaternionFromEuler(target_object_orient))
 
         # Reset joint at initial angles
         self._force_joint_positions(RESET_VALUES)
@@ -264,10 +268,14 @@ class WidowxEnv(gym.Env):
             self.goal_orient = FIXED_GOAL_ORIENTATION
 
         # Reset robot at the origin and move the target object to the goal position and orientation
+        # Note: the arrow's STL is oriented  along a different axis and its
+        # orientation vector must be corrected (for consistency with the Pybullet rendering)
+        target_object_orient = self.goal_orient + ARROW_OBJECT_ORIENTATION_CORRECTION
+
         p.resetBasePositionAndOrientation(
             self.arm, [0, 0, 0], p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
         p.resetBasePositionAndOrientation(
-            self.target_object, self.goal_pos, p.getQuaternionFromEuler(self.goal_orient))
+            self.target_object, self.goal_pos, p.getQuaternionFromEuler(target_object_orient))
 
         # Reset joint at initial angles
         self._force_joint_positions(RESET_VALUES)
@@ -499,6 +507,8 @@ class WidowxEnv(gym.Env):
             self.reward = self._get_reward17()
         elif self.reward_type == 18:
             self.reward = self._get_reward18()
+        elif self.reward_type == 19:
+            self.reward = self._get_reward19()
 
         # Apply reward coefficient
         self.reward *= self.reward_coeff
@@ -706,7 +716,17 @@ class WidowxEnv(gym.Env):
     def _get_reward18(self):
         """ Compute reward function 18 (dense) """
         self.term1 = - self.dist ** 2
-        self.term2 = - self.orient ** 2
+        self.term2 = - self.alpha_reward * self.orient ** 2
+        rew = self.term1 + self.term2
+        return rew
+
+    def _get_reward19(self):
+        """ Compute reward function 19 (sparse + dense) """
+        if self.dist >= 0.001 and self.orient >= 0.001:
+            self.term1 = - self.dist **2 - self.alpha_reward * self.orient ** 2
+        else:
+            self.term1 = 1
+        self.term2 = 0
         rew = self.term1 + self.term2
         return rew
 

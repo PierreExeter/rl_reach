@@ -29,4 +29,5 @@ widowx_reacher-v27,False,False,sphere,False,5,16,1,large,"[-2, -2, -2, -2, -2, -
 widowx_reacher-v28,True,False,sphere,False,5,15,1,large,"[-2, -2, -2, -2, -2, -2]","[2, 2, 2, 2, 2, 2]",0.1,1.0
 widowx_reacher-v29,True,False,sphere,False,5,16,1,large,"[-2, -2, -2, -2, -2, -2]","[2, 2, 2, 2, 2, 2]",0.1,1.0
 widowx_reacher-v30,False,False,arrow,False,6,17,1,large,"[-2, -2, -2, -2, -2, -2]","[2, 2, 2, 2, 2, 2]",0.1,1.0
-widowx_reacher-v31,False,False,arrow,False,6,18,1,large,"[-2, -2, -2, -2, -2, -2]","[2, 2, 2, 2, 2, 2]",0.1,1.0
+widowx_reacher-v31,False,False,arrow,False,6,18,1,large,"[-2.5, -2.5, -2.5, -2.5, -2.5, -2.5]","[2.5, 2.5, 2.5, 2.5, 2.5, 2.5]",0.01,1.0
+widowx_reacher-v32,False,False,arrow,False,6,19,1,large,"[-2.5, -2.5, -2.5, -2.5, -2.5, -2.5]","[2.5, 2.5, 2.5, 2.5, 2.5, 2.5]",0.01,1.0

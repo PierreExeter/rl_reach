@@ -104,19 +104,24 @@ if __name__ == '__main__':
     log_df.plot(x='timestep', y='distance', ax=axs[3, 2], color="b")
 
     log_df.plot(x='timestep', y='vel_dist', ax=axs[3, 3], color="g")
+    log_df.plot(x='timestep', y='vel_pos', ax=axs[3, 3], color="g", marker="+")
     ax_1 = axs[3, 3].twinx()
-    log_df.plot(x='timestep', y='vel_pos', ax=ax_1, color="r")
+    log_df.plot(x='timestep', y='acc_dist', ax=ax_1, color="r")
+    log_df.plot(x='timestep', y='acc_pos', ax=ax_1, color="r", marker="+")
 
-    log_df.plot(x='timestep', y='acc_dist', ax=axs[3, 4], color="g")
-    ax_2 = axs[3, 4].twinx()
-    log_df.plot(x='timestep', y='acc_pos', ax=ax_2, color="r")
+    log_df.plot(x='timestep', y='goal_x', ax=axs[3, 4], style='r')
+    log_df.plot(x='timestep', y='goal_y', ax=axs[3, 4], style='b')
+    log_df.plot(x='timestep', y='goal_z', ax=axs[3, 4], style='g')
+    log_df.plot(x='timestep', y='tip_x', ax=axs[3, 4], style='xr')
+    log_df.plot(x='timestep', y='tip_y', ax=axs[3, 4], style='xb')
+    log_df.plot(x='timestep', y='tip_z', ax=axs[3, 4], style='xg')
 
-    log_df.plot(x='timestep', y='goal_x', ax=axs[3, 5], style='r')
-    log_df.plot(x='timestep', y='goal_y', ax=axs[3, 5], style='b')
-    log_df.plot(x='timestep', y='goal_z', ax=axs[3, 5], style='g')
-    log_df.plot(x='timestep', y='tip_x', ax=axs[3, 5], style='xr')
-    log_df.plot(x='timestep', y='tip_y', ax=axs[3, 5], style='xb')
-    log_df.plot(x='timestep', y='tip_z', ax=axs[3, 5], style='xg')
+    log_df.plot(x='timestep', y='goal_yaw', ax=axs[3, 5], style='r')
+    log_df.plot(x='timestep', y='goal_pitch', ax=axs[3, 5], style='b')
+    log_df.plot(x='timestep', y='goal_roll', ax=axs[3, 5], style='g')
+    log_df.plot(x='timestep', y='tip_yaw', ax=axs[3, 5], style='xr')
+    log_df.plot(x='timestep', y='tip_pitch', ax=axs[3, 5], style='xb')
+    log_df.plot(x='timestep', y='tip_roll', ax=axs[3, 5], style='xg')
 
     axs[0, 0].set_ylabel("joint1 pos (rad)")
     axs[0, 1].set_ylabel("joint2 pos (rad)")
@@ -145,22 +150,19 @@ if __name__ == '__main__':
 
     axs[3, 2].set_ylabel("Distance (m)")
 
-    axs[3, 3].set_ylabel("Vel by distance change (m/s)", color="g")
-    ax_1.set_ylabel("Vel by position changes (m/s)", color="r")
+    axs[3, 3].set_ylabel("Velocity (m/s)", color="g")
+    ax_1.set_ylabel("Acceleration (m/s^2)", color="r")
     axs[3, 3].tick_params(axis='y', labelcolor="g")
     ax_1.tick_params(axis='y', labelcolor="r")
     ax_1.legend(loc="upper right")
     axs[3, 3].legend(loc="lower right")
 
-    axs[3, 4].set_ylabel("Acc by distance change (m/s^2)", color="g")
-    ax_2.set_ylabel("Acc by position change (m/s^2)", color="r")
-    axs[3, 4].tick_params(axis='y', labelcolor="g")
-    ax_2.tick_params(axis='y', labelcolor="r")
-    ax_2.legend(loc="upper right")
-    axs[3, 4].legend(loc="lower right")
+    axs[3, 4].set_ylabel("Coordinates (m)")
+    axs[3, 4].legend(loc="upper right")
 
-    axs[3, 5].set_ylabel("Coordinates (m)")
+    axs[3, 5].set_ylabel("Orientation (rad)")
     axs[3, 5].legend(loc="upper right")
+
     # ax3.legend(bbox_to_anchor=(1, 1.05))
     # ax4.legend(bbox_to_anchor=(1.2, 1.05))
 

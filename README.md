@@ -14,8 +14,7 @@ The Gym environments and training scripts are adapted from [Replab](https://gith
 
 ## Documentation
 
-Please read the [documentation](https://rl-reach.readthedocs.io/en/latest/) to get started with RL Reach.
-
+Please read the [documentation](https://rl-reach.readthedocs.io/en/latest/) to get started with RL Reach. More details can be found in the associated [journal publication](https://www.sciencedirect.com/science/article/pii/S2665963821000099) or [ArXiv ePrint](https://arxiv.org/abs/2102.04916).
 
 ## Installation
 
@@ -60,7 +59,7 @@ Note, the GPU image requires [nvidia-docker](https://github.com/NVIDIA/nvidia-do
 
 ## 3. CodeOcean
 
-A [reproducible capsule](https://codeocean.com/capsule/4112840/tree/v1) is available on CodeOcean.
+A [reproducible capsule](https://codeocean.com/capsule/4112840/tree/) is available on CodeOcean.
 
 
 ## Test the installation
@@ -183,7 +182,7 @@ A Bash script that launches multiple hyperparameter optimisation runs is provide
 ```
 
 
-# Clean all the results (Reset the repository)
+## Clean all the results (Reset the repository)
 
 It could be convenient to clean all the results and log files. Warning, this cannot be undone!
 
@@ -204,3 +203,20 @@ Each implemented environment is described [here](code/gym_envs/widowx_env/envs_l
 - Python 3.7.9
 - Conda 4.9.2
 - CUDA 11.1
+
+## Citation
+
+Please cite this work as:
+
+```bash
+@article{aumjaud2021a,
+author = {Aumjaud, Pierre and McAuliffe, David and Rodriguez-Lera, Francisco J and Cardiff, Philip},
+journal = {Software Impacts},
+pages = {100061},
+title = {{rl{\_}reach: Reproducible reinforcement learning experiments for robotic reaching tasks}},
+archivePrefix = {arXiv},
+arxivId = {2102.04916},
+doi = {https://doi.org/10.1016/j.simpa.2021.100061},
+year = {2021}
+}
+```

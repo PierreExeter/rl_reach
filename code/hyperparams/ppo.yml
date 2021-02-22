@@ -69,7 +69,7 @@ CartPole-v1:
 
 # # SB2 hyperparams
 widowx_reacher-v1:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -97,7 +97,7 @@ widowx_reacher-v1:
 
 # SB2 hyperparams
 widowx_reacher-v2:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -111,7 +111,7 @@ widowx_reacher-v2:
 
 # SB2 hyperparams
 widowx_reacher-v3:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -125,7 +125,7 @@ widowx_reacher-v3:
 
 # SB2 hyperparams
 widowx_reacher-v4:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -139,7 +139,7 @@ widowx_reacher-v4:
 
 # SB2 hyperparams
 widowx_reacher-v5:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -153,7 +153,7 @@ widowx_reacher-v5:
 
 # SB2 hyperparams
 widowx_reacher-v6:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -167,7 +167,7 @@ widowx_reacher-v6:
 
 # SB2 hyperparams
 widowx_reacher-v7:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -181,7 +181,7 @@ widowx_reacher-v7:
 
 # SB2 hyperparams
 widowx_reacher-v8:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -195,7 +195,7 @@ widowx_reacher-v8:
 
 # SB2 hyperparams
 widowx_reacher-v9:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -209,7 +209,7 @@ widowx_reacher-v9:
 
 # SB2 hyperparams
 widowx_reacher-v10:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -223,7 +223,7 @@ widowx_reacher-v10:
 
 # SB2 hyperparams
 widowx_reacher-v11:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -237,7 +237,7 @@ widowx_reacher-v11:
 
 # SB2 hyperparams
 widowx_reacher-v12:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -251,7 +251,7 @@ widowx_reacher-v12:
 
 # SB2 hyperparams
 widowx_reacher-v13:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -265,7 +265,7 @@ widowx_reacher-v13:
 
 # SB2 hyperparams
 widowx_reacher-v14:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -279,7 +279,7 @@ widowx_reacher-v14:
 
 # SB2 hyperparams
 widowx_reacher-v15:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -293,7 +293,7 @@ widowx_reacher-v15:
 
 # SB2 hyperparams
 widowx_reacher-v16:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -307,7 +307,7 @@ widowx_reacher-v16:
 
 # SB2 hyperparams
 widowx_reacher-v17:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -321,7 +321,7 @@ widowx_reacher-v17:
 
 # SB2 hyperparams
 widowx_reacher-v18:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -335,7 +335,7 @@ widowx_reacher-v18:
 
 # SB2 hyperparams
 widowx_reacher-v19:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -349,7 +349,7 @@ widowx_reacher-v19:
 
 # SB2 hyperparams
 widowx_reacher-v20:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -363,7 +363,7 @@ widowx_reacher-v20:
 
 # SB2 hyperparams
 widowx_reacher-v21:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -377,7 +377,7 @@ widowx_reacher-v21:
 
 # SB2 hyperparams
 widowx_reacher-v22:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -391,7 +391,7 @@ widowx_reacher-v22:
 
 # SB2 hyperparams
 widowx_reacher-v23:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -405,7 +405,7 @@ widowx_reacher-v23:
 
 # SB2 hyperparams
 widowx_reacher-v24:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -419,7 +419,7 @@ widowx_reacher-v24:
 
 # SB2 hyperparams
 widowx_reacher-v25:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -433,7 +433,7 @@ widowx_reacher-v25:
 
 # SB2 hyperparams
 widowx_reacher-v26:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -447,7 +447,7 @@ widowx_reacher-v26:
 
 # SB2 hyperparams
 widowx_reacher-v27:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -461,7 +461,7 @@ widowx_reacher-v27:
 
 # SB2 hyperparams
 widowx_reacher-v28:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -475,7 +475,7 @@ widowx_reacher-v28:
 
 # SB2 hyperparams
 widowx_reacher-v29:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -489,7 +489,7 @@ widowx_reacher-v29:
 
 # SB2 hyperparams
 widowx_reacher-v30:
-  n_timesteps: 100000
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8
@@ -503,7 +503,21 @@ widowx_reacher-v30:
 
 # SB2 hyperparams
 widowx_reacher-v31:
-  n_timesteps: 100000
+  n_timesteps: 500000
+  normalize: true
+  policy: 'MlpPolicy'
+  n_envs: 8
+  n_steps: 128
+  n_epochs: 4
+  batch_size: 256
+  learning_rate: !!float 2.5e-4
+  clip_range: 0.2
+  vf_coef: 0.5
+  ent_coef: 0.01
+
+# SB2 hyperparams
+widowx_reacher-v32:
+  n_timesteps: 500000
   normalize: true
   policy: 'MlpPolicy'
   n_envs: 8

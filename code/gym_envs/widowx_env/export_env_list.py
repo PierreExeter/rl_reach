@@ -495,11 +495,28 @@ d = {
         'reward_type' : 18,
         'action_type' : 1,
         'joint_limits' : "large",
-        'action_min': [-2, -2, -2, -2, -2, -2],
-        'action_max': [2, 2, 2, 2, 2, 2],
-        'alpha_reward': 0.1,
+        'action_min': [-2.5, -2.5, -2.5, -2.5, -2.5, -2.5],
+        'action_max': [2.5, 2.5, 2.5, 2.5, 2.5, 2.5],
+        'alpha_reward': 0.01,
         'reward_coeff': 1,
         },
+
+
+    'widowx_reacher-v32':
+    {
+        'random_position' : False,
+        'random_orientation': False,
+        'target_type': "arrow",
+        'goal_oriented' : False,
+        'obs_type' : 6,
+        'reward_type' : 19,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-2.5, -2.5, -2.5, -2.5, -2.5, -2.5],
+        'action_max': [2.5, 2.5, 2.5, 2.5, 2.5, 2.5],
+        'alpha_reward': 0.01,
+        'reward_coeff': 1,
+    },
 }
 
 df = pd.DataFrame.from_dict(d, orient='index').reset_index()
