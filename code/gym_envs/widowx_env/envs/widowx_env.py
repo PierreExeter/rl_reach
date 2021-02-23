@@ -722,7 +722,7 @@ class WidowxEnv(gym.Env):
 
     def _get_reward19(self):
         """ Compute reward function 19 (sparse + dense) """
-        if self.dist >= 0.001 and self.orient >= 0.001:
+        if self.dist >= 0.001 and self.orient >= 0.01:
             self.term1 = - self.dist **2 - self.alpha_reward * self.orient ** 2
         else:
             self.term1 = 1

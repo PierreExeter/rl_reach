@@ -258,6 +258,13 @@ if __name__ == "__main__":
     SUCCESS_THRESHOLD_2 = 0.002
     SUCCESS_THRESHOLD_1 = 0.001
     SUCCESS_THRESHOLD_05 = 0.0005
+    SUCCESS_THRESHOLD_ORIENT_50 = 0.5
+    SUCCESS_THRESHOLD_ORIENT_20 = 0.2
+    SUCCESS_THRESHOLD_ORIENT_10 = 0.1
+    SUCCESS_THRESHOLD_ORIENT_5 = 0.05
+    SUCCESS_THRESHOLD_ORIENT_2 = 0.02
+    SUCCESS_THRESHOLD_ORIENT_1 = 0.01
+    SUCCESS_THRESHOLD_ORIENT_05 = 0.005
     ep_success_list_50 = []
     ep_success_list_20 = []
     ep_success_list_10 = []
@@ -320,21 +327,21 @@ if __name__ == "__main__":
             ep_success_list_05 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_05, ep_success_list_05, infos)
 
-            ep_success_list_orient_50 = calc_ep_success_pos(
-                SUCCESS_THRESHOLD_50, ep_success_list_orient_50, infos)
-            ep_success_list_orient_20 = calc_ep_success_pos(
-                SUCCESS_THRESHOLD_20, ep_success_list_orient_20, infos)
-            ep_success_list_orient_10 = calc_ep_success_pos(
-                SUCCESS_THRESHOLD_10, ep_success_list_orient_10, infos)
-            ep_success_list_orient_5 = calc_ep_success_pos(
-                SUCCESS_THRESHOLD_5, ep_success_list_orient_5, infos)
-            ep_success_list_orient_2 = calc_ep_success_pos(
-                SUCCESS_THRESHOLD_2, ep_success_list_orient_2, infos)
-            ep_success_list_orient_1 = calc_ep_success_pos(
-                SUCCESS_THRESHOLD_1, ep_success_list_orient_1, infos)
-            ep_success_list_orient_05 = calc_ep_success_pos(
-                SUCCESS_THRESHOLD_05, ep_success_list_orient_05, infos)
-            
+            ep_success_list_orient_50 = calc_ep_success_orient(
+                SUCCESS_THRESHOLD_ORIENT_50, ep_success_list_orient_50, infos)
+            ep_success_list_orient_20 = calc_ep_success_orient(
+                SUCCESS_THRESHOLD_ORIENT_20, ep_success_list_orient_20, infos)
+            ep_success_list_orient_10 = calc_ep_success_orient(
+                SUCCESS_THRESHOLD_ORIENT_10, ep_success_list_orient_10, infos)
+            ep_success_list_orient_5 = calc_ep_success_orient(
+                SUCCESS_THRESHOLD_ORIENT_5, ep_success_list_orient_5, infos)
+            ep_success_list_orient_2 = calc_ep_success_orient(
+                SUCCESS_THRESHOLD_ORIENT_2, ep_success_list_orient_2, infos)
+            ep_success_list_orient_1 = calc_ep_success_orient(
+                SUCCESS_THRESHOLD_ORIENT_1, ep_success_list_orient_1, infos)
+            ep_success_list_orient_05 = calc_ep_success_orient(
+                SUCCESS_THRESHOLD_ORIENT_05, ep_success_list_orient_05, infos)
+
         EPISODE_RETURN += reward[0]
         EP_LEN += 1
 
@@ -533,6 +540,7 @@ if __name__ == "__main__":
             log_dict['reward'] = reward[0]
             log_dict['return'] = EPISODE_RETURN
             log_dict['distance'] = infos[0]['distance']
+            log_dict['orientation'] = infos[0]['orientation']
             log_dict['goal_x'] = infos[0]['goal_pos'][0]
             log_dict['goal_y'] = infos[0]['goal_pos'][1]
             log_dict['goal_z'] = infos[0]['goal_pos'][2]
@@ -712,19 +720,19 @@ if __name__ == "__main__":
 
             print("******** Success ratios by orientation *********")
             SR_mean_orient_50, RT_mean_orient_50 = calc_mean_successratio_reachtime(
-                SUCCESS_THRESHOLD_50, success_list_orient_50, reachtime_list_orient_50)
+                SUCCESS_THRESHOLD_ORIENT_50, success_list_orient_50, reachtime_list_orient_50)
             SR_mean_orient_20, RT_mean_orient_20 = calc_mean_successratio_reachtime(
-                SUCCESS_THRESHOLD_20, success_list_orient_20, reachtime_list_orient_20)
+                SUCCESS_THRESHOLD_ORIENT_20, success_list_orient_20, reachtime_list_orient_20)
             SR_mean_orient_10, RT_mean_orient_10 = calc_mean_successratio_reachtime(
-                SUCCESS_THRESHOLD_10, success_list_orient_10, reachtime_list_orient_10)
+                SUCCESS_THRESHOLD_ORIENT_10, success_list_orient_10, reachtime_list_orient_10)
             SR_mean_orient_5, RT_mean_orient_5 = calc_mean_successratio_reachtime(
-                SUCCESS_THRESHOLD_5, success_list_orient_5, reachtime_list_orient_5)
+                SUCCESS_THRESHOLD_ORIENT_5, success_list_orient_5, reachtime_list_orient_5)
             SR_mean_orient_2, RT_mean_orient_2 = calc_mean_successratio_reachtime(
-                SUCCESS_THRESHOLD_2, success_list_orient_2, reachtime_list_orient_2)
+                SUCCESS_THRESHOLD_ORIENT_2, success_list_orient_2, reachtime_list_orient_2)
             SR_mean_orient_1, RT_mean_orient_1 = calc_mean_successratio_reachtime(
-                SUCCESS_THRESHOLD_1, success_list_orient_1, reachtime_list_orient_1)
+                SUCCESS_THRESHOLD_ORIENT_1, success_list_orient_1, reachtime_list_orient_1)
             SR_mean_orient_05, RT_mean_orient_05 = calc_mean_successratio_reachtime(
-                SUCCESS_THRESHOLD_05, success_list_orient_05, reachtime_list_orient_05)
+                SUCCESS_THRESHOLD_ORIENT_05, success_list_orient_05, reachtime_list_orient_05)
 
             # log metrics to stats.csv
             d = {

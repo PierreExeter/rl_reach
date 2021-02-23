@@ -102,6 +102,8 @@ if __name__ == '__main__':
     log_df.plot(x='timestep', y='return', ax=axs[3, 1], color="m", marker="x")
 
     log_df.plot(x='timestep', y='distance', ax=axs[3, 2], color="b")
+    ax_2 = axs[3, 2].twinx()
+    log_df.plot(x='timestep', y='orientation', ax=ax_2, color="r")
 
     log_df.plot(x='timestep', y='vel_dist', ax=axs[3, 3], color="g")
     log_df.plot(x='timestep', y='vel_pos', ax=axs[3, 3], color="g", marker="+")
@@ -148,14 +150,19 @@ if __name__ == '__main__':
 
     axs[3, 1].set_ylabel("Return")
 
-    axs[3, 2].set_ylabel("Distance (m)")
+    axs[3, 2].set_ylabel("Distance (m)", color="b")
+    ax_2.set_ylabel("Orientation", color="r")
+    axs[3, 2].tick_params(axis='y', labelcolor="b")
+    ax_2.tick_params(axis='y', labelcolor="r")
+    ax_2.legend(loc="upper right")
+    axs[3, 2].legend(loc="upper left")
 
     axs[3, 3].set_ylabel("Velocity (m/s)", color="g")
     ax_1.set_ylabel("Acceleration (m/s^2)", color="r")
     axs[3, 3].tick_params(axis='y', labelcolor="g")
     ax_1.tick_params(axis='y', labelcolor="r")
     ax_1.legend(loc="upper right")
-    axs[3, 3].legend(loc="lower right")
+    axs[3, 3].legend(loc="upper left")
 
     axs[3, 4].set_ylabel("Coordinates (m)")
     axs[3, 4].legend(loc="upper right")
