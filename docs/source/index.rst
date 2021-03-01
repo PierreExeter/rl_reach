@@ -37,6 +37,7 @@ Please cite this work as follows:
    author = {Aumjaud, Pierre and McAuliffe, David and Rodriguez-Lera, Francisco J and Cardiff, Philip},
    journal = {Software Impacts},
    pages = {100061},
+   volume = {8},
    title = {{rl{\_}reach: Reproducible reinforcement learning experiments for robotic reaching tasks}},
    archivePrefix = {arXiv},
    arxivId = {2102.04916},

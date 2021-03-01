@@ -644,3 +644,24 @@ register(
         },
     )
 
+register(
+    id='widowx_reacher-v33',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs={
+        'random_position' : False,
+        'random_orientation': True,
+        'target_type': "arrow",
+        'goal_oriented' : False,
+        'obs_type' : 6,
+        'reward_type' : 19,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        # 'action_min': [-4, -4, -4, -4, -4, -4],
+        # 'action_max': [4, 4, 4, 4, 4, 4],
+        'action_min': [-2.5, -2.5, -2.5, -2.5, -2.5, -2.5],
+        'action_max': [2.5, 2.5, 2.5, 2.5, 2.5, 2.5],
+        'alpha_reward': 0.01,
+        'reward_coeff': 1,
+        },
+    )

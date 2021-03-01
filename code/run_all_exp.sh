@@ -28,5 +28,10 @@
 # echo "HER"
 # python run_experiments.py --exp-id 12 --algo her --env widowx_reacher-v4 --n-timesteps 100000 --n-seeds 2
 
-echo "45"
-python run_experiments.py --exp-id 45 --algo ppo --env widowx_reacher-v32 --n-timesteps 1000000 --n-seeds 2
+# echo "52"
+# python run_experiments.py --exp-id 52 --algo ppo --env widowx_reacher-v32 --n-timesteps 10000000 --n-seeds 2
+# echo "54"
+# python run_experiments.py --exp-id 54 --algo ppo --env widowx_reacher-v33 --n-timesteps 100000000 --n-seeds 2
+
+echo "99"
+python run_experiments.py --exp-id 99 --algo ppo --env widowx_reacher-v33 --n-timesteps 10000 --n-seeds 2

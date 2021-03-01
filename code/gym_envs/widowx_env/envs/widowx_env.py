@@ -11,6 +11,15 @@ import numpy as np
 from gym import spaces
 
 
+# # Initial joint angles
+# RESET_VALUES = [
+#     0.015339807878856412,
+#     -1.2931458041875956,
+#     1.0109710760673565,
+#     -1.3537670644267164,
+#     -0.07158577010132992,
+#     .027]
+
 # Initial joint angles
 RESET_VALUES = [
     0.015339807878856412,
@@ -18,18 +27,20 @@ RESET_VALUES = [
     1.0109710760673565,
     -1.3537670644267164,
     -0.07158577010132992,
-    .027]
+    0]
 
 
-MIN_GOAL_ORIENTATION = np.array([-np.pi, -np.pi, -np.pi])
-MAX_GOAL_ORIENTATION = np.array([np.pi, np.pi, np.pi])
 MIN_GOAL_COORDS = np.array([-.14, -.13, 0.26])
 MAX_GOAL_COORDS = np.array([.14, .13, .39])
 MIN_END_EFF_COORDS = np.array([-.16, -.15, 0.14])
 MAX_END_EFF_COORDS = np.array([.16, .15, .41])
-FIXED_GOAL_COORDS  = np.array([.14, .0, 0.26])
+FIXED_GOAL_COORDS_SPHERE  = np.array([.14, .0, 0.26])
+FIXED_GOAL_COORDS_ARROW  = np.array([0, .0, 0.26])
+MIN_GOAL_ORIENTATION = np.array([-np.pi, 0, 0])
+MAX_GOAL_ORIENTATION = np.array([np.pi, 0, 0])
 FIXED_GOAL_ORIENTATION  = np.array([-np.pi/4, 0, -np.pi/2])
-ARROW_OBJECT_ORIENTATION_CORRECTION = np.array([np.pi/2, 0, 0])
+ARROW_OBJECT_ORIENTATION_CORRECTION = np.array([np.pi/2 , 0, 0])
+
 
 class WidowxEnv(gym.Env):
     """ WidowX reacher Gym environment """
@@ -79,8 +90,10 @@ class WidowxEnv(gym.Env):
         self.obs = None
         self.action = np.zeros(6)
         self.pybullet_action = np.zeros(6)
-        self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, -0.0005])
-        self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.0005])
+        # self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, -0.0005])
+        # self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.0005])
+        self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, 0])
+        self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.025])
         self.new_joint_positions = None
         self.dist = 0
         self.old_dist = 0
@@ -93,7 +106,10 @@ class WidowxEnv(gym.Env):
         if self.random_position:
             self.goal_pos = self.sample_random_position()
         else:
-            self.goal_pos = FIXED_GOAL_COORDS
+            if self.target_type == "arrow":
+                self.goal_pos = FIXED_GOAL_COORDS_ARROW
+            elif self.target_type == "sphere":
+                self.goal_pos = FIXED_GOAL_COORDS_SPHERE
 
         # Initialise goal orientation
         if self.random_orientation:
@@ -149,7 +165,7 @@ class WidowxEnv(gym.Env):
             self.obs_space_low = np.float32(
                 np.concatenate((
                     [-1.0]*6,
-                    [-np.pi]*6,
+                    [-2*np.pi]*6,
                     MIN_GOAL_COORDS,
                     MIN_GOAL_ORIENTATION,
                     MIN_END_EFF_COORDS,
@@ -159,7 +175,7 @@ class WidowxEnv(gym.Env):
             self.obs_space_high = np.float32(
                 np.concatenate((
                     [1.0]*6,
-                    [np.pi]*6,
+                    [2*np.pi]*6,
                     MAX_GOAL_COORDS,
                     MAX_GOAL_ORIENTATION,
                     MAX_END_EFF_COORDS,
@@ -204,6 +220,10 @@ class WidowxEnv(gym.Env):
     def create_world(self):
         """ Setup camera and load URDFs"""
 
+        # # Set gravity
+        # p.setGravity(0, 0, -9.81, physicsClientId=self.physics_client)
+        # # p.setGravity(0, 0, 0, physicsClientId=self.physics_client)  
+
         # Initialise camera angle
         p.resetDebugVisualizerCamera(
             cameraDistance=0.6,
@@ -220,6 +240,33 @@ class WidowxEnv(gym.Env):
                 path,
                 "URDFs/widowx/widowx.urdf"),
             useFixedBase=True)
+
+        # # TEST
+        # self.cube = p.loadURDF(
+        #     os.path.join(
+        #         path,
+        #         "URDFs/cube.urdf"),
+        #         useFixedBase=True)
+
+        # p.resetBasePositionAndOrientation(
+        #     self.cube, [0.1, 0.1, 0.1], p.getQuaternionFromEuler([0, 0, 0]))
+
+        
+        # # TEST
+        # self.cube = p.loadURDF(
+        #     os.path.join(
+        #         path,
+        #         "URDFs/testbot.urdf"),
+        #         useFixedBase=True)
+
+        # p.resetBasePositionAndOrientation(
+        #     self.cube, [0.1, 0.1, 1], p.getQuaternionFromEuler([0, 0, 0]))
+
+        
+        # cubeStartPos = [0,0,1]
+        # cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
+        # boxId = p.loadURDF("r2d2.urdf", cubeStartPos, cubeStartOrientation)
+
 
         if self.target_type == "arrow":
             self.target_object = p.loadURDF(
@@ -259,7 +306,10 @@ class WidowxEnv(gym.Env):
         if self.random_position:
             self.goal_pos = self.sample_random_position()
         else:
-            self.goal_pos = FIXED_GOAL_COORDS
+            if self.target_type == "arrow":
+                self.goal_pos = FIXED_GOAL_COORDS_ARROW
+            elif self.target_type == "sphere":
+                self.goal_pos = FIXED_GOAL_COORDS_SPHERE
 
         # Initialise goal orientation
         if self.random_orientation:
@@ -722,7 +772,7 @@ class WidowxEnv(gym.Env):
 
     def _get_reward19(self):
         """ Compute reward function 19 (sparse + dense) """
-        if self.dist >= 0.001 and self.orient >= 0.01:
+        if ((self.dist >= 0.001) or (self.orient >= 0.01)):
             self.term1 = - self.dist **2 - self.alpha_reward * self.orient ** 2
         else:
             self.term1 = 1

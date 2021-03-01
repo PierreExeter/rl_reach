@@ -203,6 +203,15 @@ r = - O_t^2
 r = - d_t^2 - O_t^2
 \end{equation}
 
+\textbf{REW19}
+
+\begin{equation}
+r = \begin{cases}
+    - d_t^2 - \alpha O_t^2 , & \text{if $d_t \geq 0.001 $ and $O_t \geq 0.01$}\\
+    1 , & \text{if $d_t < 0.001 $ and $O_t < 0.01$}
+  \end{cases}
+\end{equation}
+
 %%%% REWARD FUNCTION TO PREVENT JOINT 1 FROM MOVING
 
 

@@ -5,27 +5,27 @@ import gym
 import widowx_env
 from stable_baselines3.common.env_checker import check_env
 
-env = gym.make('widowx_reacher-v32')
+env = gym.make('widowx_reacher-v33')
 print("any warnings?", check_env(env))
 
-# Comment this for goal environments
-# print("Action space: ", env.action_space)
-# print(env.action_space.high)
-# print(env.action_space.low)
-# print("Observation space: ", env.observation_space)
-# print(env.observation_space.high)
-# print(env.observation_space.low)
-
+# Comment this out for goal environments
+print("Action space: ", env.action_space)
+print("low: ", env.action_space.low)
+print("high: ", env.action_space.high)
+print("Observation space: ", env.observation_space)
+print("low: ", env.observation_space.low)
+print("high: ", env.observation_space.high)
 
 env.render()
 
 
-for episode in range(2):
+for episode in range(5):
     obs = env.reset()
     rewards = []
 
     for t in range(100):
         action = env.action_space.sample()
+        # action = [0, 0, 0, 0, 0, 4]
 
         obs, reward, done, info = env.step(action)
 
