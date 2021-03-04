@@ -4,21 +4,13 @@ WidowX MK-II robot manipulator reaching a target position
 """
 
 import os
+import copy
 import gym
 import pybullet as p
 import pybullet_data
 import numpy as np
 from gym import spaces
 
-
-# # Initial joint angles
-# RESET_VALUES = [
-#     0.015339807878856412,
-#     -1.2931458041875956,
-#     1.0109710760673565,
-#     -1.3537670644267164,
-#     -0.07158577010132992,
-#     .027]
 
 # Initial joint angles
 RESET_VALUES = [
@@ -34,12 +26,14 @@ MIN_GOAL_COORDS = np.array([-.14, -.13, 0.26])
 MAX_GOAL_COORDS = np.array([.14, .13, .39])
 MIN_END_EFF_COORDS = np.array([-.16, -.15, 0.14])
 MAX_END_EFF_COORDS = np.array([.16, .15, .41])
-FIXED_GOAL_COORDS_SPHERE  = np.array([.14, .0, 0.26])
-FIXED_GOAL_COORDS_ARROW  = np.array([0, .0, 0.26])
+FIXED_GOAL_COORDS_SPHERE = np.array([.14, .0, 0.26])
+FIXED_GOAL_COORDS_ARROW = np.array([.0, .0, 0.26])
+FIXED_GOAL_COORDS_MOVING = np.array([.14, -.125, 0.26])
 MIN_GOAL_ORIENTATION = np.array([-np.pi, 0, 0])
 MAX_GOAL_ORIENTATION = np.array([np.pi, 0, 0])
 FIXED_GOAL_ORIENTATION  = np.array([-np.pi/4, 0, -np.pi/2])
 ARROW_OBJECT_ORIENTATION_CORRECTION = np.array([np.pi/2 , 0, 0])
+TARGET_SPEED = 0.0025
 
 
 class WidowxEnv(gym.Env):
@@ -49,6 +43,7 @@ class WidowxEnv(gym.Env):
         self,
         random_position,
         random_orientation,
+        moving_target,
         target_type,
         goal_oriented,
         obs_type,
@@ -65,6 +60,7 @@ class WidowxEnv(gym.Env):
 
         self.random_position = random_position
         self.random_orientation = random_orientation
+        self.moving_target = moving_target
         self.target_type = target_type
         self.goal_oriented = goal_oriented
         self.obs_type = obs_type
@@ -79,6 +75,7 @@ class WidowxEnv(gym.Env):
         self.endeffector_pos = None
         self.old_endeffector_pos = None
         self.endeffector_orient = None
+        self.old_endeffector_orient = None
         self.torso_pos = None
         self.torso_orient = None
         self.end_torso_pos = None
@@ -86,36 +83,28 @@ class WidowxEnv(gym.Env):
         self.end_torso_orient = None
         self.end_goal_orient = None
         self.joint_positions = None
+        self.delta_orient = None
+        self.delta_endeff_orient = None
+        self.goal_orient = None
+        self.target_object_orient = None
         self.reward = None
         self.obs = None
         self.action = np.zeros(6)
         self.pybullet_action = np.zeros(6)
-        # self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, -0.0005])
-        # self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.0005])
         self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, 0])
         self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.025])
         self.new_joint_positions = None
         self.dist = 0
         self.old_dist = 0
+        self.orient = 0
+        self.old_orient = 0
+        self.goal_pos = np.zeros(6)
         self.term1 = 0
         self.term2 = 0
         self.delta_pos = 0
         self.delta_dist = 0
-
-        # Initialise goal position
-        if self.random_position:
-            self.goal_pos = self.sample_random_position()
-        else:
-            if self.target_type == "arrow":
-                self.goal_pos = FIXED_GOAL_COORDS_ARROW
-            elif self.target_type == "sphere":
-                self.goal_pos = FIXED_GOAL_COORDS_SPHERE
-
-        # Initialise goal orientation
-        if self.random_orientation:
-            self.goal_orient = self.sample_random_orientation()
-        else:
-            self.goal_orient = FIXED_GOAL_ORIENTATION
+        self.width = 3840 #1920
+        self.height = 2160 #1080
 
         # Define action space
         self.action_space = spaces.Box(
@@ -200,14 +189,11 @@ class WidowxEnv(gym.Env):
                     dtype=np.float32),
                 observation=self.observation_space))
 
-        # Connect to physics client. By default, do not render
+        # Connect to physics client
         self.physics_client = p.connect(p.DIRECT)
 
         # Load URDFs
         self.create_world()
-
-        # reset environment
-        self.reset()
 
     def sample_random_position(self):
         """ Sample random target position """
@@ -222,7 +208,7 @@ class WidowxEnv(gym.Env):
 
         # # Set gravity
         # p.setGravity(0, 0, -9.81, physicsClientId=self.physics_client)
-        # # p.setGravity(0, 0, 0, physicsClientId=self.physics_client)  
+        # # p.setGravity(0, 0, 0, physicsClientId=self.physics_client)
 
         # Initialise camera angle
         p.resetDebugVisualizerCamera(
@@ -251,7 +237,6 @@ class WidowxEnv(gym.Env):
         # p.resetBasePositionAndOrientation(
         #     self.cube, [0.1, 0.1, 0.1], p.getQuaternionFromEuler([0, 0, 0]))
 
-        
         # # TEST
         # self.cube = p.loadURDF(
         #     os.path.join(
@@ -262,11 +247,9 @@ class WidowxEnv(gym.Env):
         # p.resetBasePositionAndOrientation(
         #     self.cube, [0.1, 0.1, 1], p.getQuaternionFromEuler([0, 0, 0]))
 
-        
         # cubeStartPos = [0,0,1]
         # cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
         # boxId = p.loadURDF("r2d2.urdf", cubeStartPos, cubeStartOrientation)
-
 
         if self.target_type == "arrow":
             self.target_object = p.loadURDF(
@@ -283,19 +266,6 @@ class WidowxEnv(gym.Env):
 
         self.plane = p.loadURDF('plane.urdf')
 
-        # Reset robot at the origin and move the target object to the goal position and orientation
-        # Note: the arrow's STL is oriented  along a different axis and its
-        # orientation vector must be corrected (for consistency with the Pybullet rendering)
-        target_object_orient = self.goal_orient + ARROW_OBJECT_ORIENTATION_CORRECTION
-
-        p.resetBasePositionAndOrientation(
-            self.arm, [0, 0, 0], p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
-        p.resetBasePositionAndOrientation(
-            self.target_object, self.goal_pos, p.getQuaternionFromEuler(target_object_orient))
-
-        # Reset joint at initial angles
-        self._force_joint_positions(RESET_VALUES)
-
     def reset(self):
         """
         Reset robot and goal at the beginning of an episode.
@@ -306,10 +276,14 @@ class WidowxEnv(gym.Env):
         if self.random_position:
             self.goal_pos = self.sample_random_position()
         else:
-            if self.target_type == "arrow":
-                self.goal_pos = FIXED_GOAL_COORDS_ARROW
-            elif self.target_type == "sphere":
-                self.goal_pos = FIXED_GOAL_COORDS_SPHERE
+            if self.moving_target:
+                # deepcopy is necessary to avoid changing the value of FIXED_GOAL_COORDS_MOVING
+                self.goal_pos = copy.deepcopy(FIXED_GOAL_COORDS_MOVING)
+            else:
+                if self.target_type == "arrow":
+                    self.goal_pos = FIXED_GOAL_COORDS_ARROW
+                elif self.target_type == "sphere":
+                    self.goal_pos = FIXED_GOAL_COORDS_SPHERE
 
         # Initialise goal orientation
         if self.random_orientation:
@@ -317,15 +291,15 @@ class WidowxEnv(gym.Env):
         else:
             self.goal_orient = FIXED_GOAL_ORIENTATION
 
-        # Reset robot at the origin and move the target object to the goal position and orientation
-        # Note: the arrow's STL is oriented  along a different axis and its
-        # orientation vector must be corrected (for consistency with the Pybullet rendering)
-        target_object_orient = self.goal_orient + ARROW_OBJECT_ORIENTATION_CORRECTION
+        # Correct the orientation of the target object for consistency with rendering
+        # in Pybullet (This is due to the arrow's STL being oriented along a different axis)
+        self.target_object_orient = self.goal_orient + ARROW_OBJECT_ORIENTATION_CORRECTION
 
+        # Reset robot at the origin and move the target object to the goal position and orientation
         p.resetBasePositionAndOrientation(
             self.arm, [0, 0, 0], p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
         p.resetBasePositionAndOrientation(
-            self.target_object, self.goal_pos, p.getQuaternionFromEuler(target_object_orient))
+            self.target_object, self.goal_pos, p.getQuaternionFromEuler(self.target_object_orient))
 
         # Reset joint at initial angles
         self._force_joint_positions(RESET_VALUES)
@@ -489,6 +463,14 @@ class WidowxEnv(gym.Env):
         self.old_orient = np.linalg.norm(self.endeffector_orient - self.goal_orient)
         self.old_endeffector_orient = self.endeffector_orient
 
+        # Update target position and move the target object
+        if self.moving_target:
+            self.goal_pos[1] += TARGET_SPEED
+            p.resetBasePositionAndOrientation(
+                self.target_object,
+                self.goal_pos,
+                p.getQuaternionFromEuler(self.target_object_orient))
+
         # take action
         self.action = np.array(action, dtype=np.float32)
 
@@ -567,7 +549,7 @@ class WidowxEnv(gym.Env):
         self.delta_dist = self.old_dist - self.dist
         self.delta_pos = np.linalg.norm(self.old_endeffector_pos - self.endeffector_pos)
         self.delta_orient = self.old_orient - self.orient
-        self.delta_orient = np.linalg.norm(self.old_endeffector_orient - self.endeffector_orient)
+        self.delta_endeff_orient = np.linalg.norm(self.old_endeffector_orient - self.endeffector_orient)
 
         info = {}
         info['distance'] = self.dist
@@ -783,10 +765,10 @@ class WidowxEnv(gym.Env):
     def render(self, mode='human'):
         """ Render Pybullet simulation """
         p.disconnect(self.physics_client)
-        self.physics_client = p.connect(p.GUI)
+        self.physics_client = p.connect(p.GUI, options='--background_color_red=0.8 --background_color_green=0.9 --background_color_blue=1.0 --width=%d --height=%d' % (self.width, self.height))
         self.create_world()
 
-    def compute_reward(self, achieved_goal, goal):
+    def compute_reward(self, achieved_goal, goal, info):
         """ Function necessary for goal Env"""
         return - (np.linalg.norm(achieved_goal - goal)**2)
 

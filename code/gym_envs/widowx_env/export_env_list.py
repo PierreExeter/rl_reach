@@ -9,6 +9,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 1,
@@ -25,6 +26,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 2,
@@ -41,6 +43,7 @@ d = {
         {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 3,
@@ -57,6 +60,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 4,
@@ -73,6 +77,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -89,6 +94,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -105,6 +111,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -121,6 +128,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -137,6 +145,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -153,6 +162,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -169,6 +179,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -185,6 +196,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -201,6 +213,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -217,6 +230,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -233,6 +247,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -249,6 +264,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -265,6 +281,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -281,6 +298,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -297,6 +315,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -313,6 +332,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -329,6 +349,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -345,6 +366,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -361,6 +383,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -377,6 +400,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -393,6 +417,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -409,6 +434,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -425,6 +451,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -441,6 +468,7 @@ d = {
     {
         'random_position' : True,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -457,6 +485,7 @@ d = {
     {
         'random_position' : True,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "sphere",
         'goal_oriented' : False,
         'obs_type' : 5,
@@ -473,6 +502,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "arrow",
         'goal_oriented' : False,
         'obs_type' : 6,
@@ -489,6 +519,7 @@ d = {
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "arrow",
         'goal_oriented' : False,
         'obs_type' : 6,
@@ -501,11 +532,11 @@ d = {
         'reward_coeff': 1,
         },
 
-
     'widowx_reacher-v32':
     {
         'random_position' : False,
         'random_orientation': False,
+        'moving_target': False,
         'target_type': "arrow",
         'goal_oriented' : False,
         'obs_type' : 6,
@@ -522,17 +553,34 @@ d = {
     {
         'random_position' : False,
         'random_orientation': True,
+        'moving_target': False,
         'target_type': "arrow",
         'goal_oriented' : False,
         'obs_type' : 6,
         'reward_type' : 19,
         'action_type' : 1,
         'joint_limits' : "large",
-        'action_min': [-2.5, -2.5, -2.5, -2.5, -2.5, -2.5],
-        'action_max': [2.5, 2.5, 2.5, 2.5, 2.5, 2.5],
+        'action_min': [-4, -4, -4, -4, -4, -4],
+        'action_max': [4, 4, 4, 4, 4, 4],
         'alpha_reward': 0.01,
         'reward_coeff': 1,
     },
+
+    'widowx_reacher-v34':
+    {'random_position' : False,
+        'random_orientation': False,
+        'moving_target': True,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 1,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        },
 }
 
 df = pd.DataFrame.from_dict(d, orient='index').reset_index()
