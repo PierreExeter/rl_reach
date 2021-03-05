@@ -17,7 +17,7 @@ print("Observation space: ", env.observation_space)
 print("low: ", env.observation_space.low)
 print("high: ", env.observation_space.high)
 
-# env.render()
+env.render()
 
 for episode in range(5):
     obs = env.reset()
