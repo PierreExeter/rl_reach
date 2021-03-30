@@ -212,7 +212,22 @@ r = \begin{cases}
   \end{cases}
 \end{equation}
 
-%%%% REWARD FUNCTION TO PREVENT JOINT 1 FROM MOVING
+
+\subsection{Sparse + dense reward functions + Penalty for collision}
+
+\textbf{REW20}
+
+\begin{equation}
+r = \begin{cases}
+    - d_t , & \text{if $d \geq \epsilon $}\\
+    1 , & \text{if $d < \epsilon $}
+  \end{cases}
+\end{equation}
+
++ Penalty -10 if collision detected.
+
+
+%%%% REWARD FUNCTION THAT PREVENTS JOINT 1 FROM MOVING
 
 
 %\textbf{REW2} 
@@ -227,7 +242,7 @@ r = \begin{cases}
 %r = 1 - abs(A_t[0])
 %\end{equation}
 
-% REWARD FUNCTION TO PREVENT ALL JOINTS FROM MOVING
+% REWARD FUNCTION THAT PREVENTS ALL JOINTS FROM MOVING
 
 %\textbf{REW12} 
 %
@@ -360,22 +375,28 @@ $G$ = set of goals \\
 \section{Action}
 
 
-\textbf{ACT1 : Relative joint position}
+\textbf{ACT1 : Relative joint position (Instant reset of joint positions)}
 
 \begin{equation}
 [\delta_1, \delta_2, \delta_3, \delta_4, \delta_5, \delta_6]
 \end{equation}
 
-\textbf{ACT2 : Absolute joint position}
 
-\textbf{ACT3 : Relative joint torque}
+\textbf{ACT2 : Relative joint position (Continuous position control and compute physics for collision)}
 
-\textbf{ACT4 : Absolute joint torque}
+\begin{equation}
+[\delta_1, \delta_2, \delta_3, \delta_4, \delta_5, \delta_6]
+\end{equation}
+
+
+\textbf{ACT3 : Absolute joint position}
+
+\textbf{ACT4 : Relative joint torque}
+
+\textbf{ACT5 : Absolute joint torque}
 
 Where
 $\delta_i$ : Increment from previous joint position (in rad) \\
-
-TODO: Also make the difference between immediate reset and continuous position control.
 
 
 \end{document}

@@ -309,11 +309,14 @@ class WidowxEnv(gym.Env):
             self.arm, [0, 0, 0], p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
         p.resetBasePositionAndOrientation(
             self.target_object, self.goal_pos, p.getQuaternionFromEuler(self.target_object_orient))
-        p.resetBasePositionAndOrientation(
-            self.obstacle_object, self.obstacle_pos, p.getQuaternionFromEuler(self.obstacle_orient))
+
+        if self.obstacle is not None:
+            p.resetBasePositionAndOrientation(
+                self.obstacle_object, self.obstacle_pos, p.getQuaternionFromEuler(self.obstacle_orient))
 
         # Reset joint at initial angles
         self._force_joint_positions(RESET_VALUES)
+        # self._set_joint_positions(RESET_VALUES)
 
         # Get observation
         if self.obs_type == 1:
@@ -490,6 +493,8 @@ class WidowxEnv(gym.Env):
 
         if self.action_type == 1:
             self._take_action1()
+        elif self.action_type == 2:
+            self._take_action2()
 
         # get observation
         if self.obs_type == 1:
@@ -552,6 +557,8 @@ class WidowxEnv(gym.Env):
             self.reward = self._get_reward18()
         elif self.reward_type == 19:
             self.reward = self._get_reward19()
+        elif self.reward_type == 20:
+            self.reward = self._get_reward20()
 
         # Apply reward coefficient
         self.reward *= self.reward_coeff
@@ -592,7 +599,7 @@ class WidowxEnv(gym.Env):
         return self.obs, self.reward, episode_over, info
 
     def _take_action1(self):
-        """ select action #1 (increments from previous joint position """
+        """ select action #1 (increments from previous joint position) """
         # Update the new joint position with the action
         self.new_joint_positions = self.joint_positions + self.pybullet_action
 
@@ -604,6 +611,32 @@ class WidowxEnv(gym.Env):
 
         # Instantaneously reset the joint position (no torque applied)
         self._force_joint_positions(self.new_joint_positions)
+
+    def _take_action2(self):
+        """ select action #2: position control """
+        # Update the new joint position with the action
+        self.new_joint_positions = self.joint_positions + self.pybullet_action
+
+        # Clip the joint position to fit the joint's allowed boundaries
+        self.new_joint_positions = np.clip(
+            np.array(self.new_joint_positions),
+            self.joint_min,
+            self.joint_max)
+
+        # Position control
+        self._set_joint_positions(self.new_joint_positions)
+
+        self.frame_skip = 5
+
+        for _ in range(self.frame_skip):
+            p.stepSimulation(physicsClientId=self.physics_client)
+
+    def _detect_collision(self):
+        """ Detect any collision with the arm (require physics enabled) """
+        if len(p.getContactPoints(self.arm)) > 0:
+            return True
+        else:
+            return False
 
     def _normalize_scalar(self, var, old_min, old_max, new_min, new_max):
         """ Normalize scalar var from one range to another """
@@ -773,6 +806,20 @@ class WidowxEnv(gym.Env):
         rew = self.term1 + self.term2
         return rew
 
+    def _get_reward20(self):
+        """ Compute reward function 20 (sparse + dense) + penalty for collision """
+        if self.dist >= 0.001:
+            self.term1 = - self.dist
+        else:
+            self.term1 = 1
+        self.term2 = 0
+        rew = self.term1 + self.term2
+
+        if self._detect_collision():
+            rew -= 10
+
+        return rew
+
     def render(self, mode='human'):
         """ Render Pybullet simulation """
         p.disconnect(self.physics_client)
@@ -809,3 +856,13 @@ class WidowxEnv(gym.Env):
                 i,
                 joint_positions[-1]
             )
+
+    def _set_joint_positions(self, joint_positions):
+        # In SIM, gripper halves are controlled separately
+        joint_positions = list(joint_positions) + [joint_positions[-1]]
+        p.setJointMotorControlArray(
+            self.arm,
+            [0, 1, 2, 3, 4, 7, 8],
+            controlMode=p.POSITION_CONTROL,
+            targetPositions=joint_positions
+        )
