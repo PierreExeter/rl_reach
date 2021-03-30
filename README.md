@@ -197,17 +197,17 @@ A number of custom Gym environments are available in the `gym_envs` directory. T
 Each implemented environment is described [here](code/gym_envs/widowx_env/envs_list.csv). The action, observation and reward functions are given in [this table](code/gym_envs/widowx_env/reward_observation_action_shapes/reward_observation_action.pdf). Some environment renderings can be found below.
 
 
-| Name     | Reaching task      | Rendering              |
-| ---------| -------------------| -----------------------|
-| widowx_reacher-v26 | Fixed position, no orientation | 
+| Reaching task      | Rendering              |
+| -------------------| -----------------------|
+| Fixed position, no orientation | 
 ![Alt text](/docs/images/fixed_pos_no_orient.gif?raw=true "Fixed position no orientation")|
-| widowx_reacher-v28 | Random position, no orientation | 
+| Random position, no orientation | 
 ![Alt text](/docs/images/rand_pos_no_orient.gif?raw=true "Random position no orientation")|
-| widowx_reacher-v32 | Fixed position, fixed orientation | 
+| Fixed position, fixed orientation | 
 ![Alt text](/docs/images/fixed_pos_fixed_orient.gif?raw=true "Fixed position fixed orientation")|
-| widowx_reacher-v33 | Fixed position, random orientation | 
+| Fixed position, random orientation | 
 ![Alt text](/docs/images/fixed_pos_rand_orient.gif?raw=true "Fixed position random orientation")|
-| widowx_reacher-v34 | Moving position, no orientation | 
+| Moving position, no orientation | 
 ![Alt text](/docs/images/moving_pos_no_orient.gif?raw=true "Moving position no orientation")|
 
 

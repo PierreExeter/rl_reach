@@ -22,17 +22,25 @@ RESET_VALUES = [
     0]
 
 
-MIN_GOAL_COORDS = np.array([-.14, -.13, 0.26])
-MAX_GOAL_COORDS = np.array([.14, .13, .39])
-MIN_END_EFF_COORDS = np.array([-.16, -.15, 0.14])
-MAX_END_EFF_COORDS = np.array([.16, .15, .41])
+# MIN_GOAL_COORDS = np.array([-.14, -.13, 0.26])  # changed by Pierre: adding obstacle
+# MAX_GOAL_COORDS = np.array([.14, .13, .39]) # changed by Pierre: adding obstacle
+MIN_GOAL_COORDS = np.array([-.2, -.13, 0.26])
+MAX_GOAL_COORDS = np.array([.2, .13, .39])
+# MIN_END_EFF_COORDS = np.array([-.16, -.15, 0.14]) # changed by Pierre: adding obstacle
+# MAX_END_EFF_COORDS = np.array([.16, .15, .41]) # changed by Pierre: adding obstacle
+MIN_END_EFF_COORDS = np.array([-.21, -.15, 0.14])
+MAX_END_EFF_COORDS = np.array([.21, .15, .41])
 FIXED_GOAL_COORDS_SPHERE = np.array([.14, .0, 0.26])
+FIXED_GOAL_COORDS_SPHERE2 = np.array([.2, .0, 0.26])
 FIXED_GOAL_COORDS_ARROW = np.array([.0, .0, 0.26])
 FIXED_GOAL_COORDS_MOVING = np.array([.14, -.125, 0.26])
 MIN_GOAL_ORIENTATION = np.array([-np.pi, 0, 0])
 MAX_GOAL_ORIENTATION = np.array([np.pi, 0, 0])
 FIXED_GOAL_ORIENTATION  = np.array([-np.pi/4, 0, -np.pi/2])
 ARROW_OBJECT_ORIENTATION_CORRECTION = np.array([np.pi/2 , 0, 0])
+FIXED_OBSTACLE_ORIENTATION  = np.array([0, np.pi/2, 0])
+FIXED_OBSTACLE_POS = np.array([0.1, .0, 0.26])
+
 TARGET_SPEED = 0.0025
 
 
@@ -46,6 +54,7 @@ class WidowxEnv(gym.Env):
         moving_target,
         target_type,
         goal_oriented,
+        obstacle,
         obs_type,
         reward_type,
         action_type,
@@ -63,6 +72,7 @@ class WidowxEnv(gym.Env):
         self.moving_target = moving_target
         self.target_type = target_type
         self.goal_oriented = goal_oriented
+        self.obstacle = obstacle
         self.obs_type = obs_type
         self.reward_type = reward_type
         self.action_type = action_type
@@ -207,7 +217,7 @@ class WidowxEnv(gym.Env):
         """ Setup camera and load URDFs"""
 
         # # Set gravity
-        # p.setGravity(0, 0, -9.81, physicsClientId=self.physics_client)
+        p.setGravity(0, 0, -9.81, physicsClientId=self.physics_client)
         # # p.setGravity(0, 0, 0, physicsClientId=self.physics_client)
 
         # Initialise camera angle
@@ -227,30 +237,6 @@ class WidowxEnv(gym.Env):
                 "URDFs/widowx/widowx.urdf"),
             useFixedBase=True)
 
-        # # TEST
-        # self.cube = p.loadURDF(
-        #     os.path.join(
-        #         path,
-        #         "URDFs/cube.urdf"),
-        #         useFixedBase=True)
-
-        # p.resetBasePositionAndOrientation(
-        #     self.cube, [0.1, 0.1, 0.1], p.getQuaternionFromEuler([0, 0, 0]))
-
-        # # TEST
-        # self.cube = p.loadURDF(
-        #     os.path.join(
-        #         path,
-        #         "URDFs/testbot.urdf"),
-        #         useFixedBase=True)
-
-        # p.resetBasePositionAndOrientation(
-        #     self.cube, [0.1, 0.1, 1], p.getQuaternionFromEuler([0, 0, 0]))
-
-        # cubeStartPos = [0,0,1]
-        # cubeStartOrientation = p.getQuaternionFromEuler([0,0,0])
-        # boxId = p.loadURDF("r2d2.urdf", cubeStartPos, cubeStartOrientation)
-
         if self.target_type == "arrow":
             self.target_object = p.loadURDF(
                 os.path.join(
@@ -262,6 +248,19 @@ class WidowxEnv(gym.Env):
                 os.path.join(
                     path,
                     "URDFs/sphere.urdf"),
+                useFixedBase=True)
+
+        if self.obstacle == "circular_window":
+            self.obstacle_object = p.loadURDF(
+                os.path.join(
+                    path,
+                    "URDFs/circular_window.urdf"),
+                useFixedBase=True)
+        elif self.obstacle == "circular_window_small":
+            self.obstacle_object = p.loadURDF(
+                os.path.join(
+                    path,
+                    "URDFs/circular_window_small.urdf"),
                 useFixedBase=True)
 
         self.plane = p.loadURDF('plane.urdf')
@@ -280,16 +279,26 @@ class WidowxEnv(gym.Env):
                 # deepcopy is necessary to avoid changing the value of FIXED_GOAL_COORDS_MOVING
                 self.goal_pos = copy.deepcopy(FIXED_GOAL_COORDS_MOVING)
             else:
-                if self.target_type == "arrow":
-                    self.goal_pos = FIXED_GOAL_COORDS_ARROW
-                elif self.target_type == "sphere":
-                    self.goal_pos = FIXED_GOAL_COORDS_SPHERE
+                if self.obstacle == "circular_window" or self.obstacle == "circular_window_small":
+                    if self.target_type == "arrow":
+                        self.goal_pos = FIXED_GOAL_COORDS_ARROW
+                    elif self.target_type == "sphere":
+                        self.goal_pos = FIXED_GOAL_COORDS_SPHERE2
+                else:
+                    if self.target_type == "arrow":
+                        self.goal_pos = FIXED_GOAL_COORDS_ARROW
+                    elif self.target_type == "sphere":
+                        self.goal_pos = FIXED_GOAL_COORDS_SPHERE
 
         # Initialise goal orientation
         if self.random_orientation:
             self.goal_orient = self.sample_random_orientation()
         else:
             self.goal_orient = FIXED_GOAL_ORIENTATION
+
+        # Initialise obstacle position and orientation
+        self.obstacle_pos = FIXED_OBSTACLE_POS
+        self.obstacle_orient = FIXED_OBSTACLE_ORIENTATION
 
         # Correct the orientation of the target object for consistency with rendering
         # in Pybullet (This is due to the arrow's STL being oriented along a different axis)
@@ -300,6 +309,8 @@ class WidowxEnv(gym.Env):
             self.arm, [0, 0, 0], p.getQuaternionFromEuler([np.pi, np.pi, np.pi]))
         p.resetBasePositionAndOrientation(
             self.target_object, self.goal_pos, p.getQuaternionFromEuler(self.target_object_orient))
+        p.resetBasePositionAndOrientation(
+            self.obstacle_object, self.obstacle_pos, p.getQuaternionFromEuler(self.obstacle_orient))
 
         # Reset joint at initial angles
         self._force_joint_positions(RESET_VALUES)

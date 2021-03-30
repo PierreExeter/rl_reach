@@ -1,7 +1,11 @@
-import pybullet as p
-import pybullet_data
+"""
+Load WidowX manipulator and obstacle in Pybullet
+"""
 import time
 import random
+import pybullet as p
+import numpy as np
+import pybullet_data
 
 # start pybullet simulation
 p.connect(p.GUI)
@@ -17,6 +21,10 @@ plane = p.loadURDF("plane.urdf")
 
 # import Kuka urdf and fix it to the ground
 robot = p.loadURDF("gym_envs/widowx_env/envs/URDFs/widowx/widowx.urdf", [0, 0, 0], useFixedBase=1)
+obstacle = p.loadURDF("gym_envs/widowx_env/envs/URDFs/circular_window_small.urdf", [0, 0, 0], useFixedBase=1)
+
+# move obstacle
+p.resetBasePositionAndOrientation(obstacle, [0.1, .0, 0.26], p.getQuaternionFromEuler([0, np.pi/2, 0]))
 
 print("robot ID: ", robot)
 
