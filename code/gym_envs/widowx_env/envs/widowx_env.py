@@ -11,7 +11,7 @@ import pybullet as p
 import pybullet_data
 import numpy as np
 from gym import spaces
-from .env_description import ObservationShapes
+from .env_description import ObservationShapes, ActionShapes
 
 
 # Initial joint angles
@@ -87,21 +87,21 @@ class WidowxEnv(gym.Env):
         self._renders = renders
         self.lidar = True
 
-        self.endeffector_pos = None
-        self.old_endeffector_pos = None
-        self.endeffector_orient = None
-        self.old_endeffector_orient = None
-        self.torso_pos = None
-        self.torso_orient = None
-        self.end_torso_pos = None
-        self.end_goal_pos = None
-        self.end_torso_orient = None
-        self.end_goal_orient = None
-        self.joint_positions = None
-        self.delta_orient = None
-        self.delta_endeff_orient = None
-        self.goal_orient = None
-        self.target_object_orient = None
+        self.endeffector_pos = np.zeros(3)
+        self.old_endeffector_pos = np.zeros(3)
+        self.endeffector_orient = np.zeros(3)
+        self.old_endeffector_orient = np.zeros(3)
+        self.torso_pos = np.zeros(3)
+        self.torso_orient = np.zeros(3)
+        self.end_torso_pos = np.zeros(3)
+        self.end_goal_pos = np.zeros(3)
+        self.end_torso_orient = np.zeros(3)
+        self.end_goal_orient = np.zeros(3)
+        self.joint_positions = np.zeros(6)
+        self.delta_orient = np.zeros(3)
+        self.delta_endeff_orient = np.zeros(3)
+        self.goal_orient = np.zeros(3)
+        self.target_object_orient = np.zeros(3)
         self.reward = None
         self.obs = None
         self.action = np.zeros(6)
@@ -110,12 +110,12 @@ class WidowxEnv(gym.Env):
         self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.025])
         # self.pybullet_action_min = np.array([-3, -0.3, -0.3, -0.5, -0.5, 0])  # with action2
         # self.pybullet_action_max = np.array([3, 0.3, 0.3, 0.5, 0.5, 0.025])   # with action2
-        self.new_joint_positions = None
+        self.new_joint_positions = np.zeros(6)
         self.dist = 0
         self.old_dist = 0
         self.orient = 0
         self.old_orient = 0
-        self.goal_pos = np.zeros(6)
+        self.goal_pos = np.zeros(3)
         self.term1 = 0
         self.term2 = 0
         self.delta_pos = 0
@@ -258,6 +258,25 @@ class WidowxEnv(gym.Env):
         # Load URDFs
         self.create_world()
 
+
+        self.action_shape = ActionShapes(
+            self.pybullet_action,
+            self.joint_positions,
+            self.joint_min,
+            self.joint_max,
+            self.arm,
+            self.physics_client)
+
+        # self.obs_shape = ObservationShapes(
+        #     self.endeffector_pos,
+        #     self.endeffector_orient,
+        #     self.torso_pos,
+        #     self.torso_orient,
+        #     self.goal_pos,
+        #     self.goal_orient,
+        #     self.joint_positions
+        # )
+
     def sample_random_position(self):
         """ Sample random target position """
         return np.random.uniform(low=MIN_GOAL_COORDS, high=MAX_GOAL_COORDS)
@@ -381,7 +400,7 @@ class WidowxEnv(gym.Env):
                 self.obstacle_object, self.obstacle_pos, p.getQuaternionFromEuler(self.obstacle_orient))
 
         # Reset joint at initial angles
-        self._force_joint_positions(RESET_VALUES)
+        self.action_shape.force_joint_positions(RESET_VALUES)
 
         # Get observation
         self._get_general_obs()
@@ -501,10 +520,18 @@ class WidowxEnv(gym.Env):
         # Scale action to pybullet range
         self._scale_action_pybullet()
 
+        self.action_shape = ActionShapes(
+            self.pybullet_action,
+            self.joint_positions,
+            self.joint_min,
+            self.joint_max,
+            self.arm,
+            self.physics_client)
+
         if self.action_type == 1:
-            self._take_action1()
+            self.action_shape.take_action1()
         elif self.action_type == 2:
-            self._take_action2()
+            self.action_shape.take_action2()
 
         # get observation
         self._get_general_obs()
@@ -517,7 +544,7 @@ class WidowxEnv(gym.Env):
             self.goal_orient,
             self.joint_positions
         )
-        
+
         if self.obs_type == 1:
             self.obs = self.obs_shape.get_obs1()
         elif self.obs_type == 2:
@@ -624,7 +651,7 @@ class WidowxEnv(gym.Env):
             self.results_lidar = p.rayTestBatch(self.rayFrom, self.rayTo)
 
             for i in range(self.numRays):
-                print(self.results_lidar[i])
+                # print(self.results_lidar[i])
 
                 self.hitObjectUid = self.results_lidar[i][0]
 
@@ -645,38 +672,38 @@ class WidowxEnv(gym.Env):
 
         return self.obs, self.reward, episode_over, info
 
-    def _take_action1(self):
-        """ select action #1 (increments from previous joint position) """
-        # Update the new joint position with the action
-        self.new_joint_positions = self.joint_positions + self.pybullet_action
+    # def _take_action1(self):
+    #     """ select action #1 (increments from previous joint position) """
+    #     # Update the new joint position with the action
+    #     self.new_joint_positions = self.joint_positions + self.pybullet_action
 
-        # Clip the joint position to fit the joint's allowed boundaries
-        self.new_joint_positions = np.clip(
-            np.array(self.new_joint_positions),
-            self.joint_min,
-            self.joint_max)
+    #     # Clip the joint position to fit the joint's allowed boundaries
+    #     self.new_joint_positions = np.clip(
+    #         np.array(self.new_joint_positions),
+    #         self.joint_min,
+    #         self.joint_max)
 
-        # Instantaneously reset the joint position (no torque applied)
-        self._force_joint_positions(self.new_joint_positions)
+    #     # Instantaneously reset the joint position (no torque applied)
+    #     self._force_joint_positions(self.new_joint_positions)
 
-    def _take_action2(self):
-        """ select action #2: position control """
-        # Update the new joint position with the action
-        self.new_joint_positions = self.joint_positions + self.pybullet_action
+    # def _take_action2(self):
+    #     """ select action #2: position control """
+    #     # Update the new joint position with the action
+    #     self.new_joint_positions = self.joint_positions + self.pybullet_action
 
-        # Clip the joint position to fit the joint's allowed boundaries
-        self.new_joint_positions = np.clip(
-            np.array(self.new_joint_positions),
-            self.joint_min,
-            self.joint_max)
+    #     # Clip the joint position to fit the joint's allowed boundaries
+    #     self.new_joint_positions = np.clip(
+    #         np.array(self.new_joint_positions),
+    #         self.joint_min,
+    #         self.joint_max)
 
-        # Position control
-        self._set_joint_positions(self.new_joint_positions)
+    #     # Position control
+    #     self._set_joint_positions(self.new_joint_positions)
 
-        self.frame_skip = 10
+    #     self.frame_skip = 10
 
-        for _ in range(self.frame_skip):
-            p.stepSimulation(physicsClientId=self.physics_client)
+    #     for _ in range(self.frame_skip):
+    #         p.stepSimulation(physicsClientId=self.physics_client)
 
     def _detect_collision(self):
         """ Detect any collision with the arm (require physics enabled) """
@@ -915,29 +942,29 @@ class WidowxEnv(gym.Env):
         """ Function necessary for goal Env"""
         return - (np.linalg.norm(achieved_goal - goal)**2)
 
-    def _set_joint_positions(self, joint_positions):
-        """ Position control (not reset) """
-        # In Pybullet, gripper halves are controlled separately
-        joint_positions = list(joint_positions) + [joint_positions[-1]]
-        p.setJointMotorControlArray(
-            self.arm,
-            [0, 1, 2, 3, 4, 7, 8],
-            controlMode=p.POSITION_CONTROL,
-            targetPositions=joint_positions
-        )
+    # def _set_joint_positions(self, joint_positions):
+    #     """ Position control (not reset) """
+    #     # In Pybullet, gripper halves are controlled separately
+    #     joint_positions = list(joint_positions) + [joint_positions[-1]]
+    #     p.setJointMotorControlArray(
+    #         self.arm,
+    #         [0, 1, 2, 3, 4, 7, 8],
+    #         controlMode=p.POSITION_CONTROL,
+    #         targetPositions=joint_positions
+    #     )
 
-    def _force_joint_positions(self, joint_positions):
-        """ Instantaneous reset of the joint angles (not position control) """
-        for i in range(5):
-            p.resetJointState(
-                self.arm,
-                i,
-                joint_positions[i]
-            )
-        # In Pybullet, gripper halves are controlled separately
-        for i in range(7, 9):
-            p.resetJointState(
-                self.arm,
-                i,
-                joint_positions[-1]
-            )
+    # def _force_joint_positions(self, joint_positions):
+    #     """ Instantaneous reset of the joint angles (not position control) """
+    #     for i in range(5):
+    #         p.resetJointState(
+    #             self.arm,
+    #             i,
+    #             joint_positions[i]
+    #         )
+    #     # In Pybullet, gripper halves are controlled separately
+    #     for i in range(7, 9):
+    #         p.resetJointState(
+    #             self.arm,
+    #             i,
+    #             joint_positions[-1]
+    #         )

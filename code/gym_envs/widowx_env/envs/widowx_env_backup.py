@@ -682,7 +682,7 @@ class WidowxEnv(gym.Env):
             self.results_lidar = p.rayTestBatch(self.rayFrom, self.rayTo)
 
             for i in range(self.numRays):
-                print(self.results_lidar[i])
+                # print(self.results_lidar[i])
 
                 self.hitObjectUid = self.results_lidar[i][0]
 
