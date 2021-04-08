@@ -11,7 +11,6 @@ import pybullet as p
 import pybullet_data
 import numpy as np
 from gym import spaces
-from .env_description import ObservationShapes
 
 
 # Initial joint angles
@@ -384,31 +383,20 @@ class WidowxEnv(gym.Env):
         self._force_joint_positions(RESET_VALUES)
 
         # Get observation
-        self._get_general_obs()
-        self.obs_shape = ObservationShapes(
-            self.endeffector_pos,
-            self.endeffector_orient,
-            self.torso_pos,
-            self.torso_orient,
-            self.goal_pos,
-            self.goal_orient,
-            self.joint_positions
-        )
-
         if self.obs_type == 1:
-            self.obs = self.obs_shape.get_obs1()
+            self.obs = self._get_obs1()
         elif self.obs_type == 2:
-            self.obs = self.obs_shape.get_obs2()
+            self.obs = self._get_obs2()
         elif self.obs_type == 3:
-            self.obs = self.obs_shape.get_obs3()
+            self.obs = self._get_obs3()
         elif self.obs_type == 4:
-            self.obs = self.obs_shape.get_obs4()
+            self.obs = self._get_obs4()
         elif self.obs_type == 5:
-            self.obs = self.obs_shape.get_obs5()
+            self.obs = self._get_obs5()
         elif self.obs_type == 6:
-            self.obs = self.obs_shape.get_obs6()
+            self.obs = self._get_obs6()
         elif self.obs_type == 7:
-            self.obs = self.obs_shape.get_obs7()
+            self.obs = self._get_obs7()
 
         # update observation if goal oriented environment
         if self.goal_oriented:
@@ -422,7 +410,90 @@ class WidowxEnv(gym.Env):
         self.endeffector_orient = self._get_end_effector_orientation()
         self.torso_pos = self._get_torso_position()
         self.torso_orient = self._get_torso_orientation()
+        self.end_torso_pos = self.endeffector_pos - self.torso_pos
+        self.end_goal_pos = self.endeffector_pos - self.goal_pos
+        self.end_torso_orient = self.endeffector_orient - self.torso_orient
+        self.end_goal_orient = self.endeffector_orient - self.goal_orient
         self.joint_positions = self._get_joint_positions()
+
+    def _get_obs1(self):
+        """ Returns observation #1 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [self.endeffector_pos, self.joint_positions]).ravel()
+
+        return robot_obs
+
+    def _get_obs2(self):
+        """ Returns observation #2 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [self.goal_pos, self.joint_positions]).ravel()
+
+        return robot_obs
+
+    def _get_obs3(self):
+        """ Returns observation #3 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [self.end_torso_pos, self.end_goal_pos, self.joint_positions]).ravel()
+
+        return robot_obs
+
+    def _get_obs4(self):
+        """ Returns observation #4 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [self.end_goal_pos, self.joint_positions]).ravel()
+
+        return robot_obs
+
+    def _get_obs5(self):
+        """ Returns observation #5 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [self.end_torso_pos, self.end_goal_pos, self.goal_pos, self.joint_positions]).ravel()
+
+        return robot_obs
+
+    def _get_obs6(self):
+        """ Returns observation #6 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [
+                self.end_torso_pos,
+                self.end_goal_pos,
+                self.end_torso_orient,
+                self.end_goal_orient,
+                self.goal_pos,
+                self.goal_orient,
+                self.endeffector_pos,
+                self.endeffector_orient,
+                self.joint_positions
+                ]).ravel()
+
+        return robot_obs
+
+    def _get_obs7(self):
+        """ Returns observation #7 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [
+                self.end_torso_pos,
+                self.end_goal_pos,
+                self.goal_pos,
+                self.endeffector_pos,
+                self.joint_positions
+                ]).ravel()
+
+        return robot_obs
 
     def _get_joint_positions(self):
         """ Return current joint position """
@@ -507,31 +578,18 @@ class WidowxEnv(gym.Env):
             self._take_action2()
 
         # get observation
-        self._get_general_obs()
-        self.obs_shape = ObservationShapes(
-            self.endeffector_pos,
-            self.endeffector_orient,
-            self.torso_pos,
-            self.torso_orient,
-            self.goal_pos,
-            self.goal_orient,
-            self.joint_positions
-        )
-        
         if self.obs_type == 1:
-            self.obs = self.obs_shape.get_obs1()
+            self.obs = self._get_obs1()
         elif self.obs_type == 2:
-            self.obs = self.obs_shape.get_obs2()
+            self.obs = self._get_obs2()
         elif self.obs_type == 3:
-            self.obs = self.obs_shape.get_obs3()
+            self.obs = self._get_obs3()
         elif self.obs_type == 4:
-            self.obs = self.obs_shape.get_obs4()
+            self.obs = self._get_obs4()
         elif self.obs_type == 5:
-            self.obs = self.obs_shape.get_obs5()
+            self.obs = self._get_obs5()
         elif self.obs_type == 6:
-            self.obs = self.obs_shape.get_obs6()
-        elif self.obs_type == 7:
-            self.obs = self.obs_shape.get_obs7()
+            self.obs = self._get_obs6()
 
         # update observation if goal oriented environment
         if self.goal_oriented:
