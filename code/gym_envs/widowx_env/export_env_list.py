@@ -670,6 +670,24 @@ d = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         },
+
+    'widowx_reacher-v38':
+    {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        },
 }
 
 df = pd.DataFrame.from_dict(d, orient='index').reset_index()

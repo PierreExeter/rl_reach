@@ -33,6 +33,6 @@
 # echo "54"
 # python run_experiments.py --exp-id 54 --algo ppo --env widowx_reacher-v33 --n-timesteps 100000000 --n-seeds 2
 
-echo "EXP 59"
-python run_experiments.py --exp-id 59 --algo ppo --env widowx_reacher-v37 --n-timesteps 500000 --n-seeds 2
+echo "EXP 68"
+python run_experiments.py --exp-id 68 --algo ppo --env widowx_reacher-v38 --n-timesteps 500000 --n-seeds 1
 

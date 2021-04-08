@@ -807,7 +807,7 @@ register(
         'target_type': "sphere",
         'goal_oriented' : False,
         'obstacle': "circular_window_small",
-        'obs_type' : 5,
+        'obs_type' : 7,
         'reward_type' : 20,
         'action_type' : 2,
         'joint_limits' : "large",
@@ -818,3 +818,24 @@ register(
         },
     )
 
+register(
+    id='widowx_reacher-v38',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs={
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        },
+    )

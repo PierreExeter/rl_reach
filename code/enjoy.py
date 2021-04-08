@@ -240,6 +240,10 @@ if __name__ == "__main__":
 
     model = ALGOS[algo].load(model_path, env=env, **kwargs)
 
+    # Moved render flag outside the loop (Pierre)
+    if args.render:
+        env.render("human")
+
     obs = env.reset()
 
     # Force deterministic for DQN, DDPG, SAC and HER (that is a wrapper around)
@@ -294,10 +298,6 @@ if __name__ == "__main__":
     success_list_orient_1 = []
     success_list_orient_05 = []
 
-    # Moved render flag outside the loop (Pierre)
-    if args.render:
-        env.render("human")
-
     for t in range(args.n_eval_steps):
         action, state = model.predict(
             obs, state=state, deterministic=deterministic)
@@ -306,6 +306,7 @@ if __name__ == "__main__":
         # Slow down simulation when rendering (Pierre)
         if args.render:
             if "widowx" in env_id:
+                env.render("human")
                 time.sleep(1. / 30.)
             else:
                 env.render()
@@ -558,6 +559,7 @@ if __name__ == "__main__":
             log_dict['term2'] = infos[0]['term2']
             log_dict['vel_dist'] = infos[0]['vel_dist']
             log_dict['vel_pos'] = infos[0]['vel_pos']
+            log_dict['collision'] = infos[0]['collision']
 
             # log_dict['obs'] = obs
             # log_dict['obs_space_low'] = env.observation_space.low

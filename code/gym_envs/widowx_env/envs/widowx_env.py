@@ -5,6 +5,7 @@ WidowX MK-II robot manipulator reaching a target position
 
 import os
 import copy
+import math
 import gym
 import pybullet as p
 import pybullet_data
@@ -62,7 +63,8 @@ class WidowxEnv(gym.Env):
         action_min,
         action_max,
         alpha_reward,
-        reward_coeff):
+        reward_coeff,
+        renders=True):
         """
         Initialise the environment
         """
@@ -81,6 +83,8 @@ class WidowxEnv(gym.Env):
         self.action_max = np.array(action_max)
         self.alpha_reward = alpha_reward
         self.reward_coeff = reward_coeff
+        self._renders = renders
+        self.lidar = True
 
         self.endeffector_pos = None
         self.old_endeffector_pos = None
@@ -103,6 +107,8 @@ class WidowxEnv(gym.Env):
         self.pybullet_action = np.zeros(6)
         self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, 0])
         self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.025])
+        # self.pybullet_action_min = np.array([-3, -0.3, -0.3, -0.5, -0.5, 0])  # with action2
+        # self.pybullet_action_max = np.array([3, 0.3, 0.3, 0.5, 0.5, 0.025])   # with action2
         self.new_joint_positions = None
         self.dist = 0
         self.old_dist = 0
@@ -113,8 +119,18 @@ class WidowxEnv(gym.Env):
         self.term2 = 0
         self.delta_pos = 0
         self.delta_dist = 0
-        self.width = 3840 #1920
-        self.height = 2160 #1080
+
+        # render settings
+        self.renderer = p.ER_TINY_RENDERER  # p.ER_BULLET_HARDWARE_OPENGL
+        self._width = 224
+        self._height = 224
+        self._cam_dist = 0.8
+        self._cam_yaw = 0
+        self._cam_pitch = -30
+        self._cam_roll = 0
+        self.camera_target_pos = [0.2, 0, 0.1]
+        self._screen_width = 3840 #1920
+        self._screen_height = 2160 #1080
 
         # Define action space
         self.action_space = spaces.Box(
@@ -182,6 +198,22 @@ class WidowxEnv(gym.Env):
                     self.joint_max
                     ), axis=0))
 
+        elif self.obs_type == 7:
+            self.obs_space_low = np.float32(
+                np.concatenate((
+                    [-1.0]*6,
+                    MIN_GOAL_COORDS,
+                    MIN_END_EFF_COORDS,
+                    self.joint_min
+                    ), axis=0))
+            self.obs_space_high = np.float32(
+                np.concatenate((
+                    [1.0]*6,
+                    MAX_GOAL_COORDS,
+                    MAX_END_EFF_COORDS,
+                    self.joint_max
+                    ), axis=0))
+
         self.observation_space = spaces.Box(
                     low=self.obs_space_low,
                     high=self.obs_space_high,
@@ -200,7 +232,27 @@ class WidowxEnv(gym.Env):
                 observation=self.observation_space))
 
         # Connect to physics client
-        self.physics_client = p.connect(p.DIRECT)
+        if self._renders:
+            self.physics_client = p.connect(p.GUI, options='--background_color_red=0.8 --background_color_green=0.9 --background_color_blue=1.0 --width=%d --height=%d' % (self._screen_width, self._screen_height))
+        
+            # Initialise debug camera angle
+            p.resetDebugVisualizerCamera(
+                cameraDistance=self._cam_dist,
+                cameraYaw=self._cam_yaw,
+                cameraPitch=self._cam_pitch,
+                cameraTargetPosition=self.camera_target_pos,
+                physicsClientId=self.physics_client)
+
+            # Debug sliders for moving the camera
+            self.x_slider = p.addUserDebugParameter("x_slider", -10, 10, self.camera_target_pos[0])
+            self.y_slider = p.addUserDebugParameter("y_slider", -10, 10, self.camera_target_pos[1])
+            self.z_slider = p.addUserDebugParameter("z_slider", -10, 10, self.camera_target_pos[2])
+            self.dist_slider = p.addUserDebugParameter("cam_dist", 0, 10, self._cam_dist)
+            self.yaw_slider = p.addUserDebugParameter("cam_yaw", -180, 180, self._cam_yaw)
+            self.pitch_slider = p.addUserDebugParameter("cam_pitch", -180, 180, self._cam_pitch)
+
+        else:
+            self.physics_client = p.connect(p.DIRECT)
 
         # Load URDFs
         self.create_world()
@@ -219,14 +271,6 @@ class WidowxEnv(gym.Env):
         # # Set gravity
         p.setGravity(0, 0, -9.81, physicsClientId=self.physics_client)
         # # p.setGravity(0, 0, 0, physicsClientId=self.physics_client)
-
-        # Initialise camera angle
-        p.resetDebugVisualizerCamera(
-            cameraDistance=0.6,
-            cameraYaw=0,
-            cameraPitch=-30,
-            cameraTargetPosition=[0.2, 0, 0.1],
-            physicsClientId=self.physics_client)
 
         # Load robot, target object and plane urdf
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -260,10 +304,31 @@ class WidowxEnv(gym.Env):
             self.obstacle_object = p.loadURDF(
                 os.path.join(
                     path,
-                    "URDFs/circular_window_small.urdf"),
+                    "URDFs/circular_window_small_vhacd.urdf"),
                 useFixedBase=True)
 
         self.plane = p.loadURDF('plane.urdf')
+
+        if self.lidar:
+            self.rayFrom = []
+            self.rayTo = []
+            self.rayIds = []
+
+            self.lidar_height = 0.26
+            self.numRays = 96  # 1024
+            self.rayLen = 1
+            self.rayHitColor = [1, 0, 0]  # green
+            self.rayMissColor = [0, 1, 0] # red
+            self.lidarStartPositon = [0, 0, self.lidar_height]
+
+            for i in range(self.numRays):
+                self.rayFrom.append(self.lidarStartPositon)
+                self.rayTo.append([
+                self.rayLen * math.sin(2. * math.pi * float(i) / self.numRays),
+                self.rayLen * math.cos(2. * math.pi * float(i) / self.numRays), self.lidar_height])
+
+                # replace lines
+                self.rayIds.append(p.addUserDebugLine(self.rayFrom[i], self.rayTo[i], self.rayMissColor))
 
     def reset(self):
         """
@@ -331,6 +396,8 @@ class WidowxEnv(gym.Env):
             self.obs = self._get_obs5()
         elif self.obs_type == 6:
             self.obs = self._get_obs6()
+        elif self.obs_type == 7:
+            self.obs = self._get_obs7()
 
         # update observation if goal oriented environment
         if self.goal_oriented:
@@ -409,6 +476,21 @@ class WidowxEnv(gym.Env):
                 self.goal_orient,
                 self.endeffector_pos,
                 self.endeffector_orient,
+                self.joint_positions
+                ]).ravel()
+
+        return robot_obs
+
+    def _get_obs7(self):
+        """ Returns observation #7 """
+        self._get_general_obs()
+
+        robot_obs = np.concatenate(
+            [
+                self.end_torso_pos,
+                self.end_goal_pos,
+                self.goal_pos,
+                self.endeffector_pos,
                 self.joint_positions
                 ]).ravel()
 
@@ -590,11 +672,35 @@ class WidowxEnv(gym.Env):
         # According to the Pybullet documentation, 1 timestep = 240 Hz
         info['vel_dist'] = self.delta_dist * 240
         info['vel_pos'] = self.delta_pos * 240
+        info['collision'] = self._detect_collision()
 
         # Create "episode_over": never end episode prematurily
         episode_over = False
         # if self.new_distance < 0.0005:
         #     episode_over = True
+
+        if self.lidar:
+            self.results_lidar = p.rayTestBatch(self.rayFrom, self.rayTo)
+
+            for i in range(self.numRays):
+                print(self.results_lidar[i])
+
+                self.hitObjectUid = self.results_lidar[i][0]
+
+                if self.hitObjectUid < 0:
+                    self.hitPosition = [0, 0, 0]
+                    p.addUserDebugLine(
+                        self.rayFrom[i],
+                        self.rayTo[i],
+                        self.rayMissColor,
+                        replaceItemUniqueId=self.rayIds[i])
+                else:
+                    self.hitPosition = self.results_lidar[i][3]
+                    p.addUserDebugLine(
+                        self.rayFrom[i],
+                        self.hitPosition,
+                        self.rayHitColor,
+                        replaceItemUniqueId=self.rayIds[i])
 
         return self.obs, self.reward, episode_over, info
 
@@ -626,10 +732,34 @@ class WidowxEnv(gym.Env):
         # Position control
         self._set_joint_positions(self.new_joint_positions)
 
-        self.frame_skip = 5
+        self.frame_skip = 10
 
         for _ in range(self.frame_skip):
             p.stepSimulation(physicsClientId=self.physics_client)
+
+
+            # if self.lidar:
+            #     self.results_lidar = p.rayTestBatch(self.rayFrom, self.rayTo)
+
+            #     for i in range(self.numRays):
+            #         print(self.results_lidar[i])
+
+            #         self.hitObjectUid = self.results_lidar[i][0]
+
+            #         if self.hitObjectUid < 0:
+            #             self.hitPosition = [0, 0, 0]
+            #             p.addUserDebugLine(
+            #                 self.rayFrom[i],
+            #                 self.rayTo[i],
+            #                 self.rayMissColor,
+            #                 replaceItemUniqueId=self.rayIds[i])
+            #         else:
+            #             self.hitPosition = self.results_lidar[i][3]
+            #             p.addUserDebugLine(
+            #                 self.rayFrom[i],
+            #                 self.hitPosition,
+            #                 self.rayHitColor,
+            #                 replaceItemUniqueId=self.rayIds[i])
 
     def _detect_collision(self):
         """ Detect any collision with the arm (require physics enabled) """
@@ -812,19 +942,57 @@ class WidowxEnv(gym.Env):
             self.term1 = - self.dist
         else:
             self.term1 = 1
-        self.term2 = 0
-        rew = self.term1 + self.term2
 
         if self._detect_collision():
-            rew -= 10
+            self.term2 = -1
+        else:
+            self.term2 = 0
+
+        rew = self.term1 + self.term2
 
         return rew
 
     def render(self, mode='human'):
         """ Render Pybullet simulation """
-        p.disconnect(self.physics_client)
-        self.physics_client = p.connect(p.GUI, options='--background_color_red=0.8 --background_color_green=0.9 --background_color_blue=1.0 --width=%d --height=%d' % (self.width, self.height))
-        self.create_world()
+
+        if self._renders:
+
+            # update camera position from slider info
+            self._cam_dist = p.readUserDebugParameter(self.dist_slider)
+            self._cam_yaw = p.readUserDebugParameter(self.yaw_slider)
+            self._cam_pitch = p.readUserDebugParameter(self.pitch_slider)
+            x = p.readUserDebugParameter(self.x_slider)
+            y = p.readUserDebugParameter(self.y_slider)
+            z = p.readUserDebugParameter(self.z_slider)
+            self.camera_target_pos = (x, y, z)
+
+            viewMatrix = p.computeViewMatrixFromYawPitchRoll(
+                cameraTargetPosition=self.camera_target_pos,
+                distance=self._cam_dist,
+                yaw=self._cam_yaw,
+                pitch=self._cam_pitch,
+                roll=self._cam_roll,
+                upAxisIndex=2)
+
+            projectionMatrix = p.computeProjectionMatrixFOV(
+                fov=60, 
+                aspect=self._width / self._height,
+                nearVal=0.1,
+                farVal=100.0)
+
+            frame = p.getCameraImage(
+                width=self._width,
+                height=self._height,
+                viewMatrix=viewMatrix,
+                projectionMatrix=projectionMatrix,
+                renderer=self.renderer)
+
+            # frame = width, height, rgbImg, depthImg, segImg
+            # rgb_array = np.array(frame[2])
+            # depth_array = np.array(frame[3])
+            # segmentation_array = np.array(frame[4])
+
+            return frame
 
     def compute_reward(self, achieved_goal, goal, info):
         """ Function necessary for goal Env"""
@@ -856,13 +1024,3 @@ class WidowxEnv(gym.Env):
                 i,
                 joint_positions[-1]
             )
-
-    def _set_joint_positions(self, joint_positions):
-        # In SIM, gripper halves are controlled separately
-        joint_positions = list(joint_positions) + [joint_positions[-1]]
-        p.setJointMotorControlArray(
-            self.arm,
-            [0, 1, 2, 3, 4, 7, 8],
-            controlMode=p.POSITION_CONTROL,
-            targetPositions=joint_positions
-        )
