@@ -5,13 +5,12 @@ WidowX MK-II robot manipulator reaching a target position
 
 import os
 import copy
-import math
 import gym
 import pybullet as p
 import pybullet_data
 import numpy as np
 from gym import spaces
-from .env_description import ObservationShapes, ActionShapes
+from .env_description import ObservationShapes, ActionShapes, RewardFunctions
 
 
 # Initial joint angles
@@ -42,7 +41,6 @@ FIXED_GOAL_ORIENTATION  = np.array([-np.pi/4, 0, -np.pi/2])
 ARROW_OBJECT_ORIENTATION_CORRECTION = np.array([np.pi/2 , 0, 0])
 FIXED_OBSTACLE_ORIENTATION  = np.array([0, np.pi/2, 0])
 FIXED_OBSTACLE_POS = np.array([0.1, .0, 0.26])
-
 TARGET_SPEED = 0.0025
 
 
@@ -65,7 +63,8 @@ class WidowxEnv(gym.Env):
         action_max,
         alpha_reward,
         reward_coeff,
-        renders=True):
+        lidar,
+        camera_sensor):
         """
         Initialise the environment
         """
@@ -84,8 +83,8 @@ class WidowxEnv(gym.Env):
         self.action_max = np.array(action_max)
         self.alpha_reward = alpha_reward
         self.reward_coeff = reward_coeff
-        self._renders = renders
-        self.lidar = True
+        self.lidar = lidar
+        self.camera_sensor = camera_sensor
 
         self.endeffector_pos = np.zeros(3)
         self.old_endeffector_pos = np.zeros(3)
@@ -98,8 +97,10 @@ class WidowxEnv(gym.Env):
         self.end_torso_orient = np.zeros(3)
         self.end_goal_orient = np.zeros(3)
         self.joint_positions = np.zeros(6)
+        self.new_joint_positions = np.zeros(6)
         self.delta_orient = np.zeros(3)
         self.delta_endeff_orient = np.zeros(3)
+        self.goal_pos = np.zeros(3)
         self.goal_orient = np.zeros(3)
         self.target_object_orient = np.zeros(3)
         self.reward = None
@@ -110,12 +111,10 @@ class WidowxEnv(gym.Env):
         self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.025])
         # self.pybullet_action_min = np.array([-3, -0.3, -0.3, -0.5, -0.5, 0])  # with action2
         # self.pybullet_action_max = np.array([3, 0.3, 0.3, 0.5, 0.5, 0.025])   # with action2
-        self.new_joint_positions = np.zeros(6)
         self.dist = 0
         self.old_dist = 0
         self.orient = 0
         self.old_orient = 0
-        self.goal_pos = np.zeros(3)
         self.term1 = 0
         self.term2 = 0
         self.delta_pos = 0
@@ -233,31 +232,10 @@ class WidowxEnv(gym.Env):
                 observation=self.observation_space))
 
         # Connect to physics client
-        if self._renders:
-            self.physics_client = p.connect(p.GUI, options='--background_color_red=0.8 --background_color_green=0.9 --background_color_blue=1.0 --width=%d --height=%d' % (self._screen_width, self._screen_height))
+        self.physics_client = p.connect(p.DIRECT)
         
-            # Initialise debug camera angle
-            p.resetDebugVisualizerCamera(
-                cameraDistance=self._cam_dist,
-                cameraYaw=self._cam_yaw,
-                cameraPitch=self._cam_pitch,
-                cameraTargetPosition=self.camera_target_pos,
-                physicsClientId=self.physics_client)
-
-            # Debug sliders for moving the camera
-            self.x_slider = p.addUserDebugParameter("x_slider", -10, 10, self.camera_target_pos[0])
-            self.y_slider = p.addUserDebugParameter("y_slider", -10, 10, self.camera_target_pos[1])
-            self.z_slider = p.addUserDebugParameter("z_slider", -10, 10, self.camera_target_pos[2])
-            self.dist_slider = p.addUserDebugParameter("cam_dist", 0, 10, self._cam_dist)
-            self.yaw_slider = p.addUserDebugParameter("cam_yaw", -180, 180, self._cam_yaw)
-            self.pitch_slider = p.addUserDebugParameter("cam_pitch", -180, 180, self._cam_pitch)
-
-        else:
-            self.physics_client = p.connect(p.DIRECT)
-
         # Load URDFs
         self.create_world()
-
 
         self.action_shape = ActionShapes(
             self.pybullet_action,
@@ -267,15 +245,25 @@ class WidowxEnv(gym.Env):
             self.arm,
             self.physics_client)
 
-        # self.obs_shape = ObservationShapes(
-        #     self.endeffector_pos,
-        #     self.endeffector_orient,
-        #     self.torso_pos,
-        #     self.torso_orient,
-        #     self.goal_pos,
-        #     self.goal_orient,
-        #     self.joint_positions
-        # )
+        self.obs_shape = ObservationShapes(
+            self.endeffector_pos,
+            self.endeffector_orient,
+            self.torso_pos,
+            self.torso_orient,
+            self.goal_pos,
+            self.goal_orient,
+            self.joint_positions
+        )
+
+        self.reward_function = RewardFunctions(
+            self.dist,
+            self.alpha_reward,
+            self.action,
+            self.delta_dist,
+            self.delta_pos,
+            self.orient,
+            self._detect_collision()
+            )
 
     def sample_random_position(self):
         """ Sample random target position """
@@ -329,6 +317,7 @@ class WidowxEnv(gym.Env):
 
         self.plane = p.loadURDF('plane.urdf')
 
+        # Define lidar rays
         if self.lidar:
             self.rayFrom = []
             self.rayTo = []
@@ -344,8 +333,8 @@ class WidowxEnv(gym.Env):
             for i in range(self.numRays):
                 self.rayFrom.append(self.lidarStartPositon)
                 self.rayTo.append([
-                self.rayLen * math.sin(2. * math.pi * float(i) / self.numRays),
-                self.rayLen * math.cos(2. * math.pi * float(i) / self.numRays), self.lidar_height])
+                self.rayLen * np.sin(2. * np.pi * float(i) / self.numRays),
+                self.rayLen * np.cos(2. * np.pi * float(i) / self.numRays), self.lidar_height])
 
                 # replace lines
                 self.rayIds.append(p.addUserDebugLine(self.rayFrom[i], self.rayTo[i], self.rayMissColor))
@@ -569,46 +558,56 @@ class WidowxEnv(gym.Env):
         self.orient = np.linalg.norm(self.endeffector_orient - self.goal_orient)
 
         # get reward
+        self.reward_function = RewardFunctions(
+            self.dist,
+            self.alpha_reward,
+            self.action,
+            self.delta_dist,
+            self.delta_pos,
+            self.orient,
+            self._detect_collision()
+            )
+
         if self.reward_type == 1:
-            self.reward = self._get_reward1()
+            self.reward = self.reward_function.get_reward1()
         elif self.reward_type == 2:
-            self.reward = self._get_reward2()
+            self.reward = self.reward_function.get_reward2()
         elif self.reward_type == 3:
-            self.reward = self._get_reward3()
+            self.reward = self.reward_function.get_reward3()
         elif self.reward_type == 4:
-            self.reward = self._get_reward4()
+            self.reward = self.reward_function.get_reward4()
         elif self.reward_type == 5:
-            self.reward = self._get_reward5()
+            self.reward = self.reward_function.get_reward5()
         elif self.reward_type == 6:
-            self.reward = self._get_reward6()
+            self.reward = self.reward_function.get_reward6()
         elif self.reward_type == 7:
-            self.reward = self._get_reward7()
+            self.reward = self.reward_function.get_reward7()
         elif self.reward_type == 8:
-            self.reward = self._get_reward8()
+            self.reward = self.reward_function.get_reward8()
         elif self.reward_type == 9:
-            self.reward = self._get_reward9()
+            self.reward = self.reward_function.get_reward9()
         elif self.reward_type == 10:
-            self.reward = self._get_reward10()
+            self.reward = self.reward_function.get_reward10()
         elif self.reward_type == 11:
-            self.reward = self._get_reward11()
+            self.reward = self.reward_function.get_reward11()
         elif self.reward_type == 12:
-            self.reward = self._get_reward12()
+            self.reward = self.reward_function.get_reward12()
         elif self.reward_type == 13:
-            self.reward = self._get_reward13()
+            self.reward = self.reward_function.get_reward13()
         elif self.reward_type == 14:
-            self.reward = self._get_reward14()
+            self.reward = self.reward_function.get_reward14()
         elif self.reward_type == 15:
-            self.reward = self._get_reward15()
+            self.reward = self.reward_function.get_reward15()
         elif self.reward_type == 16:
-            self.reward = self._get_reward16()
+            self.reward = self.reward_function.get_reward16()
         elif self.reward_type == 17:
-            self.reward = self._get_reward17()
+            self.reward = self.reward_function.get_reward17()
         elif self.reward_type == 18:
-            self.reward = self._get_reward18()
+            self.reward = self.reward_function.get_reward18()
         elif self.reward_type == 19:
-            self.reward = self._get_reward19()
+            self.reward = self.reward_function.get_reward19()
         elif self.reward_type == 20:
-            self.reward = self._get_reward20()
+            self.reward = self.reward_function.get_reward20()
 
         # Apply reward coefficient
         self.reward *= self.reward_coeff
@@ -655,6 +654,7 @@ class WidowxEnv(gym.Env):
 
                 self.hitObjectUid = self.results_lidar[i][0]
 
+                # if no object detected
                 if self.hitObjectUid < 0:
                     self.hitPosition = [0, 0, 0]
                     p.addUserDebugLine(
@@ -670,40 +670,35 @@ class WidowxEnv(gym.Env):
                         self.rayHitColor,
                         replaceItemUniqueId=self.rayIds[i])
 
+        if self.camera_sensor:
+
+            viewMatrix = p.computeViewMatrixFromYawPitchRoll(
+                cameraTargetPosition=self.camera_target_pos,
+                distance=self._cam_dist,
+                yaw=self._cam_yaw,
+                pitch=self._cam_pitch,
+                roll=self._cam_roll,
+                upAxisIndex=2)
+
+            projectionMatrix = p.computeProjectionMatrixFOV(
+                fov=60,
+                aspect=self._width / self._height,
+                nearVal=0.1,
+                farVal=100.0)
+
+            frame = p.getCameraImage(
+                width=self._width,
+                height=self._height,
+                viewMatrix=viewMatrix,
+                projectionMatrix=projectionMatrix,
+                renderer=self.renderer)
+
+            # frame = width, height, rgbImg, depthImg, segImg
+            # rgb_array = np.array(frame[2])
+            # depth_array = np.array(frame[3])
+            # segmentation_array = np.array(frame[4])
+
         return self.obs, self.reward, episode_over, info
-
-    # def _take_action1(self):
-    #     """ select action #1 (increments from previous joint position) """
-    #     # Update the new joint position with the action
-    #     self.new_joint_positions = self.joint_positions + self.pybullet_action
-
-    #     # Clip the joint position to fit the joint's allowed boundaries
-    #     self.new_joint_positions = np.clip(
-    #         np.array(self.new_joint_positions),
-    #         self.joint_min,
-    #         self.joint_max)
-
-    #     # Instantaneously reset the joint position (no torque applied)
-    #     self._force_joint_positions(self.new_joint_positions)
-
-    # def _take_action2(self):
-    #     """ select action #2: position control """
-    #     # Update the new joint position with the action
-    #     self.new_joint_positions = self.joint_positions + self.pybullet_action
-
-    #     # Clip the joint position to fit the joint's allowed boundaries
-    #     self.new_joint_positions = np.clip(
-    #         np.array(self.new_joint_positions),
-    #         self.joint_min,
-    #         self.joint_max)
-
-    #     # Position control
-    #     self._set_joint_positions(self.new_joint_positions)
-
-    #     self.frame_skip = 10
-
-    #     for _ in range(self.frame_skip):
-    #         p.stepSimulation(physicsClientId=self.physics_client)
 
     def _detect_collision(self):
         """ Detect any collision with the arm (require physics enabled) """
@@ -726,245 +721,21 @@ class WidowxEnv(gym.Env):
                 self.pybullet_action_min[i],
                 self.pybullet_action_max[i])
 
-    def _get_reward1(self):
-        """ Compute reward function 1 (dense) """
-        self.term1 = - self.dist ** 2
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward2(self):
-        """ Compute reward function 2 (dense) """
-        self.term1 = - self.dist
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward3(self):
-        """ Compute reward function 3 (dense) """
-        self.term1 = - self.dist ** 3
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward4(self):
-        """ Compute reward function 4 (dense) """
-        self.term1 = - self.dist ** 4
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward5(self):
-        """ Compute reward function 5 (dense) """
-        self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha_reward * np.linalg.norm(self.action)
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward6(self):
-        """ Compute reward function 6 (dense) """
-        self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha_reward * np.linalg.norm(self.action) / self.dist ** 2
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward7(self):
-        """ Compute reward function 7 (dense) """
-        self.term1 = self.delta_dist
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward8(self):
-        """ Compute reward function 8 (dense) """
-        self.term1 = - self.dist ** 2
-        self.term2 = self.alpha_reward * abs(self.delta_dist / self.dist)
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward9(self):
-        """ Compute reward function 9 (dense) """
-        self.term1 = self.delta_pos
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward10(self):
-        """ Compute reward function 10 (dense) """
-        self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha_reward * self.delta_pos / self.dist
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward11(self):
-        """ Compute reward function 11 (sparse) """
-        if self.dist >= 0.001:
-            self.term1 = -1
-        else:
-            self.term1 = 0
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward12(self):
-        """ Compute reward function 12 (sparse) """
-        if self.dist >= 0.001:
-            self.term1 = 0
-        else:
-            self.term1 = 1
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward13(self):
-        """ Compute reward function 13 (sparse) """
-        if self.dist >= 0.001:
-            self.term1 = -0.02
-        else:
-            self.term1 = 1
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward14(self):
-        """ Compute reward function 14 (sparse) """
-        if self.dist >= 0.001:
-            self.term1 = -0.001
-        else:
-            self.term1 = 10
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward15(self):
-        """ Compute reward function 15 (sparse + dense) """
-        if self.dist >= 0.001:
-            self.term1 = - self.dist
-        else:
-            self.term1 = 1
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward16(self):
-        """ Compute reward function 16 (sparse + dense) """
-        if self.dist >= 0.001:
-            self.term1 = self.delta_dist
-        else:
-            self.term1 = self.delta_dist + 10
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward17(self):
-        """ Compute reward function 17 (dense) """
-        self.term1 = - self.orient ** 2
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward18(self):
-        """ Compute reward function 18 (dense) """
-        self.term1 = - self.dist ** 2
-        self.term2 = - self.alpha_reward * self.orient ** 2
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward19(self):
-        """ Compute reward function 19 (sparse + dense) """
-        if ((self.dist >= 0.001) or (self.orient >= 0.01)):
-            self.term1 = - self.dist **2 - self.alpha_reward * self.orient ** 2
-        else:
-            self.term1 = 1
-        self.term2 = 0
-        rew = self.term1 + self.term2
-        return rew
-
-    def _get_reward20(self):
-        """ Compute reward function 20 (sparse + dense) + penalty for collision """
-        if self.dist >= 0.001:
-            self.term1 = - self.dist
-        else:
-            self.term1 = 1
-
-        if self._detect_collision():
-            self.term2 = -1
-        else:
-            self.term2 = 0
-
-        rew = self.term1 + self.term2
-
-        return rew
-
     def render(self, mode='human'):
         """ Render Pybullet simulation """
 
-        if self._renders:
+        p.disconnect(self.physics_client)
+        self.physics_client = p.connect(p.GUI, options='--background_color_red=0.8 --background_color_green=0.9 --background_color_blue=1.0 --width=%d --height=%d' % (self._screen_width, self._screen_height))
+        self.create_world()
 
-            # update camera position from slider info
-            self._cam_dist = p.readUserDebugParameter(self.dist_slider)
-            self._cam_yaw = p.readUserDebugParameter(self.yaw_slider)
-            self._cam_pitch = p.readUserDebugParameter(self.pitch_slider)
-            x = p.readUserDebugParameter(self.x_slider)
-            y = p.readUserDebugParameter(self.y_slider)
-            z = p.readUserDebugParameter(self.z_slider)
-            self.camera_target_pos = (x, y, z)
-
-            viewMatrix = p.computeViewMatrixFromYawPitchRoll(
-                cameraTargetPosition=self.camera_target_pos,
-                distance=self._cam_dist,
-                yaw=self._cam_yaw,
-                pitch=self._cam_pitch,
-                roll=self._cam_roll,
-                upAxisIndex=2)
-
-            projectionMatrix = p.computeProjectionMatrixFOV(
-                fov=60, 
-                aspect=self._width / self._height,
-                nearVal=0.1,
-                farVal=100.0)
-
-            frame = p.getCameraImage(
-                width=self._width,
-                height=self._height,
-                viewMatrix=viewMatrix,
-                projectionMatrix=projectionMatrix,
-                renderer=self.renderer)
-
-            # frame = width, height, rgbImg, depthImg, segImg
-            # rgb_array = np.array(frame[2])
-            # depth_array = np.array(frame[3])
-            # segmentation_array = np.array(frame[4])
-
-            return frame
+        # Initialise debug camera angle
+        p.resetDebugVisualizerCamera(
+            cameraDistance=self._cam_dist,
+            cameraYaw=self._cam_yaw,
+            cameraPitch=self._cam_pitch,
+            cameraTargetPosition=self.camera_target_pos,
+            physicsClientId=self.physics_client)
 
     def compute_reward(self, achieved_goal, goal, info):
         """ Function necessary for goal Env"""
         return - (np.linalg.norm(achieved_goal - goal)**2)
-
-    # def _set_joint_positions(self, joint_positions):
-    #     """ Position control (not reset) """
-    #     # In Pybullet, gripper halves are controlled separately
-    #     joint_positions = list(joint_positions) + [joint_positions[-1]]
-    #     p.setJointMotorControlArray(
-    #         self.arm,
-    #         [0, 1, 2, 3, 4, 7, 8],
-    #         controlMode=p.POSITION_CONTROL,
-    #         targetPositions=joint_positions
-    #     )
-
-    # def _force_joint_positions(self, joint_positions):
-    #     """ Instantaneous reset of the joint angles (not position control) """
-    #     for i in range(5):
-    #         p.resetJointState(
-    #             self.arm,
-    #             i,
-    #             joint_positions[i]
-    #         )
-    #     # In Pybullet, gripper halves are controlled separately
-    #     for i in range(7, 9):
-    #         p.resetJointState(
-    #             self.arm,
-    #             i,
-    #             joint_positions[-1]
-    #         )

@@ -242,7 +242,7 @@ if __name__ == "__main__":
 
     # Moved render flag outside the loop (Pierre)
     if args.render:
-        env.render("human")
+        env.render()
 
     obs = env.reset()
 
@@ -306,7 +306,7 @@ if __name__ == "__main__":
         # Slow down simulation when rendering (Pierre)
         if args.render:
             if "widowx" in env_id:
-                env.render("human")
+                # env.render("human")
                 time.sleep(1. / 30.)
             else:
                 env.render()

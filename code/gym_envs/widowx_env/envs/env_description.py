@@ -117,6 +117,7 @@ class ActionShapes:
         self.joint_max = joint_max
         self.arm = arm
         self.physics_client = physics_client
+
         self.frame_skip = 10
         # Update the new joint position with the action
         self.new_joint_positions = self.joint_positions + self.pybullet_action
@@ -168,3 +169,198 @@ class ActionShapes:
                 i,
                 joint_positions[-1]
             )
+
+
+class RewardFunctions:
+
+
+    def __init__(
+        self,
+        dist,
+        alpha_reward,
+        action,
+        delta_dist,
+        delta_pos,
+        orient,
+        collision):
+
+        self.dist = dist
+        self.alpha_reward = alpha_reward
+        self.action = action
+        self.delta_dist = delta_dist
+        self.delta_pos = delta_pos
+        self.orient = orient
+        self.collision = collision
+
+        self.term1 = 0
+        self.term2 = 0
+
+    def get_reward1(self):
+        """ Compute reward function 1 (dense) """
+        self.term1 = - self.dist ** 2
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward2(self):
+        """ Compute reward function 2 (dense) """
+        self.term1 = - self.dist
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward3(self):
+        """ Compute reward function 3 (dense) """
+        self.term1 = - self.dist ** 3
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward4(self):
+        """ Compute reward function 4 (dense) """
+        self.term1 = - self.dist ** 4
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward5(self):
+        """ Compute reward function 5 (dense) """
+        self.term1 = - self.dist ** 2
+        self.term2 = - self.alpha_reward * np.linalg.norm(self.action)
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward6(self):
+        """ Compute reward function 6 (dense) """
+        self.term1 = - self.dist ** 2
+        self.term2 = - self.alpha_reward * np.linalg.norm(self.action) / self.dist ** 2
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward7(self):
+        """ Compute reward function 7 (dense) """
+        self.term1 = self.delta_dist
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward8(self):
+        """ Compute reward function 8 (dense) """
+        self.term1 = - self.dist ** 2
+        self.term2 = self.alpha_reward * abs(self.delta_dist / self.dist)
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward9(self):
+        """ Compute reward function 9 (dense) """
+        self.term1 = self.delta_pos
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward10(self):
+        """ Compute reward function 10 (dense) """
+        self.term1 = - self.dist ** 2
+        self.term2 = - self.alpha_reward * self.delta_pos / self.dist
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward11(self):
+        """ Compute reward function 11 (sparse) """
+        if self.dist >= 0.001:
+            self.term1 = -1
+        else:
+            self.term1 = 0
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward12(self):
+        """ Compute reward function 12 (sparse) """
+        if self.dist >= 0.001:
+            self.term1 = 0
+        else:
+            self.term1 = 1
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward13(self):
+        """ Compute reward function 13 (sparse) """
+        if self.dist >= 0.001:
+            self.term1 = -0.02
+        else:
+            self.term1 = 1
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward14(self):
+        """ Compute reward function 14 (sparse) """
+        if self.dist >= 0.001:
+            self.term1 = -0.001
+        else:
+            self.term1 = 10
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward15(self):
+        """ Compute reward function 15 (sparse + dense) """
+        if self.dist >= 0.001:
+            self.term1 = - self.dist
+        else:
+            self.term1 = 1
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward16(self):
+        """ Compute reward function 16 (sparse + dense) """
+        if self.dist >= 0.001:
+            self.term1 = self.delta_dist
+        else:
+            self.term1 = self.delta_dist + 10
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward17(self):
+        """ Compute reward function 17 (dense) """
+        self.term1 = - self.orient ** 2
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward18(self):
+        """ Compute reward function 18 (dense) """
+        self.term1 = - self.dist ** 2
+        self.term2 = - self.alpha_reward * self.orient ** 2
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward19(self):
+        """ Compute reward function 19 (sparse + dense) """
+        if ((self.dist >= 0.001) or (self.orient >= 0.01)):
+            self.term1 = - self.dist **2 - self.alpha_reward * self.orient ** 2
+        else:
+            self.term1 = 1
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward20(self):
+        """ Compute reward function 20 (sparse + dense) + penalty for collision """
+        if self.dist >= 0.001:
+            self.term1 = - self.dist
+        else:
+            self.term1 = 1
+
+        if self.collision:
+            self.term2 = -1
+        else:
+            self.term2 = 0
+
+        rew = self.term1 + self.term2
+
+        return rew
