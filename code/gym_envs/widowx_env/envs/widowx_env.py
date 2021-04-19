@@ -64,7 +64,9 @@ class WidowxEnv(gym.Env):
         alpha_reward,
         reward_coeff,
         lidar,
-        camera_sensor):
+        camera_sensor,
+        frame_skip,
+        pybullet_action_coeff):
         """
         Initialise the environment
         """
@@ -85,6 +87,8 @@ class WidowxEnv(gym.Env):
         self.reward_coeff = reward_coeff
         self.lidar = lidar
         self.camera_sensor = camera_sensor
+        self.frame_skip = frame_skip
+        self.pybullet_action_coeff = pybullet_action_coeff
 
         self.endeffector_pos = np.zeros(3)
         self.old_endeffector_pos = np.zeros(3)
@@ -107,8 +111,8 @@ class WidowxEnv(gym.Env):
         self.obs = None
         self.action = np.zeros(6)
         self.pybullet_action = np.zeros(6)
-        self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, 0])
-        self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.025])
+        self.pybullet_action_min = np.array([-0.05, -0.025, -0.025, -0.025, -0.05, 0]) * self.pybullet_action_coeff
+        self.pybullet_action_max = np.array([0.05, 0.025, 0.025, 0.025, 0.05, 0.025]) * self.pybullet_action_coeff
         # self.pybullet_action_min = np.array([-3, -0.3, -0.3, -0.5, -0.5, 0])  # with action2
         # self.pybullet_action_max = np.array([3, 0.3, 0.3, 0.5, 0.5, 0.025])   # with action2
         self.dist = 0
@@ -140,8 +144,13 @@ class WidowxEnv(gym.Env):
 
         # Define observation space
         if self.joint_limits == "small":
-            self.joint_min = np.array([-3.1, -1.6, -1.6, -1.8, -3.1, 0.0])
-            self.joint_max = np.array([3.1, 1.6, 1.6, 1.8, 3.1, 0.0])
+            # original values
+            # self.joint_min = np.array([-3.1, -1.6, -1.6, -1.8, -3.1, 0.0])
+            # self.joint_max = np.array([3.1, 1.6, 1.6, 1.8, 3.1, 0.0])
+
+            # measured joint amplitude
+            self.joint_min = np.array([-2.6, -1.5, -1.5, -1.7, -2.6, 0.0])
+            self.joint_max = np.array([2.6, 0.8, 1.5, 1.7, 2.6, 0.0])
         elif self.joint_limits == "large":
             self.joint_min = np.array([-3.2, -3.2, -3.2, -3.2, -3.2, -3.2])
             self.joint_max = np.array([3.2, 3.2, 3.2, 3.2, 3.2, 3.2])
@@ -243,7 +252,8 @@ class WidowxEnv(gym.Env):
             self.joint_min,
             self.joint_max,
             self.arm,
-            self.physics_client)
+            self.physics_client,
+            self.frame_skip)
 
         self.obs_shape = ObservationShapes(
             self.endeffector_pos,
@@ -430,11 +440,22 @@ class WidowxEnv(gym.Env):
         self.endeffector_orient = self._get_end_effector_orientation()
         self.torso_pos = self._get_torso_position()
         self.torso_orient = self._get_torso_orientation()
-        self.joint_positions = self._get_joint_positions()
+        self.joint_positions, self.joint_vel, self.joint_rf, self.joint_torques = self._get_joint_info()
 
-    def _get_joint_positions(self):
-        """ Return current joint position """
-        return np.array([x[0] for x in p.getJointStates(self.arm, range(6))])
+    def _get_joint_info(self):
+        """ Return current joint positions, velocities, reaction forces and torques """
+        # np.array([x[0] for x in p.getJointStates(self.arm, range(6))])
+
+        info = p.getJointStates(self.arm, range(6))
+        pos, vel, rf, t = [], [], [], []
+
+        for joint_info in info:
+            pos.append(joint_info[0])
+            vel.append(joint_info[1])
+            rf.append(joint_info[2])
+            t.append(joint_info[3])
+
+        return np.array(pos), np.array(vel), np.array(rf), np.array(t)
 
     def _get_end_effector_position(self):
         """ Get end effector coordinates """
@@ -515,12 +536,17 @@ class WidowxEnv(gym.Env):
             self.joint_min,
             self.joint_max,
             self.arm,
-            self.physics_client)
+            self.physics_client,
+            self.frame_skip)
 
         if self.action_type == 1:
             self.action_shape.take_action1()
         elif self.action_type == 2:
             self.action_shape.take_action2()
+
+
+        print("desired joint position : ", self.action_shape.new_joint_positions)
+        # print("actual joint position: ", self._get_joint_positions())
 
         # get observation
         self._get_general_obs()
@@ -608,6 +634,8 @@ class WidowxEnv(gym.Env):
             self.reward = self.reward_function.get_reward19()
         elif self.reward_type == 20:
             self.reward = self.reward_function.get_reward20()
+        elif self.reward_type == 21:
+            self.reward = self.reward_function.get_reward21()
 
         # Apply reward coefficient
         self.reward *= self.reward_coeff
@@ -626,6 +654,9 @@ class WidowxEnv(gym.Env):
         info['goal_orient'] = self.goal_orient
         info['endeffector_orient'] = self.endeffector_orient
         info['joint_pos'] = self.joint_positions
+        info['joint_vel'] = self.joint_vel
+        info['joint_tor'] = self.joint_torques
+        info['desired_joint_pos'] =  self.action_shape.new_joint_positions
         info['joint_min'] = self.joint_min
         info['joint_max'] = self.joint_max
         info['term1'] = self.term1

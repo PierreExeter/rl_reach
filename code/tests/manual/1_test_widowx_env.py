@@ -6,7 +6,7 @@ import widowx_env
 from stable_baselines3.common.env_checker import check_env
 
 
-env = gym.make('widowx_reacher-v1')
+env = gym.make('widowx_reacher-v46')
 print("any warnings?", check_env(env))
 
 # Comment this out for goal environments
@@ -25,7 +25,13 @@ for episode in range(5):
 
     for t in range(100):
         action = env.action_space.sample()
-        # action = [1, 0, 0, 0, 0, 0]
+        # action = [2, 0, 0, 0, 0, 0]
+        # action[0] = 0
+        # action[1] = 0
+        # action[2] = 0
+        # action[3] = 0
+        # action[4] = 0
+        # action[5] = 0
 
         obs, reward, done, info = env.step(action)
         # env.render()
@@ -39,6 +45,7 @@ for episode in range(5):
 
         rewards.append(reward)
         time.sleep(1. / 30.)
+        # time.sleep(3)
 
     cumulative_reward = sum(rewards)
     print(

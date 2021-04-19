@@ -76,7 +76,8 @@ if __name__ == "__main__":
             "--eval-episodes", N_EVAL_EPISODES,
             "--eval-freq", EVAL_FREQ,
             "--log-folder", LOG_FOLDER,
-            "--num-threads", NUM_THREADS
+            "--num-threads", NUM_THREADS,
+            "--tensorboard-log", LOG_FOLDER+"/tensorboard/"  # added for debug only: remove later
         ]
         args_train = list(map(str, args_train))
 

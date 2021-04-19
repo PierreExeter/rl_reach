@@ -109,7 +109,8 @@ class ActionShapes:
         joint_min,
         joint_max,
         arm,
-        physics_client):
+        physics_client,
+        frame_skip):
 
         self.pybullet_action = pybullet_action
         self.joint_positions = joint_positions
@@ -117,8 +118,8 @@ class ActionShapes:
         self.joint_max = joint_max
         self.arm = arm
         self.physics_client = physics_client
+        self.frame_skip = frame_skip
 
-        self.frame_skip = 10
         # Update the new joint position with the action
         self.new_joint_positions = self.joint_positions + self.pybullet_action
 
@@ -142,6 +143,8 @@ class ActionShapes:
 
         for _ in range(self.frame_skip):
             p.stepSimulation(physicsClientId=self.physics_client)
+
+        # p.setRealTimeSimulation(1)
 
     def set_joint_positions(self, joint_positions):
         """ Position control (not reset) """
@@ -363,4 +366,12 @@ class RewardFunctions:
 
         rew = self.term1 + self.term2
 
+        return rew
+
+    
+    def get_reward21(self):
+        """ Compute reward function 21 (dense): maximise action 1 """
+        self.term1 = self.action[0]
+        self.term2 = 0
+        rew = self.term1 + self.term2
         return rew

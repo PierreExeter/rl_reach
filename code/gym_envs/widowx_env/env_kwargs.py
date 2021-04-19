@@ -15,7 +15,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v2': {
         'random_position' : False,
@@ -33,7 +35,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
     },
     'widowx_reacher-v3': {
         'random_position' : False,
@@ -51,7 +55,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v4': {
         'random_position' : False,
@@ -69,7 +75,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v5': {
         'random_position' : False,
@@ -87,7 +95,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v6': {
         'random_position' : False,
@@ -105,7 +115,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v7': {
         'random_position' : False,
@@ -123,7 +135,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v8': {
         'random_position' : False,
@@ -141,7 +155,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v9': {
         'random_position' : False,
@@ -159,7 +175,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1000,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v10': {
         'random_position' : False,
@@ -177,7 +195,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 0.001,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v11': {
         'random_position' : False,
@@ -195,7 +215,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v12': {
         'random_position' : False,
@@ -213,7 +235,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v13': {
         'random_position' : False,
@@ -231,7 +255,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v14': {
         'random_position' : False,
@@ -249,7 +275,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v15': {
         'random_position' : False,
@@ -267,7 +295,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v16': {
         'random_position' : False,
@@ -285,7 +315,9 @@ kwargs_dicts = {
         'alpha_reward': 0.01,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v17': {
         'random_position' : False,
@@ -303,7 +335,9 @@ kwargs_dicts = {
         'alpha_reward': 0.01,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v18': {
         'random_position' : False,
@@ -321,7 +355,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v19': {
         'random_position' : False,
@@ -339,7 +375,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v20': {
         'random_position' : False,
@@ -357,7 +395,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v21': {
         'random_position' : False,
@@ -375,7 +415,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v22': {
         'random_position' : False,
@@ -393,7 +435,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v23': {
         'random_position' : False,
@@ -411,7 +455,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v24': {
         'random_position' : False,
@@ -429,7 +475,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v25': {
         'random_position' : False,
@@ -447,7 +495,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v26': {
         'random_position' : False,
@@ -465,7 +515,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v27': {
         'random_position' : False,
@@ -483,7 +535,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v28': {
         'random_position' : True,
@@ -501,7 +555,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v29': {
         'random_position' : True,
@@ -519,7 +575,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v30': {
         'random_position' : False,
@@ -537,7 +595,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v31': {
         'random_position' : False,
@@ -555,7 +615,9 @@ kwargs_dicts = {
         'alpha_reward': 0.01,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v32': {
         'random_position' : False,
@@ -573,7 +635,9 @@ kwargs_dicts = {
         'alpha_reward': 0.01,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v33': {
         'random_position' : False,
@@ -591,7 +655,9 @@ kwargs_dicts = {
         'alpha_reward': 0.01,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v34': {
         'random_position' : False,
@@ -609,7 +675,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v35': {
         'random_position' : False,
@@ -627,7 +695,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v36': {
         'random_position' : False,
@@ -645,7 +715,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v37': {
         'random_position' : False,
@@ -663,7 +735,9 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': True,
-        'camera_sensor': True
+        'camera_sensor': True,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
         },
     'widowx_reacher-v38': {
         'random_position' : False,
@@ -681,6 +755,208 @@ kwargs_dicts = {
         'alpha_reward': 0.1,
         'reward_coeff': 1,
         'lidar': False,
-        'camera_sensor': False
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
+        },
+    'widowx_reacher-v39': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 1,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
+        },
+    'widowx_reacher-v40': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-0.5, -0.5, -0.5, -0.5, -0.5, -0.5],
+        'action_max': [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
+        },
+    'widowx_reacher-v41': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 21,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
+        },
+    'widowx_reacher-v42': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 7,
+        'reward_type' : 1,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
+        },
+    'widowx_reacher-v43': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 7,
+        'reward_type' : 1,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 1,
+        },
+    'widowx_reacher-v44': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 10,
+        'pybullet_action_coeff': 1
+        },
+    'widowx_reacher-v45': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 1,
+        'pybullet_action_coeff': 1
+        },
+    'widowx_reacher-v46': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 2,
+        'joint_limits' : "small",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 3
+        },
+    'widowx_reacher-v47': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 5,
+        'pybullet_action_coeff': 10
+        },
+    'widowx_reacher-v48': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 15,
+        'action_type' : 2,
+        'joint_limits' : "large",
+        'action_min': [-2, -2, -2, -2, -2, -2],
+        'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        'reward_coeff': 1,
+        'lidar': False,
+        'camera_sensor': False,
+        'frame_skip': 10,
+        'pybullet_action_coeff': 10
         },
 }

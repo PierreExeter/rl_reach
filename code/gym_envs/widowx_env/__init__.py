@@ -270,3 +270,75 @@ register(
     max_episode_steps=100,
     kwargs=kwargs_dicts['widowx_reacher-v38'],
     )
+
+register(
+    id='widowx_reacher-v39',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v39'],
+    )
+
+register(
+    id='widowx_reacher-v40',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v40'],
+    )
+
+register(
+    id='widowx_reacher-v41',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v41'],
+    )
+
+register(
+    id='widowx_reacher-v42',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v42'],
+    )
+
+register(
+    id='widowx_reacher-v43',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=1000,
+    kwargs=kwargs_dicts['widowx_reacher-v43'],
+    )
+
+register(
+    id='widowx_reacher-v44',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v44'],
+    )
+
+register(
+    id='widowx_reacher-v45',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v45'],
+    )
+
+register(
+    id='widowx_reacher-v46',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v46'],
+    )
+
+register(
+    id='widowx_reacher-v47',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v47'],
+    )
+
+register(
+    id='widowx_reacher-v48',
+    entry_point='widowx_env.envs.widowx_env:WidowxEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['widowx_reacher-v48'],
+    )
+
+
