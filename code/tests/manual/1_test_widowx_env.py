@@ -2,11 +2,11 @@
 
 import time
 import gym
-import widowx_env
+import gym_envs
 from stable_baselines3.common.env_checker import check_env
 
 
-env = gym.make('widowx_reacher-v46')
+env = gym.make('widowx_reacher-v49')
 print("any warnings?", check_env(env))
 
 # Comment this out for goal environments

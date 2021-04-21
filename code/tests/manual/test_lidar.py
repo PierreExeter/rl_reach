@@ -10,8 +10,8 @@ p.setAdditionalSearchPath(pybullet_data.getDataPath())
 p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
 p.loadURDF("r2d2.urdf", [3, 3, 1])
 
-# obstacle_object = p.loadURDF("gym_envs/widowx_env/envs/URDFs/circular_window_small.urdf") #, useFixedBase=True)
-obstacle_object = p.loadURDF("gym_envs/widowx_env/envs/URDFs/circular_window_small_vhacd.urdf") #, useFixedBase=True)
+# obstacle_object = p.loadURDF("gym_envs/gym_envs/widowx_env/URDFs/circular_window_small.urdf") #, useFixedBase=True)
+obstacle_object = p.loadURDF("gym_envs/gym_envs/widowx_env/URDFs/circular_window_small_vhacd.urdf") #, useFixedBase=True)
 
 p.resetBasePositionAndOrientation(
     obstacle_object,

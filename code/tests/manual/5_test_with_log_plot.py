@@ -2,15 +2,15 @@
 
 import time
 import gym
-import widowx_env
+import gym_envs
 import subprocess
 from collections import OrderedDict
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
-env = gym.make('widowx_reacher-v46')
-plot_filename = "plot_env46_1_frame5_actionCoeff3.png"
+env = gym.make('widowx_reacher-v49')
+plot_filename = "plot_env49_rand.png"
 
 env.render()
 env.reset()
@@ -20,8 +20,8 @@ log_dict = OrderedDict()
 EPISODE_RETURN = 0
 
 for t in range(100):
-    # action = env.action_space.sample()
-    action = [2, 0, 0, 0, 0, 0]
+    action = env.action_space.sample()
+    # action = [0, 0, -2, 0, 0, 0]
     obs, reward, done, info = env.step(action)
     EPISODE_RETURN += reward
 
@@ -275,12 +275,12 @@ log_df.plot(x='timestep', y='term2', ax=axs[4, 0], color="g")
 log_df.plot(x='timestep', y='return', ax=axs[4, 1], color="m", marker="x")
 
 log_df.plot(x='timestep', y='distance', ax=axs[4, 2], color="b")
-ax_1 = axs[3, 2].twinx()
+ax_1 = axs[4, 2].twinx()
 log_df.plot(x='timestep', y='orientation', ax=ax_1, color="r")
 
 log_df.plot(x='timestep', y='vel_dist', ax=axs[4, 3], color="g")
 log_df.plot(x='timestep', y='vel_pos', ax=axs[4, 3], color="g", marker="+")
-ax_2 = axs[3, 3].twinx()
+ax_2 = axs[4, 3].twinx()
 log_df.plot(x='timestep', y='acc_dist', ax=ax_2, color="r")
 log_df.plot(x='timestep', y='acc_pos', ax=ax_2, color="r", marker="+")
 

@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="widowx_env",
+    name="gym_envs",
     version="0.0.1",
     author="Pierre Aumjaud",
     author_email="pierre.aumjaud@ucd.ie",

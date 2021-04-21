@@ -11,7 +11,7 @@ import gym
 import numpy as np
 import seaborn
 import torch as th
-import widowx_env
+import gym_envs
 from stable_baselines3.common.utils import set_random_seed
 from utils.exp_manager import ExperimentManager
 from utils.utils import ALGOS, StoreDict

@@ -43,14 +43,14 @@ if __name__ == '__main__':
     # 1.1. Create dict of useful environment variables
 
     try:
-        df_envs = pd.read_csv("gym_envs/widowx_env/envs_list.csv")
+        df_envs = pd.read_csv("gym_envs/gym_envs/envs_list.csv")
         # print(df_envs)
         df_env = df_envs[df_envs["env_id"] == args.env]
         env_dict = df_env.to_dict('records')[0]
         # print(env_dict)
     except BaseException:
         print(("The environment specified is missing! "
-            "Please update gym_envs/widowx_env/envs_list.csv. Exiting..."))
+            "Please update gym_envs/gym_envs/envs_list.csv. Exiting..."))
         sys.exit(0)
 
     env_dict['exp_id'] = args.exp_id

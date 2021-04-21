@@ -2,7 +2,7 @@
 
 
 import gym
-import widowx_env
+import gym_envs
 from stable_baselines3 import PPO
 
 

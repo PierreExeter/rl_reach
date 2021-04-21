@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import torch as th
 import yaml
-import widowx_env
+import gym_envs
 import matplotlib.pyplot as plt
 from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv, VecEnv, VecEnvWrapper
@@ -311,7 +311,7 @@ if __name__ == "__main__":
             else:
                 env.render()
 
-        if "widowx" in env_id:
+        if "widowx" in env_id or "Jaco" in env_id:
             # Update episode success list
             ep_success_list_50 = calc_ep_success_pos(
                 SUCCESS_THRESHOLD_50, ep_success_list_50, infos)
@@ -596,7 +596,7 @@ if __name__ == "__main__":
                 episode_lengths.append(EP_LEN)
                 EPISODE_NB += 1
 
-                if "widowx" in env_id:
+                if "widowx" in env_id or "Jaco" in env_id:
                     # append the last element of the episode success list when
                     # episode is done
                     success_list_50 = calc_success_list(
@@ -721,7 +721,7 @@ if __name__ == "__main__":
         print(
             f"Mean reward: {np.mean(episode_rewards):.2f} +/- {np.std(episode_rewards):.2f}")
 
-        if "widowx" in env_id:
+        if "widowx" in env_id or "Jaco" in env_id:
             print("******** Success ratios by position *********")
             SR_mean_50, RT_mean_50 = calc_mean_successratio_reachtime(
                 SUCCESS_THRESHOLD_50, success_list_50, reachtime_list_50)

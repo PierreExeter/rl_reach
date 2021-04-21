@@ -140,12 +140,12 @@ if __name__ == '__main__':
     log_df.plot(x='timestep', y='return', ax=axs[4, 1], color="m", marker="x")
 
     log_df.plot(x='timestep', y='distance', ax=axs[4, 2], color="b")
-    ax_1 = axs[3, 2].twinx()
+    ax_1 = axs[4, 2].twinx()
     log_df.plot(x='timestep', y='orientation', ax=ax_1, color="r")
 
     log_df.plot(x='timestep', y='vel_dist', ax=axs[4, 3], color="g")
     log_df.plot(x='timestep', y='vel_pos', ax=axs[4, 3], color="g", marker="+")
-    ax_2 = axs[3, 3].twinx()
+    ax_2 = axs[4, 3].twinx()
     log_df.plot(x='timestep', y='acc_dist', ax=ax_2, color="r")
     log_df.plot(x='timestep', y='acc_pos', ax=ax_2, color="r", marker="+")
 

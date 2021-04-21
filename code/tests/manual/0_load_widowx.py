@@ -20,8 +20,8 @@ p.setAdditionalSearchPath(pybullet_data.getDataPath())
 plane = p.loadURDF("plane.urdf")
 
 # import Kuka urdf and fix it to the ground
-robot = p.loadURDF("gym_envs/widowx_env/envs/URDFs/widowx/widowx.urdf", [0, 0, 0], useFixedBase=1)
-obstacle = p.loadURDF("gym_envs/widowx_env/envs/URDFs/circular_window_small.urdf", [0, 0, 0], useFixedBase=1)
+robot = p.loadURDF("gym_envs/gym_envs/widowx_env/URDFs/widowx/widowx.urdf", [0, 0, 0], useFixedBase=1)
+obstacle = p.loadURDF("gym_envs/gym_envs/widowx_env/URDFs/circular_window_small.urdf", [0, 0, 0], useFixedBase=1)
 
 # move obstacle
 p.resetBasePositionAndOrientation(obstacle, [0.1, .0, 0.26], p.getQuaternionFromEuler([0, np.pi/2, 0]))

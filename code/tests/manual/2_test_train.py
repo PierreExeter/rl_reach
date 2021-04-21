@@ -3,7 +3,7 @@
 
 import os
 import gym
-import widowx_env
+import gym_envs
 from stable_baselines3 import PPO
 from stable_baselines3.ppo import MlpPolicy
 from stable_baselines3.common.monitor import Monitor
