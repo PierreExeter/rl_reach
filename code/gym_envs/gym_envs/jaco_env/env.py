@@ -11,10 +11,11 @@ from .world_creation import WorldCreation
 
 
 class RobotEnv(gym.Env):
-    def __init__(self, frame_skip=5, time_step=0.02, action_robot_len=7, obs_robot_len=30):
+    def __init__(self, frame_skip=5, time_step=0.02, action_robot_len=7, obs_robot_len=17):
         # Start the bullet physics server
         self.id = p.connect(p.DIRECT)
         # print('Physics server ID:', self.id)
+
         self.gui = False
         self.action_robot_len = action_robot_len
         self.obs_robot_len = obs_robot_len
@@ -48,7 +49,7 @@ class RobotEnv(gym.Env):
         # p.startStateLogging(p.STATE_LOGGING_VIDEO_MP4, "racecar.mp4") # added by Pierre
 
         self.record_video = False #True
-        self.video_writer = None  #cv2.VideoWriter('Hola.avi', cv2.VideoWriter_fourcc(*'MJPG'), 10, (10, 10)) # (don' work)
+        self.video_writer = None  #cv2.VideoWriter('Hola.avi', cv2.VideoWriter_fourcc(*'MJPG'), 10, (10, 10)) # (don't work)
         try:
             self.width = get_monitors()[0].width
             self.height = get_monitors()[0].height
@@ -108,7 +109,7 @@ class RobotEnv(gym.Env):
             # Update robot position
             for _ in range(self.frame_skip):
                 p.stepSimulation(physicsClientId=self.id)
-                self.update_targets()
+
                 if self.gui:
                     # Slow down time so that the simulation matches real time
                     self.slow_time()
@@ -117,7 +118,12 @@ class RobotEnv(gym.Env):
     def reset_robot_joints(self):
         # Reset all robot joints
         for rj in range(p.getNumJoints(self.robot, physicsClientId=self.id)):
-            p.resetJointState(self.robot, jointIndex=rj, targetValue=0, targetVelocity=0, physicsClientId=self.id)
+            p.resetJointState(
+                self.robot,
+                jointIndex=rj,
+                targetValue=0,
+                targetVelocity=0,
+                physicsClientId=self.id)
 
     def joint_limited_weighting(self, q, lower_limits, upper_limits):
         phi = 0.5
@@ -142,7 +148,14 @@ class RobotEnv(gym.Env):
         joint_torques = [state[3] for state in joint_states]
         return joint_positions, joint_velocities, joint_torques
 
-    def position_robot_toc(self, robot, joints, joint_indices, lower_limits, upper_limits, pos_offset=np.zeros(3)):
+    def position_robot_toc(
+        self,
+        robot,
+        joints,
+        joint_indices,
+        lower_limits,
+        upper_limits,
+        pos_offset=np.zeros(3)):
 
         if type(joints) == int:
             joints = [joints]
@@ -162,7 +175,14 @@ class RobotEnv(gym.Env):
         p.resetBasePositionAndOrientation(robot, pos_offset + best_position, best_orientation, physicsClientId=self.id)
 
         for i, joint in enumerate(joints):
-            self.world_creation.setup_robot_joints(robot, joint_indices[i], lower_limits[i], upper_limits[i], randomize_joint_positions=False, default_positions=np.array(best_start_joint_poses[i]), tool=None)
+            self.world_creation.setup_robot_joints(
+                robot,
+                joint_indices[i],
+                lower_limits[i],
+                upper_limits[i],
+                randomize_joint_positions=False,
+                default_positions=np.array(best_start_joint_poses[i]),
+                tool=None)
         
         return best_position, best_orientation, best_start_joint_poses
 
@@ -188,12 +208,16 @@ class RobotEnv(gym.Env):
 
     def record_video_frame(self):
         if self.record_video and self.gui:
-            frame = np.reshape(p.getCameraImage(width=self.width, height=self.height, renderer=p.ER_BULLET_HARDWARE_OPENGL, physicsClientId=self.id)[2], (self.height, self.width, 4))[:, :, :3]
+            frame = np.reshape(
+                p.getCameraImage(
+                    width=self.width, 
+                    height=self.height,
+                    renderer=p.ER_BULLET_HARDWARE_OPENGL, 
+                    physicsClientId=self.id)[2],
+                    (self.height, self.width, 4)
+                    )[:, :, :3]
             # frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             self.video_writer.write(frame)
-
-    def update_targets(self):
-        pass
 
     def render(self, mode='human'):
         if not self.gui:
@@ -204,4 +228,3 @@ class RobotEnv(gym.Env):
             self.world_creation = WorldCreation(self.id, time_step=self.time_step, np_random=self.np_random)
             # self.util = Util(self.id, self.np_random)
             # print('Physics server ID:', self.id)
-

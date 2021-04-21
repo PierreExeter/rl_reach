@@ -1,7 +1,9 @@
 import gym
 import gym_envs
+from stable_baselines3.common.env_checker import check_env
 
 env = gym.make('ReachingJaco-v1')
+# print("any warnings?", check_env(env))
 
 
 print("Action space: ", env.action_space)
@@ -11,9 +13,9 @@ print("Observation space: ", env.observation_space)
 print(env.observation_space.high)
 print(env.observation_space.low)
 
-
 env.render()
 # env.render(mode="human")  # required by Stable Baselines
+
 
 for e in range(3):
 
