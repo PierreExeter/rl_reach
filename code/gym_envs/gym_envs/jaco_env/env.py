@@ -27,14 +27,14 @@ class RobotEnv(gym.Env):
 
         # Define action space
         self.action_space = spaces.Box(
-            low=np.array([-1.0]*(self.action_robot_len)),
-            high=np.array([1.0]*(self.action_robot_len)),
+            low=np.float32(np.array([-1.0]*(self.action_robot_len))),
+            high=np.float32(np.array([1.0]*(self.action_robot_len))),
             dtype=np.float32)
 
         # Define observation space
         self.observation_space = spaces.Box(
-            low=np.array([-1.0]*(self.obs_robot_len)),
-            high=np.array([1.0]*(self.obs_robot_len)),
+            low=np.float32(np.array([-1.0]*(self.obs_robot_len))),
+            high=np.float32(np.array([1.0]*(self.obs_robot_len))),
             dtype=np.float32)
 
         # Execute actions at 10 Hz by default. A new action every 0.1 seconds
