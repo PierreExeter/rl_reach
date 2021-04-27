@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot name="my_cube">
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="cube.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="blue">
+            <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.1" />
+        <inertia ixx="0.1" ixy="0.1" ixz="0.1" iyy="0.1" iyz="0.1" izz="0.1" />
+     </inertial>
+  </link>
+</robot>

@@ -351,7 +351,7 @@ register(
 register(
     id='ReachingJaco-v1',
     entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
-    max_episode_steps=100,
-    # kwargs=kwargs_dicts['widowx_reacher-v1'],
+    max_episode_steps=500,
+    kwargs=kwargs_dicts['ReachingJaco-v1'],
     )
 

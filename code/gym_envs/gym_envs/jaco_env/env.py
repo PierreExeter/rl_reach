@@ -11,10 +11,15 @@ from .world_creation import WorldCreation
 
 
 class RobotEnv(gym.Env):
-    def __init__(self, frame_skip=5, time_step=0.02, action_robot_len=7, obs_robot_len=17):
+    def __init__(
+        self,
+        frame_skip=5,
+        time_step=0.02,
+        action_robot_len=7,
+        obs_robot_len=17):
+
         # Start the bullet physics server
         self.id = p.connect(p.DIRECT)
-        # print('Physics server ID:', self.id)
 
         self.gui = False
         self.action_robot_len = action_robot_len
@@ -83,22 +88,22 @@ class RobotEnv(gym.Env):
             self.last_sim_time = time.time()
 
         action *= 0.05
-        action_robot = action
+        self.action_robot = action
         indices = self.robot_arm_joint_indices
 
         robot_joint_states = p.getJointStates(self.robot, jointIndices=indices, physicsClientId=self.id)
-        robot_joint_positions = np.array([x[0] for x in robot_joint_states])
+        self.robot_joint_positions = np.array([x[0] for x in robot_joint_states])
 
         for _ in range(self.frame_skip):
-            action_robot[robot_joint_positions + action_robot < self.robot_lower_limits] = 0
-            action_robot[robot_joint_positions + action_robot > self.robot_upper_limits] = 0
-            robot_joint_positions += action_robot
+            self.action_robot[self.robot_joint_positions + self.action_robot < self.robot_lower_limits] = 0
+            self.action_robot[self.robot_joint_positions + self.action_robot > self.robot_upper_limits] = 0
+            self.robot_joint_positions += self.action_robot
 
         p.setJointMotorControlArray(
             self.robot,
             jointIndices=indices,
             controlMode=p.POSITION_CONTROL,
-            targetPositions=robot_joint_positions,
+            targetPositions=self.robot_joint_positions,
             positionGains=np.array([gains]*self.action_robot_len),
             forces=[forces]*self.action_robot_len,
             physicsClientId=self.id)
@@ -172,7 +177,11 @@ class RobotEnv(gym.Env):
         best_start_joint_poses = [[ 0.79499653,  1.66096791, -1.29904527,  2.52316092, -0.14608365, 1.67627263, -1.80315766]]
 
         # spawn robot
-        p.resetBasePositionAndOrientation(robot, pos_offset + best_position, best_orientation, physicsClientId=self.id)
+        p.resetBasePositionAndOrientation(
+            robot,
+            pos_offset + best_position,
+            best_orientation,
+            physicsClientId=self.id)
 
         for i, joint in enumerate(joints):
             self.world_creation.setup_robot_joints(
@@ -183,7 +192,7 @@ class RobotEnv(gym.Env):
                 randomize_joint_positions=False,
                 default_positions=np.array(best_start_joint_poses[i]),
                 tool=None)
-        
+
         return best_position, best_orientation, best_start_joint_poses
 
     def slow_time(self):
@@ -225,6 +234,9 @@ class RobotEnv(gym.Env):
             p.disconnect(self.id)
             self.id = p.connect(p.GUI, options='--background_color_red=0.8 --background_color_green=0.9 --background_color_blue=1.0 --width=%d --height=%d' % (self.width, self.height))
 
-            self.world_creation = WorldCreation(self.id, time_step=self.time_step, np_random=self.np_random)
+            self.world_creation = WorldCreation(
+                self.id,
+                time_step=self.time_step,
+                np_random=self.np_random)
             # self.util = Util(self.id, self.np_random)
             # print('Physics server ID:', self.id)

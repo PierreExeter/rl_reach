@@ -1027,5 +1027,26 @@ kwargs_dicts = {
         'frame_skip': 20,
         'pybullet_action_coeff': 1,
         'widowx_type': "light"
-        }
+        },
+    'ReachingJaco-v1': {
+        'random_position' : False,
+        'random_orientation': False,
+        'moving_target': False,
+        'target_type': "sphere",
+        'goal_oriented' : False,
+        'obstacle': None,
+        'obs_type' : 5,
+        'reward_type' : 2,
+        'action_type' : 2,
+        # 'joint_limits' : "large",
+        # 'action_min': [-2, -2, -2, -2, -2, -2],
+        # 'action_max': [2, 2, 2, 2, 2, 2],
+        'alpha_reward': 0.1,
+        # 'reward_coeff': 1,
+        # 'lidar': False,
+        # 'camera_sensor': False,
+        # 'frame_skip': 20,
+        # 'pybullet_action_coeff': 1,
+        # 'widowx_type': "light"
+    },
 }

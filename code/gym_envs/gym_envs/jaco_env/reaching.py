@@ -1,17 +1,59 @@
 import os
+import copy
 from gym import spaces
 import numpy as np
 import pybullet as p
 from .env import RobotEnv
+from .env_description import ObservationShapes, ActionShapes, RewardFunctions
 
 
 class ReachingEnv(RobotEnv):
 
-    def __init__(self):
-        super(ReachingEnv, self).__init__(frame_skip=5, time_step=0.02, action_robot_len=7, obs_robot_len=17)
+    def __init__(
+        self,
+        random_position,
+        random_orientation,
+        moving_target,
+        target_type,
+        goal_oriented,
+        obstacle,
+        obs_type,
+        reward_type,
+        action_type,
+        alpha_reward):
+
+        super(ReachingEnv, self).__init__(
+            frame_skip=5,
+            time_step=0.02,
+            action_robot_len=7,
+            obs_robot_len=17)
+
+        self.random_position = random_position
+        self.random_orientation = random_orientation
+        self.moving_target = moving_target
+        self.target_type = target_type
+        self.goal_oriented = goal_oriented  # Not implemented yet
+        self.obstacle = obstacle
+        self.obs_type = obs_type  # Not implemented yet
+        self.reward_type = reward_type
+        self.action_type = action_type  # Not implemented yet
+        self.alpha_reward = alpha_reward
+
         self.robot_forces = 1.0
         self.robot_gains = 0.05
         self.task_success_threshold = 0.03
+        self.fixed_goal_coord = np.array([0.7, 0.0, 1.0])
+        self.obstacle_pos = np.array([0.6, 0.0, 1.0])
+        self.obstacle_orient = np.array([0, np.pi/2, 0])
+        self.dist = 0
+        self.old_dist = 0
+        self.orient = 0
+        self.old_orient = 0
+        self.term1 = 0
+        self.term2 = 0
+        self.delta_pos = 0
+        self.delta_dist = 0
+        self.target_speed = 0.01
 
         self.endeffector_pos = np.zeros(3)
         self.old_endeffector_pos = np.zeros(3)
@@ -31,6 +73,9 @@ class ReachingEnv(RobotEnv):
         self.joint_positions = np.zeros(7)
         self.new_joint_positions = np.zeros(7)
 
+        self.pybullet_action_min = np.zeros(7) # not implemented yet
+        self.pybullet_action_max = np.zeros(7) # not implemented yet
+
     def step(self, action):
 
         # get distance and end effector position before taking the action
@@ -38,6 +83,14 @@ class ReachingEnv(RobotEnv):
         self.old_endeffector_pos = self.endeffector_pos
         self.old_orient = np.linalg.norm(self.endeffector_orient - self.goal_orient)
         self.old_endeffector_orient = self.endeffector_orient
+
+        # Update target position and move the target object
+        if self.moving_target:
+            self.goal_pos[1] += self.target_speed
+            p.resetBasePositionAndOrientation(
+                self.target_object,
+                self.goal_pos,
+                p.getQuaternionFromEuler(self.target_object_orient))
 
         # Execute action
         self.take_step(action, gains=self.robot_gains, forces=self.robot_forces)
@@ -51,9 +104,29 @@ class ReachingEnv(RobotEnv):
         self.orient = np.linalg.norm(self.endeffector_orient - self.goal_orient)
 
         # get reward
-        reward = - self.dist
+        # reward = - self.dist
+
+        self.reward_function = RewardFunctions(
+            self.dist,
+            self.alpha_reward,
+            action,
+            self.delta_dist,
+            self.delta_pos,
+            self.orient,
+            self._detect_collision()
+            )
+
+        if self.reward_type == 1:
+            reward = self.reward_function.get_reward1()
+        elif self.reward_type == 2:
+            reward = self.reward_function.get_reward2()
 
         # get info
+        self.delta_dist = self.old_dist - self.dist
+        self.delta_pos = np.linalg.norm(self.old_endeffector_pos - self.endeffector_pos)
+        self.delta_orient = self.old_orient - self.orient
+        self.delta_endeff_orient = np.linalg.norm(self.old_endeffector_orient - self.endeffector_orient)
+
         info = {}
         info['task_success'] = int(self.dist <= self.task_success_threshold)
         info['action_robot_len'] = self.action_robot_len
@@ -67,27 +140,33 @@ class ReachingEnv(RobotEnv):
         info['joint_pos'] = self.joint_positions
         info['joint_vel'] = self.joint_vel
         info['joint_tor'] = self.joint_torques
-
-        # info['desired_joint_pos'] =  self.action_shape.new_joint_positions
-        # info['joint_min'] = self.joint_min
-        # info['joint_max'] = self.joint_max
-        # info['term1'] = self.term1
-        # info['term2'] = self.term2
-        # info['action'] = self.action
-        # info['action_min'] = self.action_min
-        # info['action_max'] = self.action_max
-        # info['pybullet_action'] = self.pybullet_action
-        # info['pybullet_action_min'] = self.pybullet_action_min
-        # info['pybullet_action_max'] = self.pybullet_action_max
+        info['desired_joint_pos'] =  self.robot_joint_positions
+        info['joint_min'] = self.robot_lower_limits
+        info['joint_max'] = self.robot_upper_limits
+        info['term1'] = self.term1
+        info['term2'] = self.term2
+        info['action'] = action
+        info['action_min'] = self.action_space.low
+        info['action_max'] = self.action_space.high
+        info['pybullet_action'] = self.action_robot
+        info['pybullet_action_min'] = self.pybullet_action_min
+        info['pybullet_action_max'] = self.pybullet_action_max
         # # According to the Pybullet documentation, 1 timestep = 240 Hz
-        # info['vel_dist'] = self.delta_dist * 240
-        # info['vel_pos'] = self.delta_pos * 240
-        # info['collision'] = self._detect_collision()
+        info['vel_dist'] = self.delta_dist / self.time_step
+        info['vel_pos'] = self.delta_pos / self.time_step
+        info['collision'] = self._detect_collision()
 
         # get done
         done = False
 
         return obs, reward, done, info
+
+    def _detect_collision(self):
+        """ Detect any collision with the arm (require physics enabled) """
+        if len(p.getContactPoints(self.robot)) > 0:
+            return True
+        else:
+            return False
 
     def _get_general_obs(self):
         """ Get information for generating observation array """
@@ -176,25 +255,69 @@ class ReachingEnv(RobotEnv):
         p.setGravity(0, 0, 0, physicsClientId=self.id)
         # p.setGravity(0, 0, 0, body=self.robot, physicsClientId=self.id)
 
-        # assuming that the max reach of the Jaco is 0.7,
-        # the target is generated randomly inside the inscribed cube of the reaching sphere
-        self.goal_pos = np.array([0, 0, 0.95]) + np.array([
-            self.np_random.uniform(-0.7*np.cos(np.pi/4), 0.7*np.cos(np.pi/4)),
-            self.np_random.uniform(-0.7*np.cos(np.pi/4), 0.7*np.cos(np.pi/4)),
-            self.np_random.uniform(0, 0.7*np.cos(np.pi/4))])
+        # Initialise goal position
+        if self.random_position:
+            self.goal_pos = self.sample_random_position()
+        else:
+            # deepcopy is necessary to avoid changing the value of fixed_goal_coord
+            self.goal_pos = copy.deepcopy(self.fixed_goal_coord)
 
-        self.goal_orient = p.getQuaternionFromEuler(np.array([0, np.pi/2.0, 0]), physicsClientId=self.id)
-        # self.goal_orient = np.array([0, np.pi/2.0, 0])  # changed by Pierre
+        # Initialise goal orientation
+        if self.random_orientation:
+            self.goal_orient = self.sample_random_orientation()
+        else:
+            self.goal_orient = p.getQuaternionFromEuler(np.array([0, np.pi/2.0, 0]), physicsClientId=self.id)        
+            # self.goal_orient = np.array([0, np.pi/2.0, 0])  # changed by Pierre
 
-        sphere_collision = -1
-        sphere_visual = p.createVisualShape(shapeType=p.GEOM_SPHERE, radius=0.03, rgbaColor=[0, 1, 0, 1], physicsClientId=self.id)
-        self.target = p.createMultiBody(
-            baseMass=0.0,
-            baseCollisionShapeIndex=sphere_collision,
-            baseVisualShapeIndex=sphere_visual,
-            basePosition=self.goal_pos,
-            useMaximalCoordinates=False,
-            physicsClientId=self.id)
+        # Spawn target object
+        path = os.path.abspath(os.path.dirname(__file__))
+        
+        if self.target_type == "arrow":
+            self.target_object = p.loadURDF(
+                os.path.join(
+                    path,
+                    "assets/URDFs/arrow.urdf"),
+                useFixedBase=True)
+        elif self.target_type == "sphere":
+            self.target_object = p.loadURDF(
+                os.path.join(
+                    path,
+                    "assets/URDFs/sphere.urdf"),
+                useFixedBase=True)
+
+        p.resetBasePositionAndOrientation(
+            self.target_object,
+            self.goal_pos,
+            p.getQuaternionFromEuler(self.target_object_orient))
+
+        # Spawn obstacle
+        if self.obstacle == "circular_window":
+            self.obstacle_object = p.loadURDF(
+                os.path.join(
+                    path,
+                    "assets/URDFs/circular_window.urdf"),
+                useFixedBase=True)
+        elif self.obstacle == "circular_window_small":
+            self.obstacle_object = p.loadURDF(
+                os.path.join(
+                    path,
+                    "assets/URDFs/circular_window_small_vhacd.urdf"),
+                useFixedBase=True)
+
+        if self.obstacle is not None:
+            p.resetBasePositionAndOrientation(
+                self.obstacle_object, self.obstacle_pos, p.getQuaternionFromEuler(self.obstacle_orient))
+
+        # OLD IMPLEMENTATION
+        # sphere_collision = -1
+        # sphere_visual = p.createVisualShape(shapeType=p.GEOM_SPHERE, radius=0.03, rgbaColor=[0, 1, 0, 1], physicsClientId=self.id)
+        # self.target = p.createMultiBody(
+        #     baseMass=0.0,
+        #     baseCollisionShapeIndex=sphere_collision,
+        #     baseVisualShapeIndex=sphere_visual,
+        #     basePosition=self.goal_pos,
+        #     useMaximalCoordinates=False,
+        #     physicsClientId=self.id)
 
         # Jaco
         _, _ , _ = self.position_robot_toc(
@@ -252,3 +375,26 @@ class ReachingEnv(RobotEnv):
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1, physicsClientId=self.id)
 
         return self.get_obs1()
+
+    def sample_random_position(self):
+
+        # Assuming that the max reach of the Jaco is 0.7,
+        # the target is generated randomly inside the inscribed cube of the reaching sphere
+        goal_pos = np.array([0, 0, 0.95]) + np.array([
+            self.np_random.uniform(-0.7*np.cos(np.pi/4), 0.7*np.cos(np.pi/4)),
+            self.np_random.uniform(-0.7*np.cos(np.pi/4), 0.7*np.cos(np.pi/4)),
+            self.np_random.uniform(0, 0.7*np.cos(np.pi/4))])
+
+        return goal_pos
+
+
+    
+    def sample_random_orientation(self):
+        """ Sample random target orientation """
+
+        MIN_GOAL_ORIENTATION = np.array([-np.pi, np.pi/2.0, 0.0])
+        MAX_GOAL_ORIENTATION = np.array([np.pi, np.pi/2.0, 0.0])
+
+        euler_orient = np.random.uniform(low=MIN_GOAL_ORIENTATION, high=MAX_GOAL_ORIENTATION)
+
+        return p.getQuaternionFromEuler(euler_orient, physicsClientId=self.id)

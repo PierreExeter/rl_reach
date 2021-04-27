@@ -47,7 +47,6 @@ class WorldCreation:
 
         return robot, robot_lower_limits, robot_upper_limits, robot_arm_joint_indices
 
-
     def enforce_joint_limits(self, body):
         """ Enforce joint limits """
         joint_states = p.getJointStates(
