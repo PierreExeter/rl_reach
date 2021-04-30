@@ -379,3 +379,61 @@ class RewardFunctions:
         self.term2 = 0
         rew = self.term1 + self.term2
         return rew
+
+    def get_reward22(self):
+        """ Compute reward function 22 (sparse + dense) """
+        if self.dist >= 0.001:
+            self.term1 = - self.dist
+        else:
+            self.term1 = 50
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward23(self):
+        """ Compute reward function 23 (sparse + dense) """
+        if self.dist >= 0.005:
+            self.term1 = - self.dist
+        else:
+            self.term1 = 50
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward24(self):
+        """ Compute reward function 24 (sparse + dense) """
+        if self.dist >= 0.01:
+            self.term1 = - self.dist
+        else:
+            self.term1 = 50
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward25(self):
+        """ Compute reward function 25 (sparse + dense) """
+        if self.dist >= 0.01:
+            self.term1 = - self.dist
+        elif self.dist <= 0.01 and self.dist >= 0.005:
+            self.term1 = 10
+        elif self.dist <= 0.005 and self.dist >= 0.001:
+            self.term1 = 20
+        else:
+            self.term1 = 30
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward26(self):
+        """ Compute reward function 26 (dense) """
+        self.term1 = 1 / self.dist
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew
+
+    def get_reward27(self):
+        """ Compute reward function 27 (dense) """
+        self.term1 = - np.log(self.dist)
+        self.term2 = 0
+        rew = self.term1 + self.term2
+        return rew

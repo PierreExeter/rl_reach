@@ -194,7 +194,7 @@ It could be convenient to clean all the results and log files. Warning, this can
 
 A number of custom Gym environments are available in the `gym_envs` directory. They simulate the WidowX MK-II robotic manipulator with the Pybullet physics engine. The objective is to bring the end-effector as close as possible to a target position.
 
-Each implemented environment is described [here](code/gym_envs/widowx_env/envs_list.csv). The action, observation and reward functions are given in [this table](code/gym_envs/widowx_env/reward_observation_action_shapes/reward_observation_action.pdf). Some environment renderings can be found below.
+Each implemented environment is described [here](code/gym_envs/gym_envs/envs_list.csv). The action, observation and reward functions are given in [this table](code/gym_envs/widowx_env/gym_envs/reward_observation_action.pdf). Some environment renderings can be found below.
 
 
 | Reaching task      | Rendering              |

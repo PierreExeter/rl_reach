@@ -2,7 +2,7 @@ import gym
 import gym_envs
 from stable_baselines3.common.env_checker import check_env
 
-env = gym.make('ReachingJaco-v1')
+env = gym.make('ReachingJaco-v10')
 # print("any warnings?", check_env(env))
 
 

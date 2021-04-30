@@ -20,9 +20,14 @@ class ReachingEnv(RobotEnv):
         obs_type,
         reward_type,
         action_type,
-        alpha_reward):
+        alpha_reward,
+        action_amplitude,
+        observation_amplitude,
+        robot_gains):
 
         super(ReachingEnv, self).__init__(
+            action_amp=action_amplitude,
+            obs_amp=observation_amplitude,
             frame_skip=5,
             time_step=0.02,
             action_robot_len=7,
@@ -38,9 +43,9 @@ class ReachingEnv(RobotEnv):
         self.reward_type = reward_type
         self.action_type = action_type  # Not implemented yet
         self.alpha_reward = alpha_reward
+        self.robot_gains = robot_gains
 
         self.robot_forces = 1.0
-        self.robot_gains = 0.05
         self.task_success_threshold = 0.03
         self.fixed_goal_coord = np.array([0.7, 0.0, 1.0])
         self.obstacle_pos = np.array([0.6, 0.0, 1.0])
@@ -73,8 +78,8 @@ class ReachingEnv(RobotEnv):
         self.joint_positions = np.zeros(7)
         self.new_joint_positions = np.zeros(7)
 
-        self.pybullet_action_min = np.zeros(7) # not implemented yet
-        self.pybullet_action_max = np.zeros(7) # not implemented yet
+        self.pybullet_action_min = - np.array([self.robot_gains]*self.action_robot_len)
+        self.pybullet_action_max = np.array([self.robot_gains]*self.action_robot_len)
 
     def step(self, action):
 
@@ -93,7 +98,14 @@ class ReachingEnv(RobotEnv):
                 p.getQuaternionFromEuler(self.target_object_orient))
 
         # Execute action
-        self.take_step(action, gains=self.robot_gains, forces=self.robot_forces)
+        self.take_step(
+            action=action,
+            gains=self.robot_gains,
+            forces=self.robot_forces,
+            indices=self.robot_arm_joint_indices,
+            upper_limit=self.robot_upper_limits,
+            lower_limit=self.robot_lower_limits,
+            robot=self.robot)
 
         # Get observations
         self._get_general_obs()
@@ -120,6 +132,56 @@ class ReachingEnv(RobotEnv):
             reward = self.reward_function.get_reward1()
         elif self.reward_type == 2:
             reward = self.reward_function.get_reward2()
+        elif self.reward_type == 3:
+            reward = self.reward_function.get_reward3()
+        elif self.reward_type == 4:
+            reward = self.reward_function.get_reward4()
+        elif self.reward_type == 5:
+            reward = self.reward_function.get_reward5()
+        elif self.reward_type == 6:
+            reward = self.reward_function.get_reward6()
+        elif self.reward_type == 7:
+            reward = self.reward_function.get_reward7()
+        elif self.reward_type == 8:
+            reward = self.reward_function.get_reward8()
+        elif self.reward_type == 9:
+            reward = self.reward_function.get_reward9()
+        elif self.reward_type == 10:
+            reward = self.reward_function.get_reward10()
+        elif self.reward_type == 11:
+            reward = self.reward_function.get_reward11()
+        elif self.reward_type == 12:
+            reward = self.reward_function.get_reward12()
+        elif self.reward_type == 13:
+            reward = self.reward_function.get_reward13()
+        elif self.reward_type == 14:
+            reward = self.reward_function.get_reward14()
+        elif self.reward_type == 15:
+            reward = self.reward_function.get_reward15()
+        elif self.reward_type == 16:
+            reward = self.reward_function.get_reward16()
+        elif self.reward_type == 17:
+            reward = self.reward_function.get_reward17()
+        elif self.reward_type == 18:
+            reward = self.reward_function.get_reward18()
+        elif self.reward_type == 19:
+            reward = self.reward_function.get_reward19()
+        elif self.reward_type == 20:
+            reward = self.reward_function.get_reward20()
+        elif self.reward_type == 21:
+            reward = self.reward_function.get_reward21()
+        elif self.reward_type == 22:
+            reward = self.reward_function.get_reward22()
+        elif self.reward_type == 23:
+            reward = self.reward_function.get_reward23()
+        elif self.reward_type == 24:
+            reward = self.reward_function.get_reward24()
+        elif self.reward_type == 25:
+            reward = self.reward_function.get_reward25()
+        elif self.reward_type == 26:
+            reward = self.reward_function.get_reward26()
+        elif self.reward_type == 27:
+            reward = self.reward_function.get_reward27()
 
         # get info
         self.delta_dist = self.old_dist - self.dist
@@ -245,10 +307,10 @@ class ReachingEnv(RobotEnv):
         self.task_success = 0
         self.contact_points_on_arm = {}
         self.robot, self.robot_lower_limits, self.robot_upper_limits, self.robot_arm_joint_indices = self.world_creation.create_new_world(print_joints=False)
-        
+
         self.robot_lower_limits = self.robot_lower_limits[self.robot_arm_joint_indices]
         self.robot_upper_limits = self.robot_upper_limits[self.robot_arm_joint_indices]
-        self.reset_robot_joints()
+        self.reset_robot_joints(robot=self.robot)
 
         # Disable gravity
         # p.setGravity(0, 0, -9.81, physicsClientId=self.id)
@@ -266,12 +328,13 @@ class ReachingEnv(RobotEnv):
         if self.random_orientation:
             self.goal_orient = self.sample_random_orientation()
         else:
-            self.goal_orient = p.getQuaternionFromEuler(np.array([0, np.pi/2.0, 0]), physicsClientId=self.id)        
-            # self.goal_orient = np.array([0, np.pi/2.0, 0])  # changed by Pierre
+            self.goal_orient = p.getQuaternionFromEuler(
+                np.array([0, np.pi/2.0, 0]),
+                physicsClientId=self.id)
 
         # Spawn target object
         path = os.path.abspath(os.path.dirname(__file__))
-        
+
         if self.target_type == "arrow":
             self.target_object = p.loadURDF(
                 os.path.join(
@@ -306,7 +369,9 @@ class ReachingEnv(RobotEnv):
 
         if self.obstacle is not None:
             p.resetBasePositionAndOrientation(
-                self.obstacle_object, self.obstacle_pos, p.getQuaternionFromEuler(self.obstacle_orient))
+                self.obstacle_object,
+                self.obstacle_pos,
+                p.getQuaternionFromEuler(self.obstacle_orient))
 
         # OLD IMPLEMENTATION
         # sphere_collision = -1
@@ -321,11 +386,11 @@ class ReachingEnv(RobotEnv):
 
         # Jaco
         _, _ , _ = self.position_robot_toc(
-            self.robot,
-            8,
-            self.robot_arm_joint_indices,
-            self.robot_lower_limits,
-            self.robot_upper_limits,
+            robot=self.robot,
+            joints=8,
+            joint_indices=self.robot_arm_joint_indices,
+            lower_limits=self.robot_lower_limits,
+            upper_limits=self.robot_upper_limits,
             pos_offset=np.array([0, 0, 0.6]))
 
         self.world_creation.set_gripper_open_position(self.robot, position=1.1, set_instantly=True)
@@ -387,8 +452,6 @@ class ReachingEnv(RobotEnv):
 
         return goal_pos
 
-
-    
     def sample_random_orientation(self):
         """ Sample random target orientation """
 

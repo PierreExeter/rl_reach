@@ -355,3 +355,65 @@ register(
     kwargs=kwargs_dicts['ReachingJaco-v1'],
     )
 
+register(
+    id='ReachingJaco-v2',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=200,
+    kwargs=kwargs_dicts['ReachingJaco-v2'],
+    )
+
+register(
+    id='ReachingJaco-v3',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['ReachingJaco-v3'],
+    )
+
+register(
+    id='ReachingJaco-v4',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['ReachingJaco-v4'],
+    )
+
+register(
+    id='ReachingJaco-v5',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['ReachingJaco-v5'],
+    )
+
+register(
+    id='ReachingJaco-v6',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['ReachingJaco-v6'],
+    )
+
+register(
+    id='ReachingJaco-v7',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['ReachingJaco-v7'],
+    )
+
+register(
+    id='ReachingJaco-v8',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['ReachingJaco-v8'],
+    )
+
+register(
+    id='ReachingJaco-v9',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['ReachingJaco-v9'],
+    )
+
+register(
+    id='ReachingJaco-v10',
+    entry_point='gym_envs.jaco_env.reaching:ReachingEnv',
+    max_episode_steps=100,
+    kwargs=kwargs_dicts['ReachingJaco-v10'],
+    )

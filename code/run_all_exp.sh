@@ -36,5 +36,11 @@
 # echo "EXP 81"
 # python run_experiments.py --exp-id 81 --algo ppo --env widowx_reacher-v26 --n-timesteps 500000 --n-seeds 1
 
-echo "EXP 101"
-python run_experiments.py --exp-id 101 --algo ppo --env ReachingJaco-v1 --n-timesteps 500000 --n-seeds 1
+echo "EXP 107"
+python run_experiments.py --exp-id 107 --algo ppo --env ReachingJaco-v7 --n-timesteps 1000000 --n-seeds 1
+echo "EXP 108"
+python run_experiments.py --exp-id 108 --algo ppo --env ReachingJaco-v8 --n-timesteps 1000000 --n-seeds 1
+echo "EXP 109"
+python run_experiments.py --exp-id 109 --algo ppo --env ReachingJaco-v9 --n-timesteps 1000000 --n-seeds 1
+echo "EXP 110"
+python run_experiments.py --exp-id 110 --algo ppo --env ReachingJaco-v10 --n-timesteps 1000000 --n-seeds 1

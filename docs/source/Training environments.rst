@@ -7,8 +7,8 @@ They simulate the WidowX MK-II robotic manipulator with the Pybullet physics eng
 The objective is to bring the end-effector as close as possible to a target position.
 
 Each implemented environment is described 
-`here <https://github.com/PierreExeter/rl_reach/blob/master/code/gym_envs/widowx_env/envs_list.csv>`_. The action, observation and reward functions are given in 
-`this document <https://github.com/PierreExeter/rl_reach/blob/master/code/gym_envs/widowx_env/reward_observation_action_shapes/reward_observation_action.pdf>`_. Various types of reaching tasks are available. They are listed in below by increasing order of difficulty.
+`here <https://github.com/PierreExeter/rl_reach/blob/master/code/gym_envs/gym_envs/envs_list.csv>`_. The action, observation and reward functions are given in 
+`this document <https://github.com/PierreExeter/rl_reach/blob/master/code/gym_envs/gym_envs/reward_observation_action_shapes/reward_observation_action.pdf>`_. Various types of reaching tasks are available. They are listed in below by increasing order of difficulty.
 
 .. csv-table:: Reaching tasks available
    :header:  Reaching task , Rendering 

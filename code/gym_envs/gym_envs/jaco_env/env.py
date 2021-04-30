@@ -5,7 +5,6 @@ from gym.utils import seeding
 import numpy as np
 import pybullet as p
 import cv2
-# from keras.models import load_model
 from screeninfo import get_monitors
 from .world_creation import WorldCreation
 
@@ -13,10 +12,12 @@ from .world_creation import WorldCreation
 class RobotEnv(gym.Env):
     def __init__(
         self,
-        frame_skip=5,
-        time_step=0.02,
-        action_robot_len=7,
-        obs_robot_len=17):
+        action_amp,
+        obs_amp,
+        frame_skip,
+        time_step,
+        action_robot_len,
+        obs_robot_len):
 
         # Start the bullet physics server
         self.id = p.connect(p.DIRECT)
@@ -27,14 +28,14 @@ class RobotEnv(gym.Env):
 
         # Define action space
         self.action_space = spaces.Box(
-            low=np.float32(np.array([-1.0]*(self.action_robot_len))),
-            high=np.float32(np.array([1.0]*(self.action_robot_len))),
+            low=np.float32(np.array([-action_amp]*(self.action_robot_len))),
+            high=np.float32(np.array([action_amp]*(self.action_robot_len))),
             dtype=np.float32)
 
         # Define observation space
         self.observation_space = spaces.Box(
-            low=np.float32(np.array([-1.0]*(self.obs_robot_len))),
-            high=np.float32(np.array([1.0]*(self.obs_robot_len))),
+            low=np.float32(np.array([-obs_amp]*(self.obs_robot_len))),
+            high=np.float32(np.array([obs_amp]*(self.obs_robot_len))),
             dtype=np.float32)
 
         # Execute actions at 10 Hz by default. A new action every 0.1 seconds
@@ -77,7 +78,18 @@ class RobotEnv(gym.Env):
     def reset(self):
         raise NotImplementedError('Implement reset')
 
-    def take_step(self, action, gains=0.05, forces=1, step_sim=True):
+    def take_step(
+        self,
+        action,
+        gains,
+        forces,
+        indices,
+        upper_limit,
+        lower_limit,
+        robot,
+        step_sim=True):
+
+        # clip action to fit the action space
         action = np.clip(action, a_min=self.action_space.low, a_max=self.action_space.high)
         # print('cameraYaw=%.2f, cameraPitch=%.2f, distance=%.2f' % p.getDebugVisualizerCamera(physicsClientId=self.id)[-4:-1])
 
@@ -89,18 +101,20 @@ class RobotEnv(gym.Env):
 
         action *= 0.05
         self.action_robot = action
-        indices = self.robot_arm_joint_indices
 
-        robot_joint_states = p.getJointStates(self.robot, jointIndices=indices, physicsClientId=self.id)
+        robot_joint_states = p.getJointStates(
+            bodyUniqueId=robot,
+            jointIndices=indices,
+            physicsClientId=self.id)
         self.robot_joint_positions = np.array([x[0] for x in robot_joint_states])
 
         for _ in range(self.frame_skip):
-            self.action_robot[self.robot_joint_positions + self.action_robot < self.robot_lower_limits] = 0
-            self.action_robot[self.robot_joint_positions + self.action_robot > self.robot_upper_limits] = 0
+            self.action_robot[self.robot_joint_positions + self.action_robot < lower_limit] = 0
+            self.action_robot[self.robot_joint_positions + self.action_robot > upper_limit] = 0
             self.robot_joint_positions += self.action_robot
 
         p.setJointMotorControlArray(
-            self.robot,
+            bodyUniqueId=robot,
             jointIndices=indices,
             controlMode=p.POSITION_CONTROL,
             targetPositions=self.robot_joint_positions,
@@ -108,7 +122,7 @@ class RobotEnv(gym.Env):
             forces=[forces]*self.action_robot_len,
             physicsClientId=self.id)
 
-        self.setup_record_video()  # pierre
+        # self.setup_record_video()  # pierre
 
         if step_sim:
             # Update robot position
@@ -118,13 +132,13 @@ class RobotEnv(gym.Env):
                 if self.gui:
                     # Slow down time so that the simulation matches real time
                     self.slow_time()
-            self.record_video_frame()
+            # self.record_video_frame()  # commented
 
-    def reset_robot_joints(self):
+    def reset_robot_joints(self, robot):
         # Reset all robot joints
-        for rj in range(p.getNumJoints(self.robot, physicsClientId=self.id)):
+        for rj in range(p.getNumJoints(robot, physicsClientId=self.id)):
             p.resetJointState(
-                self.robot,
+                robot,
                 jointIndex=rj,
                 targetValue=0,
                 targetVelocity=0,
@@ -169,7 +183,7 @@ class RobotEnv(gym.Env):
             upper_limits = [upper_limits]
 
         # Reset all robot joints
-        self.reset_robot_joints()
+        self.reset_robot_joints(robot)
 
         # best_position = np.array([-0.03778406, -0.07913912,  0.        ])
         best_position = np.array([0, 0, 0])
@@ -219,9 +233,9 @@ class RobotEnv(gym.Env):
         if self.record_video and self.gui:
             frame = np.reshape(
                 p.getCameraImage(
-                    width=self.width, 
+                    width=self.width,
                     height=self.height,
-                    renderer=p.ER_BULLET_HARDWARE_OPENGL, 
+                    renderer=p.ER_BULLET_HARDWARE_OPENGL,
                     physicsClientId=self.id)[2],
                     (self.height, self.width, 4)
                     )[:, :, :3]
