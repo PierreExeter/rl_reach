@@ -1,6 +1,6 @@
 # RL Reach
 
-[![Build Status](https://travis-ci.com/PierreExeter/rl_reach.svg?branch=master)](https://travis-ci.com/PierreExeter/rl_reach)
+[![Build Status](https://app.travis-ci.com/PierreExeter/rl_reach.svg?token=JycSHR8s6SzmypXW1ezx&branch=master)](https://app.travis-ci.com/PierreExeter/rl_reach)
 [![Documentation Status](https://readthedocs.org/projects/rl-reach/badge/?version=latest)](https://rl-reach.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![pylint Score](/docs/images/train.svg)](https://www.pylint.org/)
@@ -22,7 +22,7 @@ Please read the [documentation](https://rl-reach.readthedocs.io/en/latest/) to g
 
 ```bash
 # Clone the repository
-git clone https://github.com/PierreExeter/rl_reach.git && cd rl_reach/code/
+git clone https://github.com/PierreExeter/rl_reach.git && cd rl_reach
 
 # Install and activate the Conda environment
 conda env create -f environment.yml
@@ -67,16 +67,16 @@ A [reproducible capsule](https://codeocean.com/capsule/4112840/tree/) is availab
 Manual tests
 
 ```bash
-python tests/manual/1_test_widowx_env.py
-python tests/manual/2_test_train.py
-python tests/manual/3_test_enjoy.py
-python tests/manual/4_test_pytorch.py
+python code/tests/manual/1_test_widowx_env.py
+python code/tests/manual/2_test_train.py
+python code/tests/manual/3_test_enjoy.py
+python code/tests/manual/4_test_pytorch.py
 ```
 
 Automated tests
 
 ```bash
-pytest tests/auto/all_tests.py -v
+pytest code/tests/auto/all_tests.py -v
 ```
 
 ## Train RL agents
