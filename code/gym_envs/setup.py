@@ -25,5 +25,5 @@ setup(
     python_requires=">=3.6",
     license="MIT",
     keywords=["Reinforcement_Learning", "OpenAI_Gym"],
-    install_requires=["gym", "numpy", "pybullet"]
+    install_requires=["gymnasium", "numpy", "pybullet"]
 )

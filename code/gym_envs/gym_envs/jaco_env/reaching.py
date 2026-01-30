@@ -1,6 +1,6 @@
 import os
 import copy
-from gym import spaces
+from gymnasium import spaces
 import numpy as np
 import pybullet as p
 from .env import RobotEnv
@@ -221,7 +221,7 @@ class ReachingEnv(RobotEnv):
         # get done
         done = False
 
-        return obs, reward, done, info
+        return np.array(obs, dtype=np.float32), reward, done, False, info
 
     def _detect_collision(self):
         """ Detect any collision with the arm (require physics enabled) """
@@ -302,7 +302,8 @@ class ReachingEnv(RobotEnv):
         robot_obs = np.concatenate([self.end_torso_pos, self.end_goal_pos, self.joint_positions, self.endeffector_orient]).ravel()
         return robot_obs
 
-    def reset(self):
+    def reset(self, seed=None, options=None):
+        super().reset(seed=seed)
         self.setup_timing()
         self.task_success = 0
         self.contact_points_on_arm = {}
@@ -439,7 +440,7 @@ class ReachingEnv(RobotEnv):
         # Enable rendering
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1, physicsClientId=self.id)
 
-        return self.get_obs1()
+        return np.array(self.get_obs1(), dtype=np.float32), {}
 
     def sample_random_position(self):
 

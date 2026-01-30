@@ -1,7 +1,7 @@
 import os, time, datetime
-import gym
-from gym import spaces
-from gym.utils import seeding
+import gymnasium as gym
+from gymnasium import spaces
+from gymnasium.utils import seeding
 import numpy as np
 import pybullet as p
 import cv2
@@ -75,7 +75,7 @@ class RobotEnv(gym.Env):
     def _get_obs(self, forces):
         raise NotImplementedError('Implement observations')
 
-    def reset(self):
+    def reset(self, seed=None, options=None):
         raise NotImplementedError('Implement reset')
 
     def take_step(

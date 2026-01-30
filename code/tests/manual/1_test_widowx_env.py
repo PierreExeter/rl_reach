@@ -1,7 +1,7 @@
 """ Test env with random actions """
 
 import time
-import gym
+import gymnasium as gym
 import gym_envs
 from stable_baselines3.common.env_checker import check_env
 
@@ -20,7 +20,7 @@ print("high: ", env.observation_space.high)
 env.render()
 
 for episode in range(5):
-    obs = env.reset()
+    obs, info = env.reset()
     rewards = []
 
     for t in range(100):
@@ -33,7 +33,8 @@ for episode in range(5):
         # action[4] = 0
         # action[5] = 0
 
-        obs, reward, done, info = env.step(action)
+        obs, reward, terminated, truncated, info = env.step(action)
+        done = terminated or truncated
         # env.render()
 
         print("action: ", action)

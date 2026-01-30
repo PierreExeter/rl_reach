@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import gym_envs
 from stable_baselines3.common.env_checker import check_env
 
@@ -19,14 +19,15 @@ env.render()
 
 for e in range(3):
 
-    obs = env.reset()
+    obs, info = env.reset()
     rewards = []
 
     for i in range(100):
         print(i)
         # env.render()
         action = env.action_space.sample()
-        obs, reward, done, info = env.step(action)
+        obs, reward, terminated, truncated, info = env.step(action)
+        done = terminated or truncated
 
         print("action: ", action)
         print("obs: ", obs)

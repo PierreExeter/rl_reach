@@ -5,11 +5,11 @@ WidowX MK-II robot manipulator reaching a target position
 
 import os
 import copy
-import gym
+import gymnasium as gym
 import pybullet as p
 import pybullet_data
 import numpy as np
-from gym import spaces
+from gymnasium import spaces
 from .env_description import ObservationShapes, ActionShapes, RewardFunctions
 
 
@@ -361,11 +361,12 @@ class WidowxEnv(gym.Env):
                 # replace lines
                 self.rayIds.append(p.addUserDebugLine(self.rayFrom[i], self.rayTo[i], self.rayMissColor))
 
-    def reset(self):
+    def reset(self, seed=None, options=None):
         """
         Reset robot and goal at the beginning of an episode.
         Returns observation
         """
+        super().reset(seed=seed)
 
         # Initialise goal position
         if self.random_position:
@@ -444,7 +445,7 @@ class WidowxEnv(gym.Env):
         if self.goal_oriented:
             self.obs = self._get_goal_oriented_obs()
 
-        return self.obs
+        return np.array(self.obs, dtype=np.float32), {}
 
     def _get_general_obs(self):
         """ Get information for generating observation array """
@@ -741,7 +742,7 @@ class WidowxEnv(gym.Env):
             # depth_array = np.array(frame[3])
             # segmentation_array = np.array(frame[4])
 
-        return self.obs, self.reward, episode_over, info
+        return np.array(self.obs, dtype=np.float32), self.reward, episode_over, False, info
 
     def _detect_collision(self):
         """ Detect any collision with the arm (require physics enabled) """
@@ -779,6 +780,6 @@ class WidowxEnv(gym.Env):
             cameraTargetPosition=self.camera_target_pos,
             physicsClientId=self.physics_client)
 
-    def compute_reward(self, achieved_goal, goal, info):
+    def _compute_reward(self, achieved_goal, goal, info):
         """ Function necessary for goal Env"""
         return - (np.linalg.norm(achieved_goal - goal)**2)

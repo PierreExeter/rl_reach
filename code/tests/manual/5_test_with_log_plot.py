@@ -1,7 +1,7 @@
 """ Test env with random actions """
 
 import time
-import gym
+import gymnasium as gym
 import gym_envs
 import subprocess
 from collections import OrderedDict
@@ -13,7 +13,7 @@ env = gym.make('widowx_reacher-v49')
 plot_filename = "plot_env49_rand.png"
 
 env.render()
-env.reset()
+obs, info = env.reset()
 
 log_df = pd.DataFrame()
 log_dict = OrderedDict()
@@ -22,7 +22,8 @@ EPISODE_RETURN = 0
 for t in range(100):
     action = env.action_space.sample()
     # action = [0, 0, -2, 0, 0, 0]
-    obs, reward, done, info = env.step(action)
+    obs, reward, terminated, truncated, info = env.step(action)
+    done = terminated or truncated
     EPISODE_RETURN += reward
 
     print("action: ", action)
