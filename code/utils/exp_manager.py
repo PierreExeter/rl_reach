@@ -9,7 +9,7 @@ import warnings
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-import gym
+import gymnasium as gym
 import numpy as np
 import optuna
 import yaml

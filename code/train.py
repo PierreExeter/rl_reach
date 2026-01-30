@@ -7,7 +7,7 @@ import difflib
 import importlib
 import os
 import uuid
-import gym
+import gymnasium as gym
 import numpy as np
 import seaborn
 import torch as th

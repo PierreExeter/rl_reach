@@ -2,7 +2,7 @@
 
 
 import os
-import gym
+import gymnasium as gym
 import gym_envs
 from stable_baselines3 import PPO
 from stable_baselines3.ppo import MlpPolicy

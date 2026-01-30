@@ -4,7 +4,7 @@ import os
 import shutil
 import subprocess
 import pytest
-import gym
+import gymnasium as gym
 import gym_envs
 
 ######## TEST ENVIRONMENTS ###########
