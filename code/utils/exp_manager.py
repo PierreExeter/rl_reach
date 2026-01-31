@@ -13,7 +13,6 @@ import gymnasium as gym
 import numpy as np
 import optuna
 import yaml
-from optuna.integration.skopt import SkoptSampler
 from optuna.pruners import BasePruner, MedianPruner, SuccessiveHalvingPruner
 from optuna.samplers import BaseSampler, RandomSampler, TPESampler
 from stable_baselines3.common.base_class import BaseAlgorithm
@@ -619,14 +618,6 @@ class ExperimentManager():
             sampler = TPESampler(
                 n_startup_trials=self.n_startup_trials,
                 seed=self.seed)
-        elif sampler_method == "skopt":
-            # cf https://scikit-optimize.github.io/#skopt.Optimizer
-            # GP: gaussian process
-            # Gradient boosted regression: GBRT
-            sampler = SkoptSampler(
-                skopt_kwargs={
-                    "base_estimator": "GP",
-                    "acq_func": "gp_hedge"})
         else:
             raise ValueError(f"Unknown sampler: {sampler_method}")
         return sampler

@@ -14,7 +14,6 @@ dependencies:
       - PyYAML==5.1
       - sb3-contrib==0.11.0a4
       - pytablewriter==0.58.0
-      - scikit-optimize==0.8.1
       - optuna==2.3.0
       - sphinx==3.4.3
       - sphinx_rtd_theme==0.5.1

@@ -133,7 +133,7 @@ if __name__ == "__main__":  # noqa: C901
         help="Sampler to use when optimizing hyperparameters",
         type=str,
         default="tpe",
-        choices=["random", "tpe", "skopt"],
+        choices=["random", "tpe"],
     )
     parser.add_argument(
         "--pruner",
