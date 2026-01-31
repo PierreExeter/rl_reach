@@ -210,6 +210,12 @@ def create_test_env(
     if "env_wrapper" in hyperparams.keys():
         del hyperparams["env_wrapper"]
 
+    # Set render_mode in env_kwargs if should_render is True
+    if env_kwargs is None:
+        env_kwargs = {}
+    if should_render:
+        env_kwargs["render_mode"] = "human"
+
     vec_env_kwargs = {}
     vec_env_cls = DummyVecEnv
     if n_envs > 1 or "Bullet" in env_id:

@@ -6,7 +6,7 @@ import gym_envs
 from stable_baselines3.common.env_checker import check_env
 
 
-env = gym.make('widowx_reacher-v49')
+env = gym.make('widowx_reacher-v49', render_mode="human")
 print("any warnings?", check_env(env))
 
 # Comment this out for goal environments
