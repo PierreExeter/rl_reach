@@ -301,7 +301,8 @@ if __name__ == "__main__":
     for t in range(args.n_eval_steps):
         action, state = model.predict(
             obs, state=state, deterministic=deterministic)
-        obs, reward, done, infos = env.step(action)
+        obs, reward, terminated, truncated, infos = env.step(action)
+        done = terminated or truncated
 
         # Slow down simulation when rendering (Pierre)
         if args.render:

@@ -57,7 +57,8 @@ def test_envs(env_id):
 
     for timestep in range(100):
         action = env.action_space.sample()
-        _, _, done, _ = env.step(action)
+        _, _, terminated, truncated, _ = env.step(action)
+        done = terminated or truncated
 
     assert timestep == 99
     assert done
