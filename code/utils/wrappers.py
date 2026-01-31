@@ -23,9 +23,9 @@ class DoneOnSuccessWrapper(gym.Wrapper):
         self.n_successes = n_successes
         self.current_successes = 0
 
-    def reset(self):
+    def reset(self, **kwargs):
         self.current_successes = 0
-        return self.env.reset()
+        return self.env.reset(**kwargs)
 
     def step(self, action):
         obs, reward, terminated, truncated, info = self.env.step(action)
@@ -33,10 +33,11 @@ class DoneOnSuccessWrapper(gym.Wrapper):
             self.current_successes += 1
         else:
             self.current_successes = 0
-        # number of successes in a row
-        done = (terminated or truncated) or self.current_successes >= self.n_successes
+        # Mark as terminated (not truncated) when success threshold is reached
+        if self.current_successes >= self.n_successes:
+            terminated = True
         reward += self.reward_offset
-        return obs, reward, done, False, info
+        return obs, reward, terminated, truncated, info
 
     def compute_reward(self, achieved_goal, desired_goal, info):
         reward = self.env.compute_reward(achieved_goal, desired_goal, info)
