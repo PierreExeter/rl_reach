@@ -11,7 +11,6 @@ The Gym environments and training scripts are adapted from [Replab](https://gith
 
 ![Alt text](/docs/images/widowx_env.gif?raw=true "The Widowx Gym environment in Pybullet")
 
-
 ## Documentation
 
 Please read the [documentation](https://rl-reach.readthedocs.io/en/latest/) to get started with RL Reach. More details can be found in the associated [journal publication](https://www.sciencedirect.com/science/article/pii/S2665963821000099) or [ArXiv ePrint](https://arxiv.org/abs/2102.04916).
@@ -29,7 +28,18 @@ conda env create -f environment.yml
 conda activate rl_reach
 
 
-source rl_reach/bin/activate
+# install env
+uv venv --python 3.8
+source .venv/bin/activate
+uv pip install -r requirements.txt
+
+
+# code formatting check
+npx prettier . --check
+
+# code formatting write
+npx prettier . --write
+
 ```
 
 Note, this Conda environment assumes that you have CUDA 11.1 installed. If you are using another version of CUDA, you will have to install Pytorch manually as indicated [here](https://pytorch.org/get-started/locally/).
@@ -53,6 +63,7 @@ docker build -t rlreach/rlreach-gpu:latest . -f docker/Dockerfile_gpu
 Run commands inside the docker container with `run_docker_cpu.sh` and `run_docker_gpu.sh`.
 
 Example:
+
 ```bash
 ./docker/run_docker_cpu.sh python run_experiments.py --exp-id 999 --algo ppo --env widowx_reacher-v1 --n-timesteps 30000 --n-seeds 2
 ./docker/run_docker_cpu.sh python evaluate_policy.py --exp-id 999 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
@@ -63,7 +74,6 @@ Note, the GPU image requires [nvidia-docker](https://github.com/NVIDIA/nvidia-do
 ## 3. CodeOcean
 
 A [reproducible capsule](https://codeocean.com/capsule/4112840/tree/) is available on CodeOcean.
-
 
 ## Test the installation
 
@@ -87,20 +97,22 @@ pytest code/tests/auto/all_tests.py -v
 RL experiments can be launched with the script `run_experiments.py`.
 
 Usage:
-|    Flag        |              Description                           |  Type   |    Example                        |
+| Flag | Description | Type | Example |
 |----------------|----------------------------------------------------|---------|-----------------------------------|
-|`--exp-id`      |Unique experiment ID                                | *int*   | 999                                |  
-|`--algo`        |RL algorithm                                        | *str*   | a2c, ddpg, her, ppo, sac, td3     |
-|`--env`         |Training environment ID                             | *str*   | widowx_reacher-v1                 |
-|`--n-timesteps` |Number of training timesteps                        | *int*   | 10<sup>3</sup> to 10<sup>12</sup> | 
-|`--n-seeds`     |Number of runs with different initialisation seeds  | *int*   | 2 to 10                           |
-
+|`--exp-id` |Unique experiment ID | _int_ | 999 |  
+|`--algo` |RL algorithm | _str_ | a2c, ddpg, her, ppo, sac, td3 |
+|`--env` |Training environment ID | _str_ | widowx_reacher-v1 |
+|`--n-timesteps` |Number of training timesteps | _int_ | 10<sup>3</sup> to 10<sup>12</sup> |
+|`--n-seeds` |Number of runs with different initialisation seeds | _int_ | 2 to 10 |
 
 Example:
+
 ```bash
 python run_experiments.py --exp-id 999 --algo ppo --env widowx_reacher-v1 --n-timesteps 10000 --n-seeds 3
 ```
+
 A Bash script that launches multiple experiments is provided for convenience:
+
 ```bash
 ./run_all_exp.sh
 ```
@@ -110,23 +122,26 @@ A Bash script that launches multiple experiments is provided for convenience:
 Trained models can be evaluated and the results can be saved with the script `evaluate_policy.py`.
 
 Usage:
-|    Flag        |              Description                            |  Type   |    Example                              |
+| Flag | Description | Type | Example |
 |----------------|-----------------------------------------------------|---------|-----------------------------------------|
-|`--exp-id`      | Unique experiment ID                                | *int*   | 999                                      | 
-|`--n-eval-steps`| Number of evaluation timesteps                      | *int*   | 1000                                    |
-|`--log-info`    | Enable information logging at each evaluation steps | *bool*  | 0 (default) or 1                        |
-|`--plot-dim`    | Live rendering of end-effector and goal positions   | *int*   | 0: do not plot (default), 2: 2D or 3: 3D| 
-|`--render`      | Render environment during evaluation                | *bool*  | 0 (default) or 1                        |
+|`--exp-id` | Unique experiment ID | _int_ | 999 |
+|`--n-eval-steps`| Number of evaluation timesteps | _int_ | 1000 |
+|`--log-info` | Enable information logging at each evaluation steps | _bool_ | 0 (default) or 1 |
+|`--plot-dim` | Live rendering of end-effector and goal positions | _int_ | 0: do not plot (default), 2: 2D or 3: 3D|
+|`--render` | Render environment during evaluation | _bool_ | 0 (default) or 1 |
 
 Example:
+
 ```bash
 python evaluate_policy.py --exp-id 999 --n-eval-steps 1000 --log-info 0 --plot-dim 0 --render 0
 ```
 
 If `--log-info` was enabled during evaluation, it is possible to plot some useful information as shown in the plot below.
+
 ```bash
 python scripts/plot_episode_eval_log.py --exp-id 999
 ```
+
 The plots are generated in the associated experiment folder, e.g. `logs/exp_999/ppo/`.
 
 Example of environment evaluation plot:
@@ -142,12 +157,13 @@ Example of experiment learning curves:
 The evaluation metrics, environment's variables, hyperparameters used during the training and parameters for evaluating the environments are logged for each experiments in the file `benchmark/benchmark_results.csv`. Evaluation metrics of selected experiments ID can be plotted with the script `scripts/plot_benchmark.py`. The plots are generated in the folder `benchmark/plots/`.
 
 Usage:
-|    Flag     |              Description                            |  Type        |    Example                       |
+| Flag | Description | Type | Example |
 |-------------|-----------------------------------------------------|--------------|----------------------------------|
-|`--exp-list` | List of experiments to consider for plotting        | *list of int*| 26 27 28 29                      | 
-|`--col`      | Name of the hyperparameter for the X axis, see column names [here](code/benchmark/benchmark_results.csv)   | *str*  | n_timesteps |
+|`--exp-list` | List of experiments to consider for plotting | _list of int_| 26 27 28 29 |
+|`--col` | Name of the hyperparameter for the X axis, see column names [here](code/benchmark/benchmark_results.csv) | _str_ | n_timesteps |
 
 Example:
+
 ```bash
 python scripts/plot_benchmark.py --exp-list 26 27 28 29 --col n_timesteps
 ```
@@ -161,29 +177,30 @@ Example of benchmark plot:
 Hyperparameters can be tuned automatically with the optimisation framework [Optuna](https://optuna.readthedocs.io/en/stable/) using the script `train.py -optimize`.
 
 Usage:
-|    Flag             |              Description                           |  Type   |    Example                        |
+| Flag | Description | Type | Example |
 |---------------------|----------------------------------------------------|---------|-----------------------------------|
-|`--algo`             |RL algorithm                                        | *str*   | a2c, ddpg, her, ppo, sac, td3     |
-|`--env`              |Training environment ID                             | *str*   | widowx_reacher-v1                 |
-|`--n-timesteps`      |Number of training timesteps                        | *int*   | 10<sup>3</sup> to 10<sup>12</sup> | 
-|`--n-trials`         |Number of optimisation trials                       | *int*   | 2 to 100                          |
-|`--n-jobs`           |Number of parallel jobs                             | *int*   | 2 to 16                           |
-|`--sampler`          |Sampler for optimisation search                     | *str*   | random, tpe, skopt                |
-|`--pruner`           |Pruner to kill unpromising trials early             | *str*   | halving, median, none             |
-|`--n-startup-trials` |Number of trials before using optuna sampler        | *int*   | 2 to 10                           |
-|`--n-evaluations`    |Number of episode to evaluate a trial               | *int*   | 10 to 20                          |
-|`--log-folder`       |Log folder for the results                          | *str*   | logs/opti                         |
+|`--algo` |RL algorithm | _str_ | a2c, ddpg, her, ppo, sac, td3 |
+|`--env` |Training environment ID | _str_ | widowx_reacher-v1 |
+|`--n-timesteps` |Number of training timesteps | _int_ | 10<sup>3</sup> to 10<sup>12</sup> |
+|`--n-trials` |Number of optimisation trials | _int_ | 2 to 100 |
+|`--n-jobs` |Number of parallel jobs | _int_ | 2 to 16 |
+|`--sampler` |Sampler for optimisation search | _str_ | random, tpe, skopt |
+|`--pruner` |Pruner to kill unpromising trials early | _str_ | halving, median, none |
+|`--n-startup-trials` |Number of trials before using optuna sampler | _int_ | 2 to 10 |
+|`--n-evaluations` |Number of episode to evaluate a trial | _int_ | 10 to 20 |
+|`--log-folder` |Log folder for the results | _str_ | logs/opti |
 
 Example:
+
 ```bash
 python train.py -optimize --algo ppo --env widowx_reacher-v1 --n-timesteps 100000 --n-trials 100 --n-jobs 8 --sampler tpe --pruner median --n-startup-trials 10 --n-evaluations 10 --log-folder logs/opti
 ```
 
 A Bash script that launches multiple hyperparameter optimisation runs is provided for convenience:
+
 ```bash
 ./opti_all.sh
 ```
-
 
 ## Clean all the results (Reset the repository)
 
@@ -199,21 +216,18 @@ A number of custom Gym environments are available in the `gym_envs` directory. T
 
 Each implemented environment is described [here](code/gym_envs/gym_envs/envs_list.csv). The action, observation and reward functions are given in [this table](code/gym_envs/widowx_env/gym_envs/reward_observation_action.pdf). Some environment renderings can be found below.
 
-
-| Reaching task      | Rendering              |
-| -------------------| -----------------------|
-| Fixed position, no orientation | 
-![Alt text](/docs/images/fixed_pos_no_orient.gif?raw=true "Fixed position no orientation")|
-| Random position, no orientation | 
-![Alt text](/docs/images/rand_pos_no_orient.gif?raw=true "Random position no orientation")|
-| Fixed position, fixed orientation | 
-![Alt text](/docs/images/fixed_pos_fixed_orient.gif?raw=true "Fixed position fixed orientation")|
-| Fixed position, random orientation | 
-![Alt text](/docs/images/fixed_pos_rand_orient.gif?raw=true "Fixed position random orientation")|
-| Moving position, no orientation | 
-![Alt text](/docs/images/moving_pos_no_orient.gif?raw=true "Moving position no orientation")|
-
-
+| Reaching task                                                                                    | Rendering |
+| ------------------------------------------------------------------------------------------------ | --------- |
+| Fixed position, no orientation                                                                   |
+| ![Alt text](/docs/images/fixed_pos_no_orient.gif?raw=true "Fixed position no orientation")       |
+| Random position, no orientation                                                                  |
+| ![Alt text](/docs/images/rand_pos_no_orient.gif?raw=true "Random position no orientation")       |
+| Fixed position, fixed orientation                                                                |
+| ![Alt text](/docs/images/fixed_pos_fixed_orient.gif?raw=true "Fixed position fixed orientation") |
+| Fixed position, random orientation                                                               |
+| ![Alt text](/docs/images/fixed_pos_rand_orient.gif?raw=true "Fixed position random orientation") |
+| Moving position, no orientation                                                                  |
+| ![Alt text](/docs/images/moving_pos_no_orient.gif?raw=true "Moving position no orientation")     |
 
 ## Tested on
 

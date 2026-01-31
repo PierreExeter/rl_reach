@@ -1,7 +1,7 @@
 CartPole-v1:
   n_envs: 8
   n_timesteps: !!float 1e5
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_steps: 32
   batch_size: 256
   gae_lambda: 0.8
@@ -10,7 +10,6 @@ CartPole-v1:
   ent_coef: 0.0
   learning_rate: lin_0.001
   clip_range: lin_0.2
-
 
 #   # Default
 # widowx_reacher-v1:
@@ -41,7 +40,6 @@ CartPole-v1:
 #   #                      net_arch=[dict(pi=[256, 256], vf=[256, 256])]
 #   #                      )"
 
-
 # # tuned
 # widowx_reacher-v1:
 #   _init_setup_model: true
@@ -66,12 +64,11 @@ CartPole-v1:
 #   use_sde: false
 #   vf_coef: 0.7672995535258906
 
-
 # # SB2 hyperparams
 widowx_reacher-v1:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -99,7 +96,7 @@ widowx_reacher-v1:
 widowx_reacher-v2:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -113,7 +110,7 @@ widowx_reacher-v2:
 widowx_reacher-v3:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -127,7 +124,7 @@ widowx_reacher-v3:
 widowx_reacher-v4:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -141,7 +138,7 @@ widowx_reacher-v4:
 widowx_reacher-v5:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -155,7 +152,7 @@ widowx_reacher-v5:
 widowx_reacher-v6:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -169,7 +166,7 @@ widowx_reacher-v6:
 widowx_reacher-v7:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -183,7 +180,7 @@ widowx_reacher-v7:
 widowx_reacher-v8:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -197,7 +194,7 @@ widowx_reacher-v8:
 widowx_reacher-v9:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -211,7 +208,7 @@ widowx_reacher-v9:
 widowx_reacher-v10:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -225,7 +222,7 @@ widowx_reacher-v10:
 widowx_reacher-v11:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -239,7 +236,7 @@ widowx_reacher-v11:
 widowx_reacher-v12:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -253,7 +250,7 @@ widowx_reacher-v12:
 widowx_reacher-v13:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -267,7 +264,7 @@ widowx_reacher-v13:
 widowx_reacher-v14:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -281,7 +278,7 @@ widowx_reacher-v14:
 widowx_reacher-v15:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -295,7 +292,7 @@ widowx_reacher-v15:
 widowx_reacher-v16:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -309,7 +306,7 @@ widowx_reacher-v16:
 widowx_reacher-v17:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -323,7 +320,7 @@ widowx_reacher-v17:
 widowx_reacher-v18:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -337,7 +334,7 @@ widowx_reacher-v18:
 widowx_reacher-v19:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -351,7 +348,7 @@ widowx_reacher-v19:
 widowx_reacher-v20:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -365,7 +362,7 @@ widowx_reacher-v20:
 widowx_reacher-v21:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -379,7 +376,7 @@ widowx_reacher-v21:
 widowx_reacher-v22:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -393,7 +390,7 @@ widowx_reacher-v22:
 widowx_reacher-v23:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -407,7 +404,7 @@ widowx_reacher-v23:
 widowx_reacher-v24:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -421,7 +418,7 @@ widowx_reacher-v24:
 widowx_reacher-v25:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -435,7 +432,7 @@ widowx_reacher-v25:
 widowx_reacher-v26:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -449,7 +446,7 @@ widowx_reacher-v26:
 widowx_reacher-v27:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -463,7 +460,7 @@ widowx_reacher-v27:
 widowx_reacher-v28:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -477,7 +474,7 @@ widowx_reacher-v28:
 widowx_reacher-v29:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -491,7 +488,7 @@ widowx_reacher-v29:
 widowx_reacher-v30:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -505,7 +502,7 @@ widowx_reacher-v30:
 widowx_reacher-v31:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -519,7 +516,7 @@ widowx_reacher-v31:
 widowx_reacher-v32:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -533,7 +530,7 @@ widowx_reacher-v32:
 widowx_reacher-v33:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -547,7 +544,7 @@ widowx_reacher-v33:
 widowx_reacher-v34:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -561,7 +558,7 @@ widowx_reacher-v34:
 widowx_reacher-v35:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -575,7 +572,7 @@ widowx_reacher-v35:
 widowx_reacher-v36:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -589,7 +586,7 @@ widowx_reacher-v36:
 widowx_reacher-v37:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -603,7 +600,7 @@ widowx_reacher-v37:
 widowx_reacher-v38:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -617,7 +614,7 @@ widowx_reacher-v38:
 widowx_reacher-v39:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -631,7 +628,7 @@ widowx_reacher-v39:
 widowx_reacher-v40:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -645,7 +642,7 @@ widowx_reacher-v40:
 widowx_reacher-v41:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -659,7 +656,7 @@ widowx_reacher-v41:
 widowx_reacher-v42:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -673,7 +670,7 @@ widowx_reacher-v42:
 widowx_reacher-v43:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -687,7 +684,7 @@ widowx_reacher-v43:
 widowx_reacher-v44:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -701,7 +698,7 @@ widowx_reacher-v44:
 widowx_reacher-v45:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -715,7 +712,7 @@ widowx_reacher-v45:
 widowx_reacher-v46:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -729,7 +726,7 @@ widowx_reacher-v46:
 widowx_reacher-v47:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -743,7 +740,7 @@ widowx_reacher-v47:
 widowx_reacher-v48:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -757,7 +754,7 @@ widowx_reacher-v48:
 widowx_reacher-v49:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -771,7 +768,7 @@ widowx_reacher-v49:
 ReachingJaco-v1:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -785,7 +782,7 @@ ReachingJaco-v1:
 ReachingJaco-v2:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -799,7 +796,7 @@ ReachingJaco-v2:
 ReachingJaco-v3:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -813,7 +810,7 @@ ReachingJaco-v3:
 ReachingJaco-v4:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -827,7 +824,7 @@ ReachingJaco-v4:
 ReachingJaco-v5:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -841,7 +838,7 @@ ReachingJaco-v5:
 ReachingJaco-v6:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -855,7 +852,7 @@ ReachingJaco-v6:
 ReachingJaco-v7:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -869,7 +866,7 @@ ReachingJaco-v7:
 ReachingJaco-v8:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -883,7 +880,7 @@ ReachingJaco-v8:
 ReachingJaco-v9:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -897,7 +894,7 @@ ReachingJaco-v9:
 ReachingJaco-v10:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   n_envs: 8
   n_steps: 128
   n_epochs: 4
@@ -912,7 +909,6 @@ ReachingJaco-v10:
 # #   normalize: true
 # #   n_envs: 8
 # #   policy: 'MlpPolicy'
-
 
 # widowx_reacher-v38:
 #   n_timesteps: 500000
@@ -948,7 +944,6 @@ ReachingJaco-v10:
 #   #                      net_arch=[dict(pi=[256, 256], vf=[256, 256])]
 #   #                      )"
 
-
 # widowx_reacher-v5:
 #   # env_wrapper: utils.wrappers.TimeFeatureWrapper
 #   n_timesteps: 500000
@@ -976,7 +971,6 @@ ReachingJaco-v10:
 #   #                      activation_fn=nn.ReLU,
 #   #                      net_arch=[dict(pi=[256, 256], vf=[256, 256])]
 #   #                      )"
-
 
 # widowx_reacher-v6:
 #   # env_wrapper: utils.wrappers.TimeFeatureWrapper

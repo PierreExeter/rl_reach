@@ -2,7 +2,7 @@ widowx_reacher-v1:
   # env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   learning_rate: 0.0003
   buffer_size: 1000000
   learning_starts: 100
@@ -20,16 +20,15 @@ widowx_reacher-v1:
   sde_sample_freq: -1
   use_sde_at_warmup: False
   create_eval_env: False
-  policy_kwargs: None  # "dict(log_std_init=-2, net_arch=[64, 64])"
+  policy_kwargs: None # "dict(log_std_init=-2, net_arch=[64, 64])"
   device: "auto"
   _init_setup_model: True
-
 
 widowx_reacher-v3:
   # env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   learning_rate: 0.0003
   buffer_size: 1000000
   learning_starts: 100
@@ -47,16 +46,15 @@ widowx_reacher-v3:
   sde_sample_freq: -1
   use_sde_at_warmup: False
   create_eval_env: False
-  policy_kwargs: None  # "dict(log_std_init=-2, net_arch=[64, 64])"
+  policy_kwargs: None # "dict(log_std_init=-2, net_arch=[64, 64])"
   device: "auto"
   _init_setup_model: True
-
 
 widowx_reacher-v38:
   # env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   learning_rate: 0.0003
   buffer_size: 1000000
   learning_starts: 100
@@ -74,6 +72,6 @@ widowx_reacher-v38:
   sde_sample_freq: -1
   use_sde_at_warmup: False
   create_eval_env: False
-  policy_kwargs: None  # "dict(log_std_init=-2, net_arch=[64, 64])"
+  policy_kwargs: None # "dict(log_std_init=-2, net_arch=[64, 64])"
   device: "auto"
   _init_setup_model: True

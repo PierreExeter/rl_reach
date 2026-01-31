@@ -10,3 +10,6 @@ __pycache__
 code/sonic_cluster.sh
 code/kay_cluster.slurm
 docs/build/
+.prettierignore
+.prettierrc
+.venv

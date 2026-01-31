@@ -2,7 +2,7 @@ widowx_reacher-v1:
   # env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   learning_rate: 0.001
   buffer_size: 1000000
   learning_starts: 100
@@ -14,7 +14,7 @@ widowx_reacher-v1:
   n_episodes_rollout: 1
   optimize_memory_usage: False
   create_eval_env: False
-  policy_kwargs: None  # "dict(net_arch=[400, 300])"
+  policy_kwargs: None # "dict(net_arch=[400, 300])"
   device: "auto"
   _init_setup_model: True
 
@@ -22,7 +22,7 @@ widowx_reacher-v3:
   # env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   learning_rate: 0.001
   buffer_size: 1000000
   learning_starts: 100
@@ -34,16 +34,15 @@ widowx_reacher-v3:
   n_episodes_rollout: 1
   optimize_memory_usage: False
   create_eval_env: False
-  policy_kwargs: None  # "dict(net_arch=[400, 300])"
+  policy_kwargs: None # "dict(net_arch=[400, 300])"
   device: "auto"
   _init_setup_model: True
-
 
 widowx_reacher-v26:
   # env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   learning_rate: 0.001
   buffer_size: 1000000
   learning_starts: 100
@@ -55,6 +54,6 @@ widowx_reacher-v26:
   n_episodes_rollout: 1
   optimize_memory_usage: False
   create_eval_env: False
-  policy_kwargs: None  # "dict(net_arch=[400, 300])"
+  policy_kwargs: None # "dict(net_arch=[400, 300])"
   device: "auto"
   _init_setup_model: True

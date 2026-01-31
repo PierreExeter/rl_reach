@@ -3,8 +3,8 @@
 widowx_reacher-v2:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
-  model_class: 'sac'
+  policy: "MlpPolicy"
+  model_class: "sac"
   n_sampled_goal: 4
   goal_selection_strategy: "future"
   online_sampling: True
@@ -14,13 +14,12 @@ widowx_reacher-v2:
   #   - utils.wrappers.HistoryWrapperObsDict:
   #       horizon: 2
   #   - utils.wrappers.TimeFeatureWrapper
-
 
 widowx_reacher-v4:
   n_timesteps: 500000
   normalize: true
-  policy: 'MlpPolicy'
-  model_class: 'sac'
+  policy: "MlpPolicy"
+  model_class: "sac"
   n_sampled_goal: 4
   goal_selection_strategy: "future"
   online_sampling: True
@@ -30,7 +29,6 @@ widowx_reacher-v4:
   #   - utils.wrappers.HistoryWrapperObsDict:
   #       horizon: 2
   #   - utils.wrappers.TimeFeatureWrapper
-
 
 ##############
 # WITH TD3
@@ -49,8 +47,6 @@ widowx_reacher-v4:
 #     - utils.wrappers.HistoryWrapperObsDict:
 #         horizon: 2
 #     - utils.wrappers.TimeFeatureWrapper
-
-
 
 # widowx_reacher-v4:
 #   n_timesteps: 500000

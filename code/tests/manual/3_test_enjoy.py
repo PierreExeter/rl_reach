@@ -6,12 +6,11 @@ import gym_envs
 from stable_baselines3 import PPO
 
 
-env = gym.make('widowx_reacher-v1')
+env = gym.make('widowx_reacher-v1', render_mode="human")
 # model = PPO(MlpPolicy, env, verbose=1)
 model = PPO.load("logs/test/widowx_reach-v1")
 
 obs, info = env.reset()
-env.render(mode="human")
 
 for t in range(3000):
     print(t)

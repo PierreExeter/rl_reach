@@ -4,24 +4,23 @@ widowx_reacher-v1:
   n_timesteps: 500000
   normalize: true
   n_envs: 8
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   learning_rate: 0.0007
   n_steps: 5
   gamma: 0.99
   gae_lambda: 1.0
   ent_coef: 0.0
-  vf_coef: 0.5 
-  max_grad_norm: 0.5 
+  vf_coef: 0.5
+  max_grad_norm: 0.5
   rms_prop_eps: 0.00005
   use_rms_prop: True
   use_sde: False
   sde_sample_freq: -1
   normalize_advantage: False
-  create_eval_env: False 
+  create_eval_env: False
   policy_kwargs: None
-  device: 'auto'
+  device: "auto"
   _init_setup_model: True
-  
 
 widowx_reacher-v3:
   # env_wrapper: utils.wrappers.TimeFeatureWrapper
@@ -29,20 +28,20 @@ widowx_reacher-v3:
   n_timesteps: 500000
   normalize: true
   n_envs: 8
-  policy: 'MlpPolicy'
+  policy: "MlpPolicy"
   learning_rate: 0.0007
   n_steps: 5
   gamma: 0.99
   gae_lambda: 1.0
   ent_coef: 0.0
-  vf_coef: 0.5 
-  max_grad_norm: 0.5 
+  vf_coef: 0.5
+  max_grad_norm: 0.5
   rms_prop_eps: 0.00005
   use_rms_prop: True
   use_sde: False
   sde_sample_freq: -1
   normalize_advantage: False
-  create_eval_env: False 
+  create_eval_env: False
   policy_kwargs: None
-  device: 'auto'
+  device: "auto"
   _init_setup_model: True
