@@ -43,7 +43,7 @@ class RobotEnv(gym.Env):
         self.time_step = time_step
 
         self.setup_timing()
-        self.seed(1001)
+        self.np_random, _ = seeding.np_random(1001)
 
         self.world_creation = WorldCreation(
             self.id,
@@ -64,10 +64,6 @@ class RobotEnv(gym.Env):
             self.height = 1080
             # self.width = 3840
             # self.height = 2160
-
-    def seed(self, seed=None):
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
 
     def step(self, action):
         raise NotImplementedError('Implement observations')
