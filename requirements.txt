@@ -22,9 +22,7 @@ google-auth==2.48.0
 google-auth-oauthlib==1.0.0
 greenlet==3.1.1
 grpcio==1.70.0
-gym==0.26.2
 -e file:///home/pierre/4_Github_repos/rl_reach/code/gym_envs
-gym-notices==0.1.0
 gymnasium==1.0.0
 idna==3.11
 imagesize==1.4.1

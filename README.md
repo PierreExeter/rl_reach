@@ -101,8 +101,8 @@ Usage:
 |----------------|----------------------------------------------------|---------|-----------------------------------|
 |`--exp-id` |Unique experiment ID | _int_ | 999 |  
 |`--algo` |RL algorithm | _str_ | a2c, ddpg, her, ppo, sac, td3 |
-|`--env` |Training environment ID | _str_ | widowx_reacher-v1 |
-|`--n-timesteps` |Number of training timesteps | _int_ | 10<sup>3</sup> to 10<sup>12</sup> |
+|`--env` |Training environment ID | _str_ | widowx*reacher-v1 |
+|`--n-timesteps` |Number of training timesteps | \_int* | 10<sup>3</sup> to 10<sup>12</sup> |
 |`--n-seeds` |Number of runs with different initialisation seeds | _int_ | 2 to 10 |
 
 Example:
@@ -180,8 +180,8 @@ Usage:
 | Flag | Description | Type | Example |
 |---------------------|----------------------------------------------------|---------|-----------------------------------|
 |`--algo` |RL algorithm | _str_ | a2c, ddpg, her, ppo, sac, td3 |
-|`--env` |Training environment ID | _str_ | widowx_reacher-v1 |
-|`--n-timesteps` |Number of training timesteps | _int_ | 10<sup>3</sup> to 10<sup>12</sup> |
+|`--env` |Training environment ID | _str_ | widowx*reacher-v1 |
+|`--n-timesteps` |Number of training timesteps | \_int* | 10<sup>3</sup> to 10<sup>12</sup> |
 |`--n-trials` |Number of optimisation trials | _int_ | 2 to 100 |
 |`--n-jobs` |Number of parallel jobs | _int_ | 2 to 16 |
 |`--sampler` |Sampler for optimisation search | _str_ | random, tpe, skopt |

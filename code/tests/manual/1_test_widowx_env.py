@@ -6,7 +6,7 @@ import gym_envs
 from stable_baselines3.common.env_checker import check_env
 
 
-env = gym.make('widowx_reacher-v49', render_mode="human")
+env = gym.make('widowx_reacher-v49')
 print("any warnings?", check_env(env))
 
 # Comment this out for goal environments
@@ -35,7 +35,6 @@ for episode in range(5):
 
         obs, reward, terminated, truncated, info = env.step(action)
         done = terminated or truncated
-        # env.render()
 
         print("action: ", action)
         print("obs: ", obs)
